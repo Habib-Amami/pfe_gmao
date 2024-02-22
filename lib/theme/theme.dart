@@ -67,7 +67,7 @@ const darkColorScheme = ColorScheme(
   inversePrimary: Color(0xff166683),
 );
 
-//this is the TextTheme of the appliaction
+//this is the TextTheme of the application
 const textTheme = TextTheme(
   //Display Type Style
   displayLarge: TextStyle(
@@ -120,7 +120,7 @@ const textTheme = TextTheme(
     letterSpacing: 0.1,
   ),
 
-  //Lable Type Style
+  //Label Type Style
   labelLarge: TextStyle(
     fontWeight: FontWeight.w500,
     fontSize: 14,
@@ -159,7 +159,7 @@ const textTheme = TextTheme(
   ),
 );
 
-//this ligthTheme of the application
+//this light Theme of the application
 final lightTheme = ThemeData(
   useMaterial3: true,
   // COLOR
@@ -169,7 +169,7 @@ final lightTheme = ThemeData(
   textTheme: textTheme,
 );
 
-//this is the darktheme of the application
+//this is the dark theme of the application
 final darkTheme = ThemeData(
   useMaterial3: true,
   //COLOR

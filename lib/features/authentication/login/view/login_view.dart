@@ -70,7 +70,7 @@ class _LoginViewState extends State<LoginView> {
                   hintText: "Enter Your Email Here",
                 ),
                 validator: (value) {
-                  //TODO : create a email validtion
+                  //create a email validation
                   if (value == null || value.isEmpty) {
                     return "please provide an email";
                   }
