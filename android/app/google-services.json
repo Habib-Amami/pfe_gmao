@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1056314791974",
+    "project_id": "pfe-gmao-11445214",
+    "storage_bucket": "pfe-gmao-11445214.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1056314791974:android:5bef2ca3769c0375c82ee7",
+        "android_client_info": {
+          "package_name": "tn.com.softic.pfe_gmao"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDH39hkXbvMgwT6bSxWkFHlDmgv4PWbDfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
