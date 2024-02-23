@@ -24,6 +24,8 @@ class _LoginViewState extends State<LoginView> {
   // Form key for managing the state of the login form
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
+  // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   // Variables to store user email and password inputs
   String _email = "";
   String _password = "";
@@ -271,19 +273,21 @@ class _LoginViewState extends State<LoginView> {
                                 emailAddress: _email,
                                 password: _password,
                               );
-                              // ignore: use_build_context_synchronously
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Login successfully"),
-                                ),
-                              );
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Login successfully"),
+                                  ),
+                                );
+                              }
                             } on FirebaseAuthException catch (e) {
-                              // ignore: use_build_context_synchronously
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(e.message!),
-                                ),
-                              );
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(e.message!),
+                                  ),
+                                );
+                              }
                             }
                           }
                         },
