@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../password%20rest/view/password_rest_bottomsheet.dart';
+import '../../password rest/view/password_rest_view.dart';
 import '../controller/login_controller.dart';
 
 // LoginPage is a StatefulWidget representing the login screen of the application
@@ -14,6 +14,7 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  final LoginController _loginController = LoginController();
   // Variables to manage the visibility of the password
   bool _isObscure = true;
 
@@ -192,10 +193,10 @@ class _LoginViewState extends State<LoginView> {
                       onSaved: (newValue) {
                         _password = newValue!;
                       },
-                      onFieldSubmitted: (_) {
-                        _formkey.currentState!.save();
-                        _formkey.currentState!.validate();
-                      },
+                      // onFieldSubmitted: (_) {
+                      //   _formkey.currentState!.validate();
+                      //   _formkey.currentState!.save();
+                      // },
                     ),
                   ),
                   Padding(
@@ -239,7 +240,7 @@ class _LoginViewState extends State<LoginView> {
                               isScrollControlled: true,
                               elevation:
                                   Theme.of(context).bottomSheetTheme.elevation,
-                              builder: (context) => PasswordRestBottomSheet(),
+                              builder: (context) => const PasswordRestView(),
                             );
                           },
                           child: Text(
@@ -263,26 +264,27 @@ class _LoginViewState extends State<LoginView> {
                       height: 60,
                       child: FilledButton(
                         onPressed: () async {
-                          _formkey.currentState!.validate();
-                          _formkey.currentState!.save();
-                          try {
-                            await LoginController().loginUser(
-                              emailAddress: _email,
-                              password: _password,
-                            );
-                            // ignore: use_build_context_synchronously
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Login successfully"),
-                              ),
-                            );
-                          } on FirebaseAuthException catch (e) {
-                            // ignore: use_build_context_synchronously
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(e.message!),
-                              ),
-                            );
+                          if (_formkey.currentState!.validate()) {
+                            _formkey.currentState!.save();
+                            try {
+                              await _loginController.loginUser(
+                                emailAddress: _email,
+                                password: _password,
+                              );
+                              // ignore: use_build_context_synchronously
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Login successfully"),
+                                ),
+                              );
+                            } on FirebaseAuthException catch (e) {
+                              // ignore: use_build_context_synchronously
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(e.message!),
+                                ),
+                              );
+                            }
                           }
                         },
                         child: Text(
