@@ -129,7 +129,7 @@ class _PasswordRestViewState extends State<PasswordRestView> {
                                         ),
                                   ),
                                   content: const Text(
-                                    'password rest email was send the email that u provided, Check your in box and make sure to update your password',
+                                    'password rest email was send the email that you provided, Check your in box and make sure to update your password',
                                   ),
                                   actions: [
                                     TextButton(
