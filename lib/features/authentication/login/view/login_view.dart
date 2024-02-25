@@ -106,6 +106,8 @@ class _LoginViewState extends State<LoginView> {
                       onSaved: (newValue) {
                         _email = newValue!;
                       },
+                      initialValue:
+                          _loginController.getCachedEmailFromLocalDB(),
                     ),
                   ),
                   Padding(
@@ -195,6 +197,8 @@ class _LoginViewState extends State<LoginView> {
                       onSaved: (newValue) {
                         _password = newValue!;
                       },
+                      initialValue:
+                          _loginController.getCachedPasswordFromLocalDB(),
                       // onFieldSubmitted: (_) {
                       //   _formkey.currentState!.validate();
                       //   _formkey.currentState!.save();
@@ -280,6 +284,12 @@ class _LoginViewState extends State<LoginView> {
                                   ),
                                 );
                               }
+                              //saving the isdere credentials in case of a successfull login
+                              _loginController.rememberMe(
+                                isChecked: _isChecked,
+                                email: _email,
+                                password: _password,
+                              );
                             } on FirebaseAuthException catch (e) {
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
