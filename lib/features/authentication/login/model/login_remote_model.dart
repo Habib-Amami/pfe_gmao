@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../../firebase_services.dart';
 
-class LoginModel {
+class RemoteLoginModel {
   Future<User?> login({
     required emailAddress,
     required password,
