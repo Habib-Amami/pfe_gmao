@@ -1,25 +1,7 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../../../../firebase_services.dart';
-
-class LoginModel {
-  Future<User?> login({
-    required emailAddress,
-    required password,
-  }) async {
-    UserCredential userCredential =
-        await FirebaseService.instance.authInstance.signInWithEmailAndPassword(
-      email: emailAddress,
-      password: password,
-    );
-    return userCredential.user;
-  }
-
+class LocalLoginModel {
   Future<void> saveCredentialsToLocalDB({
     required String email,
     required String password,
