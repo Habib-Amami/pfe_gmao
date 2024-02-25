@@ -24,4 +24,25 @@ class LoginController {
       rethrow;
     }
   }
+
+  void rememberMe({
+    required bool isChecked,
+    required String email,
+    required String password,
+  }) async {
+    if (isChecked) {
+      await _loginModel.saveCredentialsToLocalDB(
+        email: email,
+        password: password,
+      );
+    }
+  }
+
+  String? getCachedEmailFromLocalDB() {
+    return _loginModel.getCachedEmail();
+  }
+
+  String? getCachedPasswordFromLocalDB() {
+    return _loginModel.getCachedPassword();
+  }
 }
