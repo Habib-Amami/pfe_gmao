@@ -22,7 +22,7 @@ void main() async {
   // if key not exists return null
   String? encryptedKeyString = await secureStorage.read(key: 'key');
   if (encryptedKeyString == null) {
-    //genrating AES encryption key with hive helper function
+    //generating AES encryption key with hive helper function
     final List<int> hiveKey = Hive.generateSecureKey();
 
     //adding the key to the secure storage
@@ -69,6 +69,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       themeMode: ThemeMode.system,
       theme: lightTheme,
