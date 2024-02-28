@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pfe_gmao/menu%20screens/settings.dart';
 import 'menu screens/calender_screen.dart';
 import 'menu screens/equipment_screen.dart';
 import 'menu screens/notification_screen.dart';
 import 'menu screens/profile_screen.dart';
 import 'menu screens/work_order_screen.dart';
+import 'package:ionicons/ionicons.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -39,7 +41,7 @@ class _HomeState extends State<Home> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(30),
                   child: IconButton(
-                    icon: const Icon(Icons.person),
+                    icon: const Icon(Ionicons.person),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -51,6 +53,15 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Settings(),
+                        ));
+                  },
+                  icon: const Icon(Ionicons.settings_sharp)),
             ],
           ),
         ),
@@ -71,10 +82,10 @@ class _HomeState extends State<Home> {
         destinations: const [
           NavigationDestination(
             selectedIcon: Icon(
-              Icons.construction,
+              Ionicons.construct_outline,
             ),
             icon: Icon(
-              Icons.construction_outlined,
+              Ionicons.construct,
             ),
             label: "Equipment",
             tooltip: "Equipment List",
@@ -84,23 +95,24 @@ class _HomeState extends State<Home> {
               Icons.tire_repair_outlined,
             ),
             icon: Icon(
-              Icons.tire_repair_outlined,
+              Icons.tire_repair,
             ),
             label: "Intervention",
             tooltip: "Tasks Calender",
           ),
           NavigationDestination(
               selectedIcon: Icon(
-                Icons.webhook_outlined,
+                Icons.webhook_rounded,
               ),
               icon: Icon(
-                Icons.webhook_rounded,
+                Icons.webhook_sharp,
               ),
               label: "work order",
               tooltip: "work flow order"),
           NavigationDestination(
+            selectedIcon: Icon(Ionicons.notifications_outline),
             icon: Icon(
-              Icons.notifications,
+              Ionicons.notifications_sharp,
             ),
             label: "Notifications",
             tooltip: "Notifications",
