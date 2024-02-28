@@ -12,9 +12,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+      ),
       body: Center(
         child: ElevatedButton(
-          onPressed: () => FirebaseService.instance.authInstance.signOut(),
+          onPressed: () async {
+            await FirebaseService.instance.authInstance.signOut();
+          },
           child: const Icon(Icons.exit_to_app_outlined),
         ),
       ),
