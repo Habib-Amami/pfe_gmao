@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pfe_gmao/menu%20screens/settings.dart';
 import 'menu screens/calender_screen.dart';
-import 'menu screens/equipment_screen.dart';
+import 'Equipments/View/equipment_screen.dart';
 import 'menu screens/notification_screen.dart';
 import 'menu screens/profile_screen.dart';
 import 'menu screens/work_order_screen.dart';
@@ -58,7 +58,7 @@ class _HomeState extends State<Home> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const Settings(),
+                          builder: (context) => const Setting(),
                         ));
                   },
                   icon: const Icon(Ionicons.settings_sharp)),

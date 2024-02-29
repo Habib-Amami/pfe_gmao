@@ -4,14 +4,14 @@ import 'package:pfe_gmao/home.dart';
 import 'package:pfe_gmao/menu%20screens/notification_screen.dart';
 import 'package:pfe_gmao/menu%20screens/profile_screen.dart';
 
-class Settings extends StatefulWidget {
-  const Settings({super.key});
+class Setting extends StatefulWidget {
+  const Setting({super.key});
 
   @override
-  State<Settings> createState() => _SettingsState();
+  State<Setting> createState() => _SettingsState();
 }
 
-class _SettingsState extends State<Settings> {
+class _SettingsState extends State<Setting> {
   bool isDark = false;
   @override
   Widget build(BuildContext context) {

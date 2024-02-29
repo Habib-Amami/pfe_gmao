@@ -19,6 +19,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: ElevatedButton(
           onPressed: () async {
             await FirebaseService.instance.authInstance.signOut();
+            if (context.mounted) {
+              Navigator.popUntil(context, (route) => route.isFirst);
+            }
           },
           child: const Icon(Icons.exit_to_app_outlined),
         ),
