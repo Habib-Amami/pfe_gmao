@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pfe_gmao/home.dart';
 
 import '../../password rest/view/password_rest_view.dart';
 import '../controller/login_controller.dart';
