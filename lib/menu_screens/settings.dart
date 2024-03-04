@@ -5,14 +5,14 @@ import '../features/profile_management/view/profile_view.dart';
 import '../home.dart';
 import 'notification_screen.dart';
 
-class Settings extends StatefulWidget {
-  const Settings({super.key});
+class Setting extends StatefulWidget {
+  const Setting({super.key});
 
   @override
-  State<Settings> createState() => _SettingsState();
+  State<Setting> createState() => _SettingsState();
 }
 
-class _SettingsState extends State<Settings> {
+class _SettingsState extends State<Setting> {
   bool isDark = false;
   @override
   Widget build(BuildContext context) {

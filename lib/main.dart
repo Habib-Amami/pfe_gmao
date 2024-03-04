@@ -18,9 +18,11 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true,
   );
+
   await Hive.initFlutter();
   const FlutterSecureStorage secureStorage = FlutterSecureStorage();
   // if key not exists return null
