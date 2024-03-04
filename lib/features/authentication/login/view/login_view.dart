@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pfe_gmao/home.dart';
 
 import '../../password rest/view/password_rest_view.dart';
 import '../controller/login_controller.dart';
@@ -105,7 +104,7 @@ class _LoginViewState extends State<LoginView> {
                         return null;
                       },
                       onSaved: (newValue) {
-                        _email = newValue!;
+                        _email = newValue!.trim();
                       },
                       initialValue:
                           _loginController.getCachedEmailFromLocalDB(),
@@ -168,35 +167,13 @@ class _LoginViewState extends State<LoginView> {
                           return "please provide a password";
                         }
                         // Check if the password is at least 8 characters long
-                        if (value.length < 8) {
-                          return "the password  be at least 8 characters in length";
+                        if (value.length < 6) {
+                          return "the password  must be at least 6 characters in length";
                         }
-
-                        // Check if the password contains at least one uppercase letter
-                        if (!value.contains(RegExp(r'[A-Z]'))) {
-                          return "the password should contain at least one upper case";
-                        }
-
-                        // Check if the password contains at least one lowercase letter
-                        if (!value.contains(RegExp(r'[a-z]'))) {
-                          return "should contain at least one lower case";
-                        }
-
-                        // Check if the password contains at least one digit
-                        if (!value.contains(RegExp(r'[0-9]'))) {
-                          return "should contain at least one digit";
-                        }
-
-                        // Check if the password contains at least one special character
-                        if (!value
-                            .contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-                          return "password should contain at least one special character";
-                        }
-                        // If all conditions are met, the password is considered valid
                         return null;
                       },
                       onSaved: (newValue) {
-                        _password = newValue!;
+                        _password = newValue!.trim();
                       },
                       initialValue:
                           _loginController.getCachedPasswordFromLocalDB(),
