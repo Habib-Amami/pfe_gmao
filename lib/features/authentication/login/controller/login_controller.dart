@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pfe_gmao/features/authentication/login/model/login_local_model.dart';
 
+import '../model/login_local_model.dart';
 import '../model/login_remote_model.dart';
 
 class LoginController {

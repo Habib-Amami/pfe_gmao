@@ -1,4 +1,4 @@
-import 'package:pfe_gmao/features/profile_management/model/profile_model.dart';
+import '../model/profile_model.dart';
 
 class ProfileController {
   final ProfileModel _profileModel = ProfileModel();

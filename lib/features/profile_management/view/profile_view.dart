@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:pfe_gmao/features/profile_management/view/alerts/email_update_alert.dart';
-import 'package:pfe_gmao/features/profile_management/view/profile_picture_bottom_sheet/profile_picture_bottom_sheet.dart';
 
 import '../../../firebase/firebase_references.dart';
 import '../../../firebase/firebase_services.dart';
 import '../model/user.dart';
+import 'alerts/email_update_alert.dart';
 import 'alerts/phone_number_update_alert.dart';
 import 'alerts/username_update_alert.dart';
+import 'profile_picture_bottom_sheet/profile_picture_bottom_sheet.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
