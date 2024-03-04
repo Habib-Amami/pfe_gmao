@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:pfe_gmao/menu%20screens/settings.dart';
-import 'menu screens/calender_screen.dart';
-import 'menu screens/equipment_screen.dart';
-import 'menu screens/notification_screen.dart';
-import 'menu screens/profile_screen.dart';
-import 'menu screens/work_order_screen.dart';
 import 'package:ionicons/ionicons.dart';
+
+import 'features/profile_management/view/profile_view.dart';
+import 'menu_screens/calender_screen.dart';
+import 'menu_screens/equipment_screen.dart';
+import 'menu_screens/notification_screen.dart';
+import 'menu_screens/settings.dart';
+import 'menu_screens/work_order_screen.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});

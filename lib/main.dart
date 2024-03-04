@@ -1,14 +1,15 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'features/authentication/login/view/login_view.dart';
-import 'firebase_options.dart';
-import 'firebase_services.dart';
+import 'firebase/firebase_options.dart';
+import 'firebase/firebase_services.dart';
 import 'home.dart';
 import 'theme/theme.dart';
 
@@ -16,6 +17,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseFirestore.instance.settings = const Settings(
+    persistenceEnabled: true,
   );
   await Hive.initFlutter();
   const FlutterSecureStorage secureStorage = FlutterSecureStorage();
