@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:pfe_gmao/home.dart';
-import 'package:pfe_gmao/menu%20screens/notification_screen.dart';
-import 'package:pfe_gmao/menu%20screens/profile_screen.dart';
+
+import '../features/profile_management/view/profile_view.dart';
+import '../home.dart';
+import 'notification_screen.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});

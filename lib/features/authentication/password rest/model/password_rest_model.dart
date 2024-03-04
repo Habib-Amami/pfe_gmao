@@ -1,4 +1,4 @@
-import '../../../../firebase_services.dart';
+import '../../../../firebase/firebase_services.dart';
 
 class PasswordRestModel {
   Future<void> passwordRest({required String email}) async {
