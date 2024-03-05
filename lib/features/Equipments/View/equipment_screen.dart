@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:pfe_gmao/features/Equipments/View/add_equipment_page.dart';
 import 'package:pfe_gmao/features/Equipments/model/equipment.dart';
 import 'package:pfe_gmao/features/Equipments/services/db_service.dart';
 
@@ -18,20 +19,28 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
   final TextEditingController descriptionTextEditingController =
       TextEditingController();
   final TextEditingController areaEditingController = TextEditingController();
+  //final TextEditingController disciplineEditingController =TextEditingController();
+  //final TextEditingController workshopEditingController =TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.library_add),
-        onPressed: _displayTextInputDialog,
+        onPressed: () {
+          //_displayTextInputDialog();
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const AddEquipmentPage()));
+        },
       ),
       body: SafeArea(
         child: Column(
           children: [
             SizedBox(
               width: MediaQuery.sizeOf(context).width,
-              height: MediaQuery.sizeOf(context).height * 0.40,
+              height: MediaQuery.sizeOf(context).height * 0.7462,
               child: StreamBuilder(
                 builder: (context, snapshot) {
                   List equipments = snapshot.data?.docs ?? [];
@@ -64,10 +73,17 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                             ],
                           ),
                           child: ExpansionTile(
-                            // leading: CircleAvatar(
-                            //   radius: 30,
-                            //   backgroundImage: NetworkImage(equipment.Photo),
-                            // ),
+                            leading: equipment.Photo == ''
+                                ? const CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage: NetworkImage(
+                                        'https://firebasestorage.googleapis.com/v0/b/pfe-gmao-11445214.appspot.com/o/default%20picture.jpg?alt=media&token=c964483d-03dd-4ce2-982b-481d4fa22be2'),
+                                  )
+                                : CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage:
+                                        NetworkImage(equipment.Photo),
+                                  ),
                             title: Text(equipment.TagName),
                             subtitle: Text(equipment.Description),
                             children: <Widget>[
@@ -88,9 +104,9 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                                               // changing the status of the equipment
                                               Equipment updatedEquipment =
                                                   equipment.copyWith(
-                                                      Status: false,
-                                                      UpdatedOn:
-                                                          Timestamp.now());
+                                                Status: false,
+                                                UpdatedOn: Timestamp.now(),
+                                              );
                                               DatabaseService().updateEquipment(
                                                   idEquipment,
                                                   updatedEquipment);
@@ -106,9 +122,9 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                                             onPressed: () {
                                               Equipment updatedEquipment =
                                                   equipment.copyWith(
-                                                      Status: true,
-                                                      UpdatedOn:
-                                                          Timestamp.now());
+                                                Status: true,
+                                                UpdatedOn: Timestamp.now(),
+                                              );
                                               DatabaseService().updateEquipment(
                                                   idEquipment,
                                                   updatedEquipment);
@@ -135,57 +151,5 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
         ),
       ),
     );
-  }
-
-  void _displayTextInputDialog() async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("Add an equipment"),
-            content: Container(
-              height: 250,
-              child: Column(
-                children: [
-                  TextField(
-                    controller: tagNameTextEditingController,
-                    decoration: const InputDecoration(hintText: "TagName"),
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: descriptionTextEditingController,
-                    decoration: const InputDecoration(hintText: "Description"),
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: areaEditingController,
-                    decoration: const InputDecoration(hintText: "Area"),
-                  ),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              MaterialButton(
-                onPressed: () {
-                  Equipment equipment = Equipment(
-                      TagName: tagNameTextEditingController.text,
-                      Description: descriptionTextEditingController.text,
-                      Status: false,
-                      Area: areaEditingController.text,
-                      CreatedOn: Timestamp.now(),
-                      UpdatedOn: Timestamp.now());
-                  DatabaseService().addEquipment(equipment);
-                  Navigator.pop(context);
-                  tagNameTextEditingController.clear();
-                  descriptionTextEditingController.clear();
-                  areaEditingController.clear();
-                },
-                color: Theme.of(context).colorScheme.primary,
-                textColor: Colors.white,
-                child: const Text("OK"),
-              )
-            ],
-          );
-        });
   }
 }
