@@ -1,7 +1,9 @@
 {
     "cSpell.words": [
+        "autocorrect",
         "gmao",
         "Ionicons",
         "Roboto"
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
 }
