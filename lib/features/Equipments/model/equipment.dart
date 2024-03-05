@@ -7,7 +7,9 @@ class Equipment {
   String Area;
   Timestamp CreatedOn;
   Timestamp UpdatedOn;
-  //String Photo;
+  String Discipline;
+  String Workshop;
+  String Photo;
 
   Equipment({
     required this.TagName,
@@ -16,7 +18,9 @@ class Equipment {
     required this.Area,
     required this.CreatedOn,
     required this.UpdatedOn,
-    //required this.Photo,
+    required this.Discipline,
+    required this.Workshop,
+    required this.Photo,
   });
 
   Equipment.fromJSON(Map<String, dynamic> json)
@@ -27,7 +31,9 @@ class Equipment {
           Area: json['Area']! as String,
           CreatedOn: json["CreatedOn"]! as Timestamp,
           UpdatedOn: json["UpdatedOn"]! as Timestamp,
-          //Photo: json['Photo'] as String,
+          Discipline: json["Discipline"]! as String,
+          Workshop: json["Workshop"]! as String,
+          Photo: json['Photo'] as String,
         );
 
   Equipment copyWith({
@@ -37,7 +43,9 @@ class Equipment {
     String? Area,
     Timestamp? CreatedOn,
     Timestamp? UpdatedOn,
-    //String? Photo,
+    String? Discipline,
+    String? Workshop,
+    String? Photo,
   }) {
     return Equipment(
       TagName: TagName ?? this.TagName,
@@ -46,7 +54,9 @@ class Equipment {
       Area: Area ?? this.Area,
       CreatedOn: CreatedOn ?? this.CreatedOn,
       UpdatedOn: UpdatedOn ?? this.UpdatedOn,
-      //Photo: Photo ?? this.Photo,
+      Discipline: Discipline ?? this.Discipline,
+      Workshop: Workshop ?? this.Workshop,
+      Photo: Photo ?? this.Photo,
     );
   }
 
@@ -58,7 +68,9 @@ class Equipment {
       'Status': Status,
       'CreatedOn': CreatedOn,
       'UpdatedOn': UpdatedOn,
-      //'Photo': Photo,
+      'Discipline': Discipline,
+      'WorkShop': Workshop,
+      'Photo': Photo,
     };
   }
 }
