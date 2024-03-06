@@ -41,8 +41,12 @@ class ProfileController {
   }
 
   Future<void> updatePassword({required String newPassword}) async {
-    await _profileModel.updatePassword(
-      newPassword: newPassword,
-    );
+    try {
+      await _profileModel.updatePassword(
+        newPassword: newPassword,
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
 }
