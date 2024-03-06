@@ -1,11 +1,11 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pfe_gmao/features/profile_management/model/profile_model.dart';
+
+import '../../model/profile_model.dart';
 
 class ProfilePictureBottomsheet extends StatefulWidget {
   final String profileImageURL;
