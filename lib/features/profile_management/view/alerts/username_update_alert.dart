@@ -10,29 +10,33 @@ class UsernameUpdateAlert extends StatefulWidget {
 }
 
 class _AlertState extends State<UsernameUpdateAlert> {
+  // Create an instance of the ProfileController for managing profile-related actions
   final ProfileController _profileController = ProfileController();
-  // Form key for managing the state of the login form
+
+  // Form key for managing the state of the username update form
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
-  // Variables to manage the visibility of the password
+  // Variable to manage the visibility of the password
   bool _isObscure = true;
 
-  // Variables to store user email and password inputs
+  // Variables to store user's new username and password
   String _username = "";
   String _password = "";
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      // Adjust the padding, content alignment, and size of the alert dialog
       buttonPadding: const EdgeInsets.all(16),
-      icon: const Icon(
-        Icons.update,
-      ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       titlePadding: const EdgeInsets.symmetric(vertical: 16),
       scrollable: false,
       semanticLabel: "alert dialog for updating the username",
       elevation: 24,
+      // Set the icon and title of the alert dialog
+      icon: const Icon(
+        Icons.update,
+      ),
       title: Text(
         "Username Update",
         style: Theme.of(context).textTheme.headlineMedium!.copyWith(
@@ -41,6 +45,7 @@ class _AlertState extends State<UsernameUpdateAlert> {
             ),
         textAlign: TextAlign.center,
       ),
+      // Set the content of the alert dialog with a form for new username and password input
       content: SizedBox(
         width: MediaQuery.sizeOf(context).width / 4 * 3,
         height: MediaQuery.sizeOf(context).height / 3,
@@ -50,6 +55,7 @@ class _AlertState extends State<UsernameUpdateAlert> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // TextFormField for entering the new username
               Padding(
                 padding: const EdgeInsets.only(top: 16, bottom: 48),
                 child: TextFormField(
@@ -61,19 +67,19 @@ class _AlertState extends State<UsernameUpdateAlert> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "please provide your new username";
+                      return "Please provide your new username";
                     }
                     return null;
                   },
                   onSaved: (newUsername) => _username = newUsername!.trim(),
                 ),
               ),
+              // TextFormField for entering the password
               TextFormField(
                 decoration: InputDecoration(
                   hintText: "Your password",
                   prefixIcon: const Icon(Icons.lock_outline),
                   suffixIcon: IconButton(
-                    // Toggle visibility of the password with an icon button
                     onPressed: () {
                       setState(() {
                         _isObscure = !_isObscure;
@@ -87,11 +93,11 @@ class _AlertState extends State<UsernameUpdateAlert> {
                 obscureText: _isObscure,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "please provide your password";
+                    return "Please provide your password";
                   }
                   // Check if the password is at least 6 characters long
                   if (value.length < 6) {
-                    return "the password  must be at least 6 characters in length";
+                    return "The password must be at least 6 characters in length";
                   }
                   return null;
                 },
@@ -101,26 +107,33 @@ class _AlertState extends State<UsernameUpdateAlert> {
           ),
         ),
       ),
+      // Set the actions (buttons) for the alert dialog
       actions: [
+        // Cancel button
         ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
           },
           child: const Text("Cancel"),
         ),
+        // Submit button for updating the username
         FilledButton(
           onPressed: () async {
             if (_formkey.currentState!.validate()) {
               _formkey.currentState!.save();
+              // Verify the entered password
               bool isVerified = await _profileController.verifyPassword(
                 entredPassword: _password,
               );
               if (isVerified) {
                 try {
+                  // Update the username
                   await _profileController.updateUserName(
-                      newUserName: _username);
+                    newUserName: _username,
+                  );
                 } catch (e) {
                   if (context.mounted) {
+                    // Display an error message as a snackbar for username update failure
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text("Error: Unable to update username"),
@@ -131,6 +144,7 @@ class _AlertState extends State<UsernameUpdateAlert> {
 
                 if (context.mounted) {
                   Navigator.pop(context);
+                  // Display a success message as a snackbar
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text("Username updated successfully"),
@@ -140,6 +154,7 @@ class _AlertState extends State<UsernameUpdateAlert> {
               } else {
                 if (context.mounted) {
                   Navigator.pop(context);
+                  // Display an error message as a snackbar for wrong password
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text("Wrong password"),
