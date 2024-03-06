@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../controller/profile_controller.dart';
@@ -134,9 +135,22 @@ class _AlertState extends State<PasswordUpdateAlert> {
                 entredPassword: _password,
               );
               if (isVerified) {
-                await _profileController.updatePassword(
-                  newPassword: _updatedPassword,
-                );
+                try {
+                  await _profileController.updatePassword(
+                    newPassword: _updatedPassword,
+                  );
+                } on FirebaseAuthMultiFactorException catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          e.message!,
+                        ),
+                      ),
+                    );
+                  }
+                }
+
                 if (context.mounted) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
