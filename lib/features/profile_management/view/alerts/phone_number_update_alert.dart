@@ -115,8 +115,20 @@ class _AlertState extends State<PhoneNumberUpdateAlert> {
                 entredPassword: _password,
               );
               if (isVerified) {
-                await _profileController.updatePhoneNumber(
-                    newPhoneNumber: _phoneNumber);
+                try {
+                  await _profileController.updatePhoneNumber(
+                    newPhoneNumber: _phoneNumber,
+                  );
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Error: Unable to update phone number"),
+                      ),
+                    );
+                  }
+                }
+
                 if (context.mounted) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
