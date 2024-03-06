@@ -108,7 +108,7 @@ class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
+                  FilledButton.tonal(
                     style: const ButtonStyle(
                         elevation: MaterialStatePropertyAll(2)),
                     onPressed: () async {
@@ -127,7 +127,7 @@ class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
                   const SizedBox(
                     width: 20,
                   ),
-                  ElevatedButton(
+                  FilledButton.tonal(
                     style: const ButtonStyle(
                         elevation: MaterialStatePropertyAll(2)),
                     onPressed: () async {
@@ -147,7 +147,7 @@ class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
               ),
             ),
             SizedBox(
-              width: 200,
+              width: 220,
               child: FilledButton(
                 onPressed: () async {
                   if (imageFile != null) {
