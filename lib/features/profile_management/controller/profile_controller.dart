@@ -15,7 +15,11 @@ class ProfileController {
   }
 
   Future<void> updateUserName({required String newUserName}) async {
-    await _profileModel.updateUserName(newUserName: newUserName);
+    try {
+      await _profileModel.updateUserName(newUserName: newUserName);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<void> updatePhoneNumber({required String newPhoneNumber}) async {
