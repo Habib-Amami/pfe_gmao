@@ -116,7 +116,19 @@ class _AlertState extends State<UsernameUpdateAlert> {
                 entredPassword: _password,
               );
               if (isVerified) {
-                await _profileController.updateUserName(newUserName: _username);
+                try {
+                  await _profileController.updateUserName(
+                      newUserName: _username);
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Error: Unable to update username"),
+                      ),
+                    );
+                  }
+                }
+
                 if (context.mounted) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
