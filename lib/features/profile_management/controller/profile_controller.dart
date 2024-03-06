@@ -5,7 +5,7 @@ class ProfileController {
 
   Future<bool> verifyPassword({required String entredPassword}) async {
     try {
-      await _profileModel.reauthenticateWithNewPassword(
+      await _profileModel.reauthenticateWithPassword(
         password: entredPassword,
       );
       return true;
@@ -22,11 +22,19 @@ class ProfileController {
     await _profileModel.updatePhoneNumber(newPhoneNumber: newPhoneNumber);
   }
 
-  Future<void> updateEmail(
-      {required String newEmail, required String password}) async {
+  Future<void> updateEmail({
+    required String newEmail,
+    required String password,
+  }) async {
     await _profileModel.updateEmail(
       newEmail: newEmail,
       password: password,
+    );
+  }
+
+  Future<void> updatePassword({required String newPassword}) async {
+    await _profileModel.updatePassword(
+      newPassword: newPassword,
     );
   }
 }
