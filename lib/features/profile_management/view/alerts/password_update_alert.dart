@@ -11,29 +11,33 @@ class PasswordUpdateAlert extends StatefulWidget {
 }
 
 class _AlertState extends State<PasswordUpdateAlert> {
+  // Create an instance of the ProfileController for managing profile-related actions
   final ProfileController _profileController = ProfileController();
-  // Form key for managing the state of the login form
+
+  // Form key for managing the state of the password update form
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
-  // Variables to manage the visibility of the password
+  // Variable to manage the visibility of the password
   bool _isObscure = true;
 
-  // Variables to store user email and password inputs
+  // Variables to store user's updated and old passwords
   String _updatedPassword = "";
   String _password = "";
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      // Adjust the padding, content alignment, and size of the alert dialog
       buttonPadding: const EdgeInsets.all(16),
-      icon: const Icon(
-        Icons.update,
-      ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       titlePadding: const EdgeInsets.symmetric(vertical: 16),
       scrollable: false,
       semanticLabel: "alert dialog for updating the password",
       elevation: 24,
+      // Set the icon and title of the alert dialog
+      icon: const Icon(
+        Icons.update,
+      ),
       title: Text(
         "Password Update",
         style: Theme.of(context).textTheme.headlineSmall!.copyWith(
@@ -42,6 +46,7 @@ class _AlertState extends State<PasswordUpdateAlert> {
             ),
         textAlign: TextAlign.center,
       ),
+      // Set the content of the alert dialog with a form for updated and old password input
       content: SizedBox(
         width: MediaQuery.sizeOf(context).width / 4 * 3,
         height: MediaQuery.sizeOf(context).height / 3,
@@ -51,6 +56,7 @@ class _AlertState extends State<PasswordUpdateAlert> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // TextFormField for entering the new password
               Padding(
                 padding: const EdgeInsets.only(top: 16, bottom: 48),
                 child: TextFormField(
@@ -60,7 +66,6 @@ class _AlertState extends State<PasswordUpdateAlert> {
                     hintText: "Your new password",
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
-                      // Toggle visibility of the password with an icon button
                       onPressed: () {
                         setState(() {
                           _isObscure = !_isObscure;
@@ -74,11 +79,11 @@ class _AlertState extends State<PasswordUpdateAlert> {
                   obscureText: _isObscure,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "please provide your new password";
+                      return "Please provide your new password";
                     }
                     // Check if the password is at least 6 characters long
                     if (value.length < 6) {
-                      return "the password  must be at least 6 characters in length";
+                      return "The password must be at least 6 characters in length";
                     }
                     return null;
                   },
@@ -86,13 +91,13 @@ class _AlertState extends State<PasswordUpdateAlert> {
                       _updatedPassword = newPassword!.trim(),
                 ),
               ),
+              // TextFormField for entering the old password
               TextFormField(
                 decoration: InputDecoration(
-                  helperText: "Enter your oldpassword here for confirmation",
+                  helperText: "Enter your old password here for confirmation",
                   hintText: "Your old password",
                   prefixIcon: const Icon(Icons.lock_outline),
                   suffixIcon: IconButton(
-                    // Toggle visibility of the password with an icon button
                     onPressed: () {
                       setState(() {
                         _isObscure = !_isObscure;
@@ -106,11 +111,11 @@ class _AlertState extends State<PasswordUpdateAlert> {
                 obscureText: _isObscure,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "please provide your old password";
+                    return "Please provide your old password";
                   }
                   // Check if the password is at least 6 characters long
                   if (value.length < 6) {
-                    return "the password  must be at least 6 characters in length";
+                    return "The password must be at least 6 characters in length";
                   }
                   return null;
                 },
@@ -120,27 +125,33 @@ class _AlertState extends State<PasswordUpdateAlert> {
           ),
         ),
       ),
+      // Set the actions (buttons) for the alert dialog
       actions: [
+        // Cancel button
         ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
           },
           child: const Text("Cancel"),
         ),
+        // Submit button for updating the password
         FilledButton(
           onPressed: () async {
             if (_formkey.currentState!.validate()) {
               _formkey.currentState!.save();
+              // Verify the entered old password
               bool isVerified = await _profileController.verifyPassword(
                 entredPassword: _password,
               );
               if (isVerified) {
                 try {
+                  // Update the password
                   await _profileController.updatePassword(
                     newPassword: _updatedPassword,
                   );
                 } on FirebaseAuthMultiFactorException catch (e) {
                   if (context.mounted) {
+                    // Display an error message as a snackbar for multi-factor authentication
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
@@ -153,6 +164,7 @@ class _AlertState extends State<PasswordUpdateAlert> {
 
                 if (context.mounted) {
                   Navigator.pop(context);
+                  // Display a success message as a snackbar
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text(
@@ -164,6 +176,7 @@ class _AlertState extends State<PasswordUpdateAlert> {
               } else {
                 if (context.mounted) {
                   Navigator.pop(context);
+                  // Display an error message as a snackbar for wrong old password
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text("Wrong password"),
