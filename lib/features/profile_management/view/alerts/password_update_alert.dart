@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../controller/profile_controller.dart';
-import '../../model/profile_model.dart';
 
 class PasswordUpdateAlert extends StatefulWidget {
   const PasswordUpdateAlert({super.key});
