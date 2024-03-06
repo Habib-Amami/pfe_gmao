@@ -10,8 +10,10 @@ class EmailUpdateAlert extends StatefulWidget {
 }
 
 class _AlertState extends State<EmailUpdateAlert> {
+  // Create an instance of the ProfileController for managing profile-related actions
   final ProfileController _profileController = ProfileController();
-  // Form key for managing the state of the login form
+
+  // Form key for managing the state of the email update form
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   // Variables to manage the visibility of the password
@@ -24,6 +26,7 @@ class _AlertState extends State<EmailUpdateAlert> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      // Adjust the padding, content alignment, and size of the alert dialog
       buttonPadding: const EdgeInsets.all(16),
       icon: const Icon(
         Icons.update,
@@ -33,6 +36,7 @@ class _AlertState extends State<EmailUpdateAlert> {
       scrollable: false,
       semanticLabel: "alert dialog for updating the email",
       elevation: 24,
+      // Set the title of the alert dialog
       title: Text(
         "Email Update",
         style: Theme.of(context).textTheme.headlineSmall!.copyWith(
@@ -41,6 +45,7 @@ class _AlertState extends State<EmailUpdateAlert> {
             ),
         textAlign: TextAlign.center,
       ),
+      // Set the content of the alert dialog with a form for email and password input
       content: SizedBox(
         width: MediaQuery.sizeOf(context).width / 4 * 3,
         height: MediaQuery.sizeOf(context).height / 3,
@@ -50,6 +55,7 @@ class _AlertState extends State<EmailUpdateAlert> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // TextFormField for entering the new email
               Padding(
                 padding: const EdgeInsets.only(top: 16, bottom: 48),
                 child: TextFormField(
@@ -68,6 +74,7 @@ class _AlertState extends State<EmailUpdateAlert> {
                   onSaved: (newEmail) => _email = newEmail!.trim(),
                 ),
               ),
+              // TextFormField for entering the password for confirmation
               TextFormField(
                 decoration: InputDecoration(
                   hintText: "Your password",
@@ -80,8 +87,12 @@ class _AlertState extends State<EmailUpdateAlert> {
                       });
                     },
                     icon: _isObscure
-                        ? const Icon(Icons.visibility_outlined)
-                        : const Icon(Icons.visibility_off_outlined),
+                        ? const Icon(
+                            Icons.visibility_outlined,
+                          )
+                        : const Icon(
+                            Icons.visibility_off_outlined,
+                          ),
                   ),
                 ),
                 obscureText: _isObscure,
@@ -101,13 +112,20 @@ class _AlertState extends State<EmailUpdateAlert> {
           ),
         ),
       ),
+      // Set the actions (buttons) for the alert dialog
       actions: [
+        // Cancel button
         ElevatedButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(
+              context,
+            );
           },
-          child: const Text("Cancel"),
+          child: const Text(
+            "Cancel",
+          ),
         ),
+        // Submit button for updating the email
         FilledButton(
           onPressed: () async {
             if (_formkey.currentState!.validate()) {
@@ -120,27 +138,35 @@ class _AlertState extends State<EmailUpdateAlert> {
                   newEmail: _email,
                   password: _password,
                 );
+                // Display a success message as a snackbar
                 if (context.mounted) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text("Email updated successfully"),
+                      content: Text(
+                        "Email updated successfully",
+                      ),
                     ),
                   );
                 }
               } else {
+                // Display an error message as a snackbar for wrong password
                 if (context.mounted) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text("Wrong password"),
+                      content: Text(
+                        "Wrong password",
+                      ),
                     ),
                   );
                 }
               }
             }
           },
-          child: const Text("Submit"),
+          child: const Text(
+            "Submit",
+          ),
         ),
       ],
     );
