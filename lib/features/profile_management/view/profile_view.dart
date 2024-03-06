@@ -26,24 +26,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
         automaticallyImplyLeading: true,
       ),
       body: SingleChildScrollView(
+        // StreamBuilder to listen for changes in user data
         child: StreamBuilder(
           stream: FirebaseService.instance.firestoreInstance
               .collection(userCollectionRef)
               .doc(FirebaseService.instance.authInstance.currentUser!.uid)
               .snapshots(),
           builder: (context, snapshot) {
+            // Check for errors in the stream
             if (snapshot.hasError) {
               return Text('Error = ${snapshot.error}');
             }
-
+            // Check if data is available in the stream
             if (snapshot.hasData) {
+              // Create UserModel instance from snapshot data
               UserModel currendtUser =
                   UserModel.fromFirestore(snapshot.data!, null);
-
+              // UI layout for the profile screen
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
+                    // Display user's profile picture
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: CircleAvatar(
@@ -77,10 +81,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
+                    // Divider for visual separation
                     const Divider(
                       endIndent: 16,
                       indent: 16,
                     ),
+                    // Section for Profile Information
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         vertical: 8,
@@ -99,6 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
+                    // Slidable widget for editable username
                     Slidable(
                       startActionPane: ActionPane(
                         extentRatio: 0.25,
@@ -143,6 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
+                    // Slidable widget for editable email
                     Slidable(
                       startActionPane: ActionPane(
                         extentRatio: 0.2,
@@ -194,6 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
+                    // Button to update password
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: ElevatedButton(
@@ -209,10 +218,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: const Text("Update Password"),
                       ),
                     ),
+                    // Divider for visual separation
                     const Divider(
                       endIndent: 16,
                       indent: 16,
                     ),
+                    // Section for Personal Information
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         vertical: 8,
@@ -231,6 +242,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
+                    // Slidable widget for editable phone number
                     Slidable(
                       startActionPane: ActionPane(
                         extentRatio: 0.25,
@@ -275,6 +287,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
+                    // Display Serial Number
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       child: Row(
@@ -290,6 +303,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
                     ),
+                    // Display user's role
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       child: Row(
@@ -305,6 +319,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
                     ),
+                    // Buttons to edit profile and log out
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       child: Row(
@@ -344,7 +359,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               );
             }
-            return const Center(child: CircularProgressIndicator());
+            // Show loading indicator while data is being fetched
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           },
         ),
       ),
