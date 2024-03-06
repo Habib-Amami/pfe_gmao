@@ -13,12 +13,7 @@ class ProfileModel {
         toFirestore: (UserModel user, _) => user.toFirestore(),
       );
 
-  // Future<User?> getProfileInfo() async {
-  //   final docSnap = await _usersCollection.get();
-  //   final userInfo = docSnap.data();
-  //   return userInfo;
-  // }
-  Future<void> reauthenticateWithNewPassword({required String password}) async {
+  Future<void> reauthenticateWithPassword({required String password}) async {
     User user = FirebaseService.instance.authInstance.currentUser!;
     AuthCredential credential = EmailAuthProvider.credential(
       email: user.email!,
@@ -38,7 +33,7 @@ class ProfileModel {
 
   Future<void> updateEmail(
       {required String newEmail, required String password}) async {
-    await reauthenticateWithNewPassword(password: password);
+    await reauthenticateWithPassword(password: password);
     await FirebaseService.instance.authInstance.currentUser!
         .verifyBeforeUpdateEmail(
           newEmail,
@@ -60,6 +55,14 @@ class ProfileModel {
     await _usersCollection.update(
       {
         "phoneNumber": newPhoneNumber,
+      },
+    );
+  }
+
+  Future<void> updatePhotoURL({required String newPhotoURL}) async {
+    await _usersCollection.update(
+      {
+        "photoURL": newPhotoURL,
       },
     );
   }
