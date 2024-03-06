@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// Enum to represent user roles
 enum Roles {
   // ignore: constant_identifier_names
   Engineer,
@@ -7,12 +8,14 @@ enum Roles {
   Administrator,
 }
 
+// Extension to convert enum values to a short string
 extension RolesToString on Roles {
   String toShortString() {
     return toString().split('.').last;
   }
 }
 
+// Model class representing a user
 class UserModel {
   String userName;
   String email;
@@ -22,6 +25,7 @@ class UserModel {
   Timestamp updatedAt;
   String serialNumber;
 
+  // Constructor for creating a UserModel instance
   UserModel({
     required this.userName,
     required this.email,
@@ -32,6 +36,7 @@ class UserModel {
     required this.serialNumber,
   });
 
+  // Factory method to create a UserModel instance from Firestore data
   factory UserModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
@@ -48,6 +53,7 @@ class UserModel {
     );
   }
 
+  // Helper method to convert role string to Roles enum
   static Roles _parseRole(String roleString) {
     switch (roleString) {
       case 'Engineer':
@@ -60,6 +66,7 @@ class UserModel {
     }
   }
 
+  // Method to create a copy of the UserModel with specified changes
   UserModel copyWith({
     String? id,
     String? userName,
@@ -82,6 +89,7 @@ class UserModel {
     );
   }
 
+  // Method to convert UserModel to a map for Firestore
   Map<String, dynamic> toFirestore() {
     return {
       'userName': userName,
