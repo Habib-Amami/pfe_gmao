@@ -25,7 +25,7 @@ class ProfileModel {
   }
 
   Future<void> updateUserName({required String newUserName}) async {
-    _usersCollection.update({"userName": newUserName});
+    _usersCollection.update({usernameFieldRef: newUserName});
     await FirebaseService.instance.authInstance.currentUser!.updateDisplayName(
       newUserName,
     );
@@ -40,7 +40,7 @@ class ProfileModel {
         )
         .then(
           (_) => _usersCollection.update(
-            {"email": newEmail},
+            {emailFieldRef: newEmail},
           ),
         );
   }
@@ -54,7 +54,7 @@ class ProfileModel {
   Future<void> updatePhoneNumber({required String newPhoneNumber}) async {
     await _usersCollection.update(
       {
-        "phoneNumber": newPhoneNumber,
+        phoneNumberFieldRef: newPhoneNumber,
       },
     );
   }
@@ -62,7 +62,7 @@ class ProfileModel {
   Future<void> updatePhotoURL({required String newPhotoURL}) async {
     await _usersCollection.update(
       {
-        "photoURL": newPhotoURL,
+        photoURLFieldRef: newPhotoURL,
       },
     );
   }
