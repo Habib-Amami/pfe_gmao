@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../../firebase/firebase_references.dart';
+import '../../../firebase/cloud_firestore_references.dart';
 import '../../../firebase/firebase_services.dart';
 import 'user.dart';
 

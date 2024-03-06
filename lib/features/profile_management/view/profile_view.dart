@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:pfe_gmao/features/profile_management/view/alerts/password_update_alert.dart';
 
-import '../../../firebase/firebase_references.dart';
+import '../../../firebase/cloud_firestore_references.dart';
 import '../../../firebase/firebase_services.dart';
 import '../model/user.dart';
 import 'alerts/email_update_alert.dart';
