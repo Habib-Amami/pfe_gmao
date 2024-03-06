@@ -3,6 +3,7 @@ import '../model/profile_model.dart';
 class ProfileController {
   final ProfileModel _profileModel = ProfileModel();
 
+  // Verify the entered password for reauthentication
   Future<bool> verifyPassword({required String entredPassword}) async {
     try {
       await _profileModel.reauthenticateWithPassword(
@@ -14,6 +15,7 @@ class ProfileController {
     }
   }
 
+  // Update the user's username.
   Future<void> updateUserName({required String newUserName}) async {
     try {
       await _profileModel.updateUserName(newUserName: newUserName);
@@ -22,6 +24,7 @@ class ProfileController {
     }
   }
 
+  // Update the user's phone number
   Future<void> updatePhoneNumber({required String newPhoneNumber}) async {
     try {
       await _profileModel.updatePhoneNumber(newPhoneNumber: newPhoneNumber);
@@ -30,6 +33,7 @@ class ProfileController {
     }
   }
 
+  // Update the user's email
   Future<void> updateEmail({
     required String newEmail,
     required String password,
@@ -40,6 +44,7 @@ class ProfileController {
     );
   }
 
+  // Update the user's password
   Future<void> updatePassword({required String newPassword}) async {
     try {
       await _profileModel.updatePassword(
