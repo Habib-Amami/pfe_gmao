@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
+// Import the profile model for updating profile information
 import '../../model/profile_model.dart';
 
 class ProfilePictureBottomsheet extends StatefulWidget {
@@ -22,8 +23,11 @@ class ProfilePictureBottomsheet extends StatefulWidget {
 }
 
 class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
+  // Variable to store the selected image file
   File? imageFile;
 
+  // Method to pick an image from the gallery or camera using the ImagePicker package
+  //and crop it
   Future<CroppedFile?> pickImage({required ImageSource imageSource}) async {
     ImagePicker picker = ImagePicker();
     final XFile? pickedImage = await picker.pickImage(
@@ -32,8 +36,8 @@ class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
       imageQuality: 100,
     );
     if (pickedImage != null) {
+      // Crop the selected image using the ImageCropper package
       ImageCropper cropper = ImageCropper();
-
       CroppedFile? croppedFile = await cropper.cropImage(
         sourcePath: pickedImage.path,
         aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
@@ -49,21 +53,27 @@ class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
     return null;
   }
 
+  // Method to upload the selected profile picture to Firebase Storage and
+  //get it doawload URL
   Future<String> uploadProfilePicture({
     required String profilePictureRef,
     required File profilePicture,
   }) async {
+    // Get references to Firebase Storage
     Reference rootReference = FirebaseStorage.instance.ref();
     Reference profilePicturesDir =
         rootReference.child("users_profile_pictures");
     Reference imageToUploadRef = profilePicturesDir.child(profilePictureRef);
+    // Upload the profile picture file to Firebase Storage
     await imageToUploadRef.putFile(
       profilePicture,
       SettableMetadata(contentType: 'image/jpeg'),
     );
+    // Get the download URL of the uploaded image
     return await imageToUploadRef.getDownloadURL();
   }
 
+  // Build the UI for the ProfilePictureBottomsheet widget
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -74,6 +84,7 @@ class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Display the selected or current profile picture
             Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: imageFile != null
@@ -103,6 +114,7 @@ class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
               padding: EdgeInsets.only(bottom: 16),
               child: Text("Pick an image from :"),
             ),
+            // Buttons to choose an image from the gallery or camera
             Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Row(
@@ -146,11 +158,13 @@ class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
                 ],
               ),
             ),
+            // Button to save the selected image as the new profile picture
             SizedBox(
               width: 220,
               child: FilledButton(
                 onPressed: () async {
                   if (imageFile != null) {
+                    // Upload and update the new profile picture URL
                     String profileImageURL = await uploadProfilePicture(
                       profilePictureRef:
                           "${widget.serialNumber}_profile_picture",
@@ -165,6 +179,7 @@ class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
                   } else {
                     Navigator.pop(context);
                   }
+                  // Display a success message as a snackbar
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
