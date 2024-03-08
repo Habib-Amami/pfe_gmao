@@ -31,9 +31,7 @@ class ProfileModel {
     );
   }
 
-  Future<void> updateEmail(
-      {required String newEmail, required String password}) async {
-    await reauthenticateWithPassword(password: password);
+  Future<void> updateEmail({required String newEmail}) async {
     await FirebaseService.instance.authInstance.currentUser!
         .verifyBeforeUpdateEmail(
           newEmail,

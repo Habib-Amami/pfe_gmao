@@ -36,11 +36,9 @@ class ProfileController {
   // Update the user's email
   Future<void> updateEmail({
     required String newEmail,
-    required String password,
   }) async {
     await _profileModel.updateEmail(
       newEmail: newEmail,
-      password: password,
     );
   }
 

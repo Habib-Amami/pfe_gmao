@@ -136,7 +136,6 @@ class _AlertState extends State<EmailUpdateAlert> {
               if (isVerified) {
                 _profileController.updateEmail(
                   newEmail: _email,
-                  password: _password,
                 );
                 // Display a success message as a snackbar
                 if (context.mounted) {
