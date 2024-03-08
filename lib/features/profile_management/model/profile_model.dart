@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
@@ -25,10 +26,12 @@ class ProfileModel {
   }
 
   Future<void> updateUserName({required String newUserName}) async {
-    _usersCollection.update({usernameFieldRef: newUserName});
+    await _usersCollection.update({usernameFieldRef: newUserName});
     await FirebaseService.instance.authInstance.currentUser!.updateDisplayName(
       newUserName,
     );
+    await _usersCollection
+        .update({updateAtFieldRef: FieldValue.serverTimestamp()});
   }
 
   Future<void> updateEmail({required String newEmail}) async {
@@ -41,6 +44,8 @@ class ProfileModel {
             {emailFieldRef: newEmail},
           ),
         );
+    await _usersCollection
+        .update({updateAtFieldRef: FieldValue.serverTimestamp()});
   }
 
   Future<void> updatePassword({required String newPassword}) async {
@@ -55,6 +60,8 @@ class ProfileModel {
         phoneNumberFieldRef: newPhoneNumber,
       },
     );
+    await _usersCollection
+        .update({updateAtFieldRef: FieldValue.serverTimestamp()});
   }
 
   Future<void> updatePhotoURL({required String newPhotoURL}) async {
@@ -63,5 +70,7 @@ class ProfileModel {
         photoURLFieldRef: newPhotoURL,
       },
     );
+    await _usersCollection
+        .update({updateAtFieldRef: FieldValue.serverTimestamp()});
   }
 }
