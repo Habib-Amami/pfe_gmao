@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:pfe_gmao/features/profile_management/view/alerts/password_update_alert.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:pfe_gmao/features/profile_management/view/alerts/camera_permission_denied_alert.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../../../firebase/firebase_services.dart';
 import '../model/user.dart';
 import 'alerts/email_update_alert.dart';
+import 'alerts/password_update_alert.dart';
 import 'alerts/phone_number_update_alert.dart';
 import 'alerts/username_update_alert.dart';
 import 'profile_picture_bottom_sheet/profile_picture_bottom_sheet.dart';
@@ -65,16 +67,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         style: const ButtonStyle(
                           elevation: MaterialStatePropertyAll(2),
                         ),
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return ProfilePictureBottomsheet(
-                                profileImageURL: currendtUser.photoURL,
-                                serialNumber: currendtUser.serialNumber,
+                        onPressed: () async {
+                          await Permission.camera.onDeniedCallback(() {
+                            if (context.mounted) {
+                              showDialog(
+                                context: context,
+                                builder: (context) =>
+                                    const CameraPermissionDeniedAlert(),
                               );
-                            },
-                          );
+                            }
+                          }).onGrantedCallback(() {
+                            if (context.mounted) {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return ProfilePictureBottomsheet(
+                                    profileImageURL: currendtUser.photoURL,
+                                    serialNumber: currendtUser.serialNumber,
+                                  );
+                                },
+                              );
+                            }
+                          }).onPermanentlyDeniedCallback(() {
+                            if (context.mounted) {
+                              showDialog(
+                                context: context,
+                                builder: (context) =>
+                                    const CameraPermissionDeniedAlert(),
+                              );
+                            }
+                          }).request();
                         },
                         child: const Text(
                           "Change Profile Picture",
