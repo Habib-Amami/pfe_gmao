@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../../../firebase/firebase_services.dart';
@@ -62,6 +65,26 @@ class ProfileModel {
     );
     await _usersCollection
         .update({updateAtFieldRef: FieldValue.serverTimestamp()});
+  }
+
+  // Method to upload the selected profile picture to Firebase Storage and
+  //get it doawload URL
+  Future<String> uploadProfilePicture({
+    required String profilePictureRef,
+    required File profilePicture,
+  }) async {
+    // Get references to Firebase Storage
+    Reference rootReference = FirebaseStorage.instance.ref();
+    Reference profilePicturesDir =
+        rootReference.child("users_profile_pictures");
+    Reference imageToUploadRef = profilePicturesDir.child(profilePictureRef);
+    // Upload the profile picture file to Firebase Storage
+    await imageToUploadRef.putFile(
+      profilePicture,
+      SettableMetadata(contentType: 'image/jpeg'),
+    );
+    // Get the download URL of the uploaded image
+    return await imageToUploadRef.getDownloadURL();
   }
 
   Future<void> updatePhotoURL({required String newPhotoURL}) async {

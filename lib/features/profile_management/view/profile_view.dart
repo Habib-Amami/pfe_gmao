@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pfe_gmao/features/profile_management/view/alerts/camera_permission_denied_alert.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../../../firebase/firebase_services.dart';
 import '../model/user.dart';
+import 'alerts/camera_permission_denied_alert.dart';
 import 'alerts/email_update_alert.dart';
 import 'alerts/password_update_alert.dart';
 import 'alerts/phone_number_update_alert.dart';
