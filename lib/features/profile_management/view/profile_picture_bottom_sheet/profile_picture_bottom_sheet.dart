@@ -152,7 +152,7 @@ class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
                           "${widget.serialNumber}_profile_picture",
                       profilePicture: imageFile!,
                     );
-                    await ProfileModel().updatePhotoURL(
+                    await _profileController.updatePhotoURL(
                       newPhotoURL: profileImageURL,
                     );
                     if (context.mounted) {
