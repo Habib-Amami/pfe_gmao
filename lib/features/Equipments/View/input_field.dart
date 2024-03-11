@@ -2,13 +2,15 @@ import "package:flutter/material.dart";
 
 class MyInputField extends StatefulWidget {
   final String title;
-  final String hint;
-  final TextEditingController controller;
+  final String? hint;
+  final String? initialValue;
+  final TextEditingController? controller;
   const MyInputField(
       {super.key,
       required this.title,
-      required this.hint,
-      required this.controller});
+      this.hint,
+      this.controller,
+      this.initialValue});
 
   @override
   State<MyInputField> createState() => _MyInputFieldState();
@@ -34,6 +36,7 @@ class _MyInputFieldState extends State<MyInputField> {
                 border: Border.all(color: Colors.grey, width: 1.0),
                 borderRadius: BorderRadius.circular(12)),
             child: TextFormField(
+              initialValue: widget.initialValue,
               autocorrect: false,
               cursorColor: Theme.of(context).colorScheme.primary,
               controller: widget.controller,
