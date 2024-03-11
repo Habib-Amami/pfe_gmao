@@ -1,11 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:pfe_gmao/features/Equipments/View/input_field.dart';
-
-import '../model/equipment.dart';
-import '../services/db_service.dart';
 
 class AddEquipmentPage extends StatefulWidget {
   const AddEquipmentPage({super.key});
@@ -64,7 +59,12 @@ class _AddEquipmentPageState extends State<AddEquipmentPage> {
             children: [
               FilledButton(
                   onPressed: () async {
-                    return showDialog(
+                    if (tagNameTextEditingController.text.isNotEmpty &&
+                        descriptionTextEditingController.text.isNotEmpty &&
+                        areaEditingController.text.isNotEmpty &&
+                        disciplineEditingController.text.isNotEmpty &&
+                        workshopEditingController.text.isNotEmpty) {
+                      return showDialog(
                         context: context,
                         builder: (context) {
                           return AlertDialog(
@@ -97,7 +97,25 @@ class _AddEquipmentPageState extends State<AddEquipmentPage> {
                               ),
                             ],
                           );
-                        });
+                        },
+                      );
+                    } else {
+                      return showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text(
+                                "Error!",
+                              ),
+                              content: const Text('Please fill all the fields'),
+                              actions: [
+                                TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text("OK"))
+                              ],
+                            );
+                          });
+                    }
                   },
                   child: const Text("Create new equipment"))
             ],
