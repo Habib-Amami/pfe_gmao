@@ -22,7 +22,6 @@ class UserModel {
   String phoneNumber;
   String photoURL;
   Roles role;
-  Timestamp updatedAt;
   String serialNumber;
 
   // Constructor for creating a UserModel instance
@@ -32,7 +31,6 @@ class UserModel {
     required this.phoneNumber,
     required this.photoURL,
     required this.role,
-    required this.updatedAt,
     required this.serialNumber,
   });
 
@@ -47,7 +45,6 @@ class UserModel {
       email: data?['email'] as String,
       photoURL: data?['photoURL'] as String,
       role: _parseRole(data?['role']),
-      updatedAt: data?['updatedAt'] as Timestamp,
       phoneNumber: data?['phoneNumber'] as String,
       serialNumber: data?['serialNumber'] as String,
     );
@@ -67,27 +64,23 @@ class UserModel {
   }
 
   // Method to create a copy of the UserModel with specified changes
-  UserModel copyWith({
-    String? id,
-    String? userName,
-    String? email,
-    String? phoneNumber,
-    String? photoURL,
-    Roles? role,
-    Timestamp? createdAt,
-    Timestamp? updatedAt,
-    String? serialNumber,
-  }) {
-    return UserModel(
-      userName: userName ?? this.userName,
-      email: email ?? this.email,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      photoURL: photoURL ?? this.photoURL,
-      role: role ?? this.role,
-      updatedAt: updatedAt ?? this.updatedAt,
-      serialNumber: serialNumber ?? this.serialNumber,
-    );
-  }
+  // UserModel copyWith({
+  //   String? userName,
+  //   String? email,
+  //   String? phoneNumber,
+  //   String? photoURL,
+  //   Roles? role,
+  //   String? serialNumber,
+  // }) {
+  //   return UserModel(
+  //     userName: userName ?? this.userName,
+  //     email: email ?? this.email,
+  //     phoneNumber: phoneNumber ?? this.phoneNumber,
+  //     photoURL: photoURL ?? this.photoURL,
+  //     role: role ?? this.role,
+  //     serialNumber: serialNumber ?? this.serialNumber,
+  //   );
+  // }
 
   // Method to convert UserModel to a map for Firestore
   Map<String, dynamic> toFirestore() {
@@ -97,7 +90,6 @@ class UserModel {
       'phoneNumber': phoneNumber,
       'photoURL': photoURL,
       'role': role.toShortString(),
-      'updatedAt': updatedAt,
       'serialNumber': serialNumber,
     };
   }

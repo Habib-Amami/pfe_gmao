@@ -6,6 +6,7 @@ const String usernameFieldRef = "userName"; // User's username field
 const String emailFieldRef = "email"; // User's email field
 const String phoneNumberFieldRef = "phoneNumber"; // User's phone number field
 const String photoURLFieldRef = "photoURL"; // User's photo URL field
+const String updateAtFieldRef = "updatedAt"; // User's document update tim
 
 // Reference to the users collection in Firestore
 const String equipmentCollectionRef = "equipments";

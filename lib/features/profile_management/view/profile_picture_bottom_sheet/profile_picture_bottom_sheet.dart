@@ -1,12 +1,10 @@
 import 'dart:io';
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
-// Import the profile model for updating profile information
-import '../../model/profile_model.dart';
+import '../../controller/profile_controller.dart';
 
 class ProfilePictureBottomsheet extends StatefulWidget {
   final String profileImageURL;
@@ -23,6 +21,8 @@ class ProfilePictureBottomsheet extends StatefulWidget {
 }
 
 class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
+  // Create an instance of the ProfileController for managing profile-related actions
+  final ProfileController _profileController = ProfileController();
   // Variable to store the selected image file
   File? imageFile;
 
@@ -51,26 +51,6 @@ class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
       }
     }
     return null;
-  }
-
-  // Method to upload the selected profile picture to Firebase Storage and
-  //get it doawload URL
-  Future<String> uploadProfilePicture({
-    required String profilePictureRef,
-    required File profilePicture,
-  }) async {
-    // Get references to Firebase Storage
-    Reference rootReference = FirebaseStorage.instance.ref();
-    Reference profilePicturesDir =
-        rootReference.child("users_profile_pictures");
-    Reference imageToUploadRef = profilePicturesDir.child(profilePictureRef);
-    // Upload the profile picture file to Firebase Storage
-    await imageToUploadRef.putFile(
-      profilePicture,
-      SettableMetadata(contentType: 'image/jpeg'),
-    );
-    // Get the download URL of the uploaded image
-    return await imageToUploadRef.getDownloadURL();
   }
 
   // Build the UI for the ProfilePictureBottomsheet widget
@@ -165,12 +145,13 @@ class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
                 onPressed: () async {
                   if (imageFile != null) {
                     // Upload and update the new profile picture URL
-                    String profileImageURL = await uploadProfilePicture(
+                    String profileImageURL =
+                        await _profileController.uploadProfilePicture(
                       profilePictureRef:
                           "${widget.serialNumber}_profile_picture",
                       profilePicture: imageFile!,
                     );
-                    await ProfileModel().updatePhotoURL(
+                    await _profileController.updatePhotoURL(
                       newPhotoURL: profileImageURL,
                     );
                     if (context.mounted) {

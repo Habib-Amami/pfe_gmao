@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../model/profile_model.dart';
 
 class ProfileController {
@@ -36,11 +38,9 @@ class ProfileController {
   // Update the user's email
   Future<void> updateEmail({
     required String newEmail,
-    required String password,
   }) async {
     await _profileModel.updateEmail(
       newEmail: newEmail,
-      password: password,
     );
   }
 
@@ -53,5 +53,23 @@ class ProfileController {
     } catch (e) {
       rethrow;
     }
+  }
+
+  // Method to upload the selected profile picture to Firebase Storage and
+  //get it doawload URL
+  Future<String> uploadProfilePicture({
+    required String profilePictureRef,
+    required File profilePicture,
+  }) async {
+    return await _profileModel.uploadProfilePicture(
+      profilePictureRef: profilePictureRef,
+      profilePicture: profilePicture,
+    );
+  }
+
+  Future<void> updatePhotoURL({required String newPhotoURL}) async {
+    await _profileModel.updatePhotoURL(
+      newPhotoURL: newPhotoURL,
+    );
   }
 }
