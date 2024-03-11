@@ -64,23 +64,23 @@ class UserModel {
   }
 
   // Method to create a copy of the UserModel with specified changes
-  UserModel copyWith({
-    String? userName,
-    String? email,
-    String? phoneNumber,
-    String? photoURL,
-    Roles? role,
-    String? serialNumber,
-  }) {
-    return UserModel(
-      userName: userName ?? this.userName,
-      email: email ?? this.email,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      photoURL: photoURL ?? this.photoURL,
-      role: role ?? this.role,
-      serialNumber: serialNumber ?? this.serialNumber,
-    );
-  }
+  // UserModel copyWith({
+  //   String? userName,
+  //   String? email,
+  //   String? phoneNumber,
+  //   String? photoURL,
+  //   Roles? role,
+  //   String? serialNumber,
+  // }) {
+  //   return UserModel(
+  //     userName: userName ?? this.userName,
+  //     email: email ?? this.email,
+  //     phoneNumber: phoneNumber ?? this.phoneNumber,
+  //     photoURL: photoURL ?? this.photoURL,
+  //     role: role ?? this.role,
+  //     serialNumber: serialNumber ?? this.serialNumber,
+  //   );
+  // }
 
   // Method to convert UserModel to a map for Firestore
   Map<String, dynamic> toFirestore() {

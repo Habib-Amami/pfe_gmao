@@ -5,7 +5,6 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../controller/profile_controller.dart';
-import '../../model/profile_model.dart';
 
 class ProfilePictureBottomsheet extends StatefulWidget {
   final String profileImageURL;
