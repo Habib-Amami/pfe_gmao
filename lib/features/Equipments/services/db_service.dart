@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pfe_gmao/firebase/cloud_firestore_references.dart';
 
 import '../model/equipment.dart';
+import 'uid_generator.dart';
 
 const String Equipment_Collection_ref = "equipments";
 
@@ -22,9 +22,33 @@ class DatabaseService {
     return _equipmentsRef.snapshots();
   }
 
+// create method
+  // void createEquipments() {
+  //   FirebaseFirestore.instance.collection(Equipment_Collection_ref).add();
+  // }
+
   // Create method
-  void addEquipment(Equipment equipment) async {
-    _equipmentsRef.add(equipment);
+  void addEquipment(
+      {required String tagName,
+      required String docId,
+      required String desc,
+      required String area,
+      required String dis,
+      required String workshop}) async {
+    FirebaseFirestore.instance.collection("equipments").doc(docId).set({
+      'id': docId,
+      'TagName': tagName,
+      'Description': desc,
+      'Area': area,
+      'Status': false,
+      'Discipline': dis,
+      'Workshop': workshop,
+      'CreatedOn': Timestamp.now(),
+      'UpdatedOn': Timestamp.now(),
+      'Photo':
+          'https://firebasestorage.googleapis.com/v0/b/pfe-gmao-11445214.appspot.com/o/default%20picture.jpg?alt=media&token=c964483d-03dd-4ce2-982b-481d4fa22be2',
+    });
+    //_equipmentsRef.id;
   }
 
   // update method
