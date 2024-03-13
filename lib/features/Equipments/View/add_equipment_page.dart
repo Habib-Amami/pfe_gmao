@@ -594,6 +594,16 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                         },
                       ),
                     ),
+                    validator: (value) {
+                      //create a email validation
+                      if (value == null || value.isEmpty) {
+                        return "please provide a description";
+                      }
+                      return null;
+                    },
+                    onSaved: (newValue) {
+                      _description = newValue!.trim();
+                    },
                   ),
                 ),
                 // Button to create new equipment
