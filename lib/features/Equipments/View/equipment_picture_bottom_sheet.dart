@@ -1,13 +1,9 @@
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pfe_gmao/features/Equipments/services/db_service.dart';
-
-import '../model/equipment.dart';
 
 // Import the profile model for updating profile information
 
