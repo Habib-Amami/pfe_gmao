@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'equipment_picture_bottom_sheet.dart';
+
 import '../model/equipment.dart';
+import 'equipment_picture_bottom_sheet.dart';
 
 class EquipmentView extends StatefulWidget {
   //final String equipmentId;
