@@ -1,21 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../model/equipment.dart';
-import 'uid_generator.dart';
 
-const String Equipment_Collection_ref = "equipments";
+const String equipmentCollectionRef = "equipments";
 
 class DatabaseService {
   final _firestore = FirebaseFirestore.instance;
   late final CollectionReference _equipmentsRef;
   DatabaseService() {
-    _equipmentsRef = _firestore
-        .collection(Equipment_Collection_ref)
-        .withConverter<Equipment>(
-          fromFirestore: (snapshots, _) =>
-              Equipment.fromJSON(snapshots.data()!),
-          toFirestore: (equipment, _) => equipment.toJson(),
-        );
+    _equipmentsRef =
+        _firestore.collection(equipmentCollectionRef).withConverter<Equipment>(
+              fromFirestore: (snapshots, _) =>
+                  Equipment.fromJSON(snapshots.data()!),
+              toFirestore: (equipment, _) => equipment.toJson(),
+            );
   }
   // Get method
   Stream<QuerySnapshot> getEquipments() {

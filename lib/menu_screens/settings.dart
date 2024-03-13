@@ -56,7 +56,7 @@ class _SettingsState extends State<Setting> {
               ],
             ),
             const SizedBox(height: 20),
-            Container(
+            SizedBox(
               width: double.infinity,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,

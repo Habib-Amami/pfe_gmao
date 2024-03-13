@@ -1,11 +1,10 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:pfe_gmao/features/Equipments/View/equipment_picture_bottom_sheet.dart';
 import 'package:pfe_gmao/features/Equipments/model/equipment.dart';
 import 'package:pfe_gmao/features/Equipments/services/my_equipment_functions.dart';
+import '../model/equipment.dart';
+import 'equipment_picture_bottom_sheet.dart';
 
 class EquipmentView extends StatefulWidget {
   //final String equipmentId;
@@ -78,7 +77,7 @@ class _EquipmentViewState extends State<EquipmentView> {
                         return EquipmentPictureBottomSheet(
                           equipmentId: equipmentData['id'],
                           equipmentImageUrl: equipmentData['Photo'],
-                          TagName: equipmentData['TagName'],
+                          tagName: equipmentData['TagName'],
                         );
                       },
                     );

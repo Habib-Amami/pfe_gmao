@@ -3,19 +3,19 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pfe_gmao/features/Equipments/services/db_service.dart';
+import '../services/db_service.dart';
 
 // Import the profile model for updating profile information
 
 class EquipmentPictureBottomSheet extends StatefulWidget {
   final String equipmentId;
   final String equipmentImageUrl;
-  final String TagName;
+  final String tagName;
   const EquipmentPictureBottomSheet({
     super.key,
     required this.equipmentId,
     required this.equipmentImageUrl,
-    required this.TagName,
+    required this.tagName,
   });
 
   @override
@@ -166,7 +166,7 @@ class Download extends State<EquipmentPictureBottomSheet> {
                     // Upload and update the new profile picture URL
                     String equipmentImageURL = await uploadProfilePicture(
                       equipmentPictureRef:
-                          "${widget.TagName}_equipment_picture",
+                          "${widget.tagName}_equipment_picture",
                       equipmentPicture: imageFile!,
                     );
                     await DatabaseService().updateEquipmentPicture(

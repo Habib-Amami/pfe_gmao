@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class CameraPermissionDeniedAlert extends StatelessWidget {
-  const CameraPermissionDeniedAlert({super.key});
+class EquipmentCameraPermissionDeniedAlert extends StatelessWidget {
+  const EquipmentCameraPermissionDeniedAlert({super.key});
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text("Permissiondenied !"),
       content: const Text(
-        "you can't manage your profile picture, please change the camera permission from the settings",
+        "you can't add a equipment's picture, please change the camera permission from the settings",
       ),
       actions: [
         TextButton(
@@ -17,7 +17,9 @@ class CameraPermissionDeniedAlert extends StatelessWidget {
           child: const Text("cancel"),
         ),
         TextButton(
-          onPressed: () => openAppSettings(),
+          onPressed: () => openAppSettings().then(
+            (_) => Navigator.pop(context),
+          ),
           child: const Text(
             "Settings",
           ),

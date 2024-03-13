@@ -5,7 +5,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../firebase/cloud_firestore_references.dart';
 import '../../../firebase/firebase_services.dart';
 import '../model/user.dart';
-import 'alerts/camera_permission_denied_alert.dart';
+import 'alerts/profile_camera_permission_denied_alert.dart';
 import 'alerts/email_update_alert.dart';
 import 'alerts/password_update_alert.dart';
 import 'alerts/phone_number_update_alert.dart';
@@ -73,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               showDialog(
                                 context: context,
                                 builder: (context) =>
-                                    const CameraPermissionDeniedAlert(),
+                                    const ProfileCameraPermissionDeniedAlert(),
                               );
                             }
                           }).onGrantedCallback(() {
@@ -93,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               showDialog(
                                 context: context,
                                 builder: (context) =>
-                                    const CameraPermissionDeniedAlert(),
+                                    const ProfileCameraPermissionDeniedAlert(),
                               );
                             }
                           }).request();
