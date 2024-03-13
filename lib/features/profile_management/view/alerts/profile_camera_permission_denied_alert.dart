@@ -17,7 +17,9 @@ class ProfileCameraPermissionDeniedAlert extends StatelessWidget {
           child: const Text("cancel"),
         ),
         TextButton(
-          onPressed: () => openAppSettings(),
+          onPressed: () => openAppSettings().then(
+            (_) => Navigator.pop(context),
+          ),
           child: const Text(
             "Settings",
           ),
