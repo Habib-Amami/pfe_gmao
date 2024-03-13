@@ -5,9 +5,9 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pfe_gmao/features/Equipments/View/alerts/equipment_camera_permission_denied_alert.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
+import 'alerts/equipment_camera_permission_denied_alert.dart';
 
 // Define an enumeration for equipment priorities
 enum Priority {
@@ -219,7 +219,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                             }
                           }).onGrantedCallback(() async {
                             CroppedFile? pickedImge = await pickImage(
-                              imageSource: ImageSource.gallery,
+                              imageSource: ImageSource.camera,
                             );
                             if (pickedImge != null) {
                               selectedImageFile = File(pickedImge.path);

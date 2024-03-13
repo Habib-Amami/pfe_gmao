@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pfe_gmao/features/Equipments/View/add_equipment_page.dart';
+import 'package:pfe_gmao/features/Equipments/View/equipment_view.dart';
 import 'package:pfe_gmao/features/Equipments/model/equipment.dart';
 import 'package:pfe_gmao/features/Equipments/services/db_service.dart';
 
@@ -10,17 +11,10 @@ class EquipmentScreen extends StatefulWidget {
   const EquipmentScreen({super.key});
 
   @override
-  _EquipmentScreenState createState() => _EquipmentScreenState();
+  EquipmentScreenState createState() => EquipmentScreenState();
 }
 
-class _EquipmentScreenState extends State<EquipmentScreen> {
-  final TextEditingController tagNameTextEditingController =
-      TextEditingController();
-  final TextEditingController descriptionTextEditingController =
-      TextEditingController();
-  final TextEditingController areaEditingController = TextEditingController();
-  //final TextEditingController disciplineEditingController =TextEditingController();
-  //final TextEditingController workshopEditingController =TextEditingController();
+class EquipmentScreenState extends State<EquipmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +22,6 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.library_add),
         onPressed: () {
-          //_displayTextInputDialog();
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -73,6 +66,7 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                             ],
                           ),
                           child: ExpansionTile(
+                            title: Text(equipment.TagName),
                             leading: equipment.Photo == ''
                                 ? const CircleAvatar(
                                     radius: 30,
@@ -84,7 +78,6 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                                     backgroundImage:
                                         NetworkImage(equipment.Photo),
                                   ),
-                            title: Text(equipment.TagName),
                             subtitle: Text(equipment.Description),
                             children: <Widget>[
                               Padding(
@@ -135,7 +128,17 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                               ),
                               TextButton(
                                 child: const Text("More details"),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EquipmentView(
+                                        equipmentId: idEquipment,
+                                        equipment: equipment,
+                                      ),
+                                    ),
+                                  );
+                                },
                               )
                             ],
                           ),

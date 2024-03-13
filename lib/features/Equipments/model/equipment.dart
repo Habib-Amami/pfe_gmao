@@ -1,6 +1,9 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Equipment {
+  String id;
   String TagName;
   String Description;
   bool Status;
@@ -12,6 +15,7 @@ class Equipment {
   String Photo;
 
   Equipment({
+    required this.id,
     required this.TagName,
     required this.Description,
     required this.Status,
@@ -25,6 +29,7 @@ class Equipment {
 
   Equipment.fromJSON(Map<String, dynamic> json)
       : this(
+          id: json['id']! as String,
           TagName: json['TagName']! as String,
           Description: json['Description']! as String,
           Status: json['Status']! as bool,
@@ -48,6 +53,7 @@ class Equipment {
     String? Photo,
   }) {
     return Equipment(
+      id: id ?? this.id,
       TagName: TagName ?? this.TagName,
       Description: Description ?? this.Description,
       Status: Status ?? this.Status,
@@ -62,6 +68,7 @@ class Equipment {
 
   Map<String, Object> toJson() {
     return {
+      'id': id,
       'TagName': TagName,
       'Description': Description,
       'Area': Area,

@@ -12,3 +12,6 @@ const String updateAtFieldRef =
 //References to the default euipment picture
 const defaultEquipmentPicture =
     "https://firebasestorage.googleapis.com/v0/b/pfe-gmao-11445214.appspot.com/o/default%20picture.jpg?alt=media&token=c964483d-03dd-4ce2-982b-481d4fa22be2";
+
+// Reference to the users collection in Firestore
+const String equipmentCollectionRef = "equipments";
