@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class CameraPermissionDeniedAlert extends StatelessWidget {
-  const CameraPermissionDeniedAlert({super.key});
+class ProfileCameraPermissionDeniedAlert extends StatelessWidget {
+  const ProfileCameraPermissionDeniedAlert({super.key});
 
   @override
   Widget build(BuildContext context) {
