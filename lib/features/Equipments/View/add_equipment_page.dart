@@ -37,7 +37,7 @@ enum Status {
 }
 
 // Extension to convert enum values to strings
-extension StatusToString on Priority {
+extension StatusToString on Status {
   String statusToShortString() {
     return toString().split('.').last;
   }
@@ -546,7 +546,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                       onSelectionChanged: (Set<Status> newvalue) {
                         setState(() {
                           defaultStatus = newvalue.first;
-                          _status = defaultPriority.priorityToShortString();
+                          _status = defaultStatus.statusToShortString();
                         });
                       },
                       showSelectedIcon: false,
