@@ -76,6 +76,7 @@ class ProfileModel {
     // Get references to Firebase Storage
     Reference rootReference = FirebaseStorage.instance.ref();
     Reference profilePicturesDir =
+        //TODO : add constant refernce in the firebase file
         rootReference.child("users_profile_pictures");
     Reference imageToUploadRef = profilePicturesDir.child(profilePictureRef);
     // Upload the profile picture file to Firebase Storage
