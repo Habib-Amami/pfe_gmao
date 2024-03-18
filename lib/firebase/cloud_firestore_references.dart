@@ -15,3 +15,6 @@ const defaultEquipmentPicture =
 
 // Reference to the users collection in Firestore
 const String equipmentCollectionRef = "equipments";
+
+//Reference to the equipment pictures folder in the firebase storage
+const String equipmnetPictureDic = "equipment_pictures";
