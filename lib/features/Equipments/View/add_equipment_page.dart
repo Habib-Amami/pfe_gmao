@@ -51,14 +51,18 @@ class AddEquipmentPage extends StatefulWidget {
 }
 
 class AddEquipmentPageState extends State<AddEquipmentPage> {
+  // Form key for managing the state of the add equipment form
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+
   // Variable to store the selected image file
   File? selectedImageFile;
 
   // Variables to store equipment details
-  String _tagName = "1";
-  String _area = "1";
+  String _photoURL = "";
+  String _tagName = "";
+  String _area = "";
   String _workShop = "";
-  String _discipline = "1";
+  String _discipline = "";
   String _priority = "";
   String _status = "";
   String _description = "";
@@ -107,6 +111,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Form(
+            key: _formkey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -639,21 +644,43 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                       ),
                                     ),
                                     TextButton(
-                                      onPressed: () {
-                                        String docId = UniqueIdGenerator
-                                            .generateUniqueId();
-                                        // createNewEquipment();
-
-                                        DatabaseService().addEquipment(
-                                          tagName: _tagName,
-                                          docId: docId,
-                                          description: _description,
-                                          area: _area,
-                                          discipline: _discipline,
-                                          workshop: _workShop,
-                                        );
-
-                                        Navigator.pop(context);
+                                      onPressed: () async {
+                                        if (_formkey.currentState!.validate()) {
+                                          _formkey.currentState!.save();
+                                          String docId = UniqueIdGenerator
+                                              .generateUniqueId();
+                                          // createNewEquipment();
+                                          if (selectedImageFile != null) {
+                                            String photoURL =
+                                                await DatabaseService()
+                                                    .addEquipmentPicture(
+                                                        equipmentPictureRef:
+                                                            "${_tagName}_profile_picture",
+                                                        equipmnetPicture:
+                                                            selectedImageFile!);
+                                            DatabaseService().addEquipment(
+                                              photoURL: photoURL,
+                                              tagName: _tagName,
+                                              docId: docId,
+                                              description: _description,
+                                              area: _area,
+                                              discipline: _discipline,
+                                              workshop: _workShop,
+                                            );
+                                          } else {
+                                            DatabaseService().addEquipment(
+                                              tagName: _tagName,
+                                              docId: docId,
+                                              description: _description,
+                                              area: _area,
+                                              discipline: _discipline,
+                                              workshop: _workShop,
+                                            );
+                                          }
+                                          if (context.mounted) {
+                                            Navigator.pop(context);
+                                          }
+                                        }
                                       },
                                       child: const Text("Confirm"),
                                     )
