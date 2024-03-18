@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:geolocator/geolocator.dart';
 
 class EquipmentLocationServiceAlert extends StatelessWidget {
   const EquipmentLocationServiceAlert({super.key});
@@ -17,7 +17,7 @@ class EquipmentLocationServiceAlert extends StatelessWidget {
           child: const Text("cancel"),
         ),
         TextButton(
-          onPressed: () => openAppSettings().then(
+          onPressed: () => Geolocator.openLocationSettings().then(
             (_) => Navigator.pop(context),
           ),
           child: const Text(
