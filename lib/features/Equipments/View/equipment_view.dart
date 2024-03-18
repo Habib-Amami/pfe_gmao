@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:pfe_gmao/features/Equipments/View/equipment_picture_bottom_sheet.dart';
 import 'package:pfe_gmao/features/Equipments/model/equipment.dart';
 import 'package:pfe_gmao/features/Equipments/services/my_equipment_functions.dart';
-import '../model/equipment.dart';
-import 'equipment_picture_bottom_sheet.dart';
 
 class EquipmentView extends StatefulWidget {
   //final String equipmentId;
