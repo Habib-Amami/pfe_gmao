@@ -6,7 +6,8 @@ class Equipment {
   String id;
   String TagName;
   String Description;
-  bool Status;
+  String Status;
+  String Priority;
   String Area;
   Timestamp CreatedOn;
   Timestamp UpdatedOn;
@@ -19,6 +20,7 @@ class Equipment {
     required this.TagName,
     required this.Description,
     required this.Status,
+    required this.Priority,
     required this.Area,
     required this.CreatedOn,
     required this.UpdatedOn,
@@ -32,7 +34,8 @@ class Equipment {
           id: json['id']! as String,
           TagName: json['TagName']! as String,
           Description: json['Description']! as String,
-          Status: json['Status']! as bool,
+          Status: json['Status']! as String,
+          Priority: json['Priority']! as String,
           Area: json['Area']! as String,
           CreatedOn: json["CreatedOn"]! as Timestamp,
           UpdatedOn: json["UpdatedOn"]! as Timestamp,
@@ -45,7 +48,8 @@ class Equipment {
     String? id,
     String? TagName,
     String? Description,
-    bool? Status,
+    String? Status,
+    String? Priority,
     String? Area,
     Timestamp? CreatedOn,
     Timestamp? UpdatedOn,
@@ -58,6 +62,7 @@ class Equipment {
       TagName: TagName ?? this.TagName,
       Description: Description ?? this.Description,
       Status: Status ?? this.Status,
+      Priority: Priority ?? this.Priority,
       Area: Area ?? this.Area,
       CreatedOn: CreatedOn ?? this.CreatedOn,
       UpdatedOn: UpdatedOn ?? this.UpdatedOn,
@@ -74,6 +79,7 @@ class Equipment {
       'Description': Description,
       'Area': Area,
       'Status': Status,
+      'Priority': Priority,
       'CreatedOn': CreatedOn,
       'UpdatedOn': UpdatedOn,
       'Discipline': Discipline,

@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:pfe_gmao/firebase/cloud_firestore_references.dart';
+import '../View/add_equipment_page.dart';
+import '../../../firebase/cloud_firestore_references.dart';
 
 import '../model/equipment.dart';
 
@@ -37,6 +38,8 @@ class DatabaseService {
     required String area,
     required String discipline,
     required String workshop,
+    required String status,
+    required String priority,
     String photoURL =
         'https://firebasestorage.googleapis.com/v0/b/pfe-gmao-11445214.appspot.com/o/default%20picture.jpg?alt=media&token=c964483d-03dd-4ce2-982b-481d4fa22be2',
   }) async {
@@ -45,7 +48,8 @@ class DatabaseService {
       'TagName': tagName,
       'Description': description,
       'Area': area,
-      'Status': false,
+      'Status': status,
+      'Priority': priority,
       'Discipline': discipline,
       'Workshop': workshop,
       'CreatedOn': Timestamp.now(),
