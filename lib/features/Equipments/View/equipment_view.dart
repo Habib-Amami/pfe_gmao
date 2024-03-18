@@ -92,6 +92,8 @@ class _EquipmentViewState extends State<EquipmentView> {
               myProperty('Area', equipmentData['Area']),
               myProperty('Discipline', equipmentData['Discipline']),
               myProperty('Workshop', equipmentData['Workshop']),
+              myProperty(
+                  'Status', equipmentData['Status'] ? 'Active' : 'Stand By'),
             ],
           );
         },

@@ -9,7 +9,7 @@ String formattedDate(timeStamp) {
 
 Widget myProperty(String myTitle, String myValue) {
   return Padding(
-    padding: const EdgeInsets.only(top: 15.0),
+    padding: const EdgeInsets.symmetric(vertical: 10),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -29,7 +29,7 @@ Widget myProperty(String myTitle, String myValue) {
           decoration: BoxDecoration(
             border: Border.all(
               color: Colors.grey.shade500,
-              width: 1.3,
+              width: 1,
             ),
             borderRadius: BorderRadius.circular(15),
           ),
