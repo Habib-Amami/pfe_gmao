@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:pfe_gmao/features/Equipments/View/edit_equipment_page.dart';
 
 import '../model/equipment.dart';
 import '../services/db_service.dart';
@@ -47,7 +48,6 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                     itemBuilder: (context, index) {
                       Equipment equipment = equipments[index].data();
                       String idEquipment = equipments[index].id;
-                      debugPrint(idEquipment);
                       return Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 10),
@@ -56,6 +56,20 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                             motion: const StretchMotion(),
                             children: [
                               SlidableAction(
+                                  icon: Icons.edit_outlined,
+                                  label: "Edit",
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
+                                  onPressed: (context) => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              EditEquipmentPage(
+                                                equipmentId: idEquipment,
+                                                equipment: equipment,
+                                              )))),
+                              SlidableAction(
                                   icon: Ionicons.trash_bin,
                                   label: "Delete",
                                   backgroundColor:
@@ -63,7 +77,7 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                   onPressed: (context) {
                                     DatabaseService()
                                         .deleteEquipment(idEquipment);
-                                  })
+                                  }),
                             ],
                           ),
                           child: ExpansionTile(
