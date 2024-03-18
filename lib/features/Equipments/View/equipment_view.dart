@@ -51,7 +51,7 @@ class _EquipmentViewState extends State<EquipmentView> {
             padding: const EdgeInsets.only(left: 20, right: 20),
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 10, bottom: 8),
                 child: Container(
                   height: 150,
                   child: CircleAvatar(
@@ -64,29 +64,29 @@ class _EquipmentViewState extends State<EquipmentView> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: TextButton(
-                  style: const ButtonStyle(
-                    elevation: MaterialStatePropertyAll(2),
-                  ),
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return EquipmentPictureBottomSheet(
-                          equipmentId: equipmentData['id'],
-                          equipmentImageUrl: equipmentData['Photo'],
-                          tagName: equipmentData['TagName'],
-                        );
-                      },
-                    );
-                  },
-                  child: Text(
-                    "Change Equipment Picture",
-                  ),
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.only(bottom: 8.0),
+              //   child: TextButton(
+              //     style: const ButtonStyle(
+              //       elevation: MaterialStatePropertyAll(2),
+              //     ),
+              //     onPressed: () {
+              //       showModalBottomSheet(
+              //         context: context,
+              //         builder: (context) {
+              //           return EquipmentPictureBottomSheet(
+              //             equipmentId: equipmentData['id'],
+              //             equipmentImageUrl: equipmentData['Photo'],
+              //             tagName: equipmentData['TagName'],
+              //           );
+              //         },
+              //       );
+              //     },
+              //     child: const Text(
+              //       "Change Equipment Picture",
+              //     ),
+              //   ),
+              // ),
               myProperty('TagName', equipmentData['TagName'],
                   const Icon(Icons.local_offer_outlined)),
               myProperty(
