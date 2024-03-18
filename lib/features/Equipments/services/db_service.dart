@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:pfe_gmao/firebase/cloud_firestore_references.dart';
 
 import '../model/equipment.dart';
 
@@ -26,14 +30,16 @@ class DatabaseService {
   // }
 
   // Create method
-  void addEquipment(
-      {required String tagName,
-      //required String photo,
-      required String docId,
-      required String description,
-      required String area,
-      required String discipline,
-      required String workshop}) async {
+  void addEquipment({
+    required String tagName,
+    required String docId,
+    required String description,
+    required String area,
+    required String discipline,
+    required String workshop,
+    String photoURL =
+        'https://firebasestorage.googleapis.com/v0/b/pfe-gmao-11445214.appspot.com/o/default%20picture.jpg?alt=media&token=c964483d-03dd-4ce2-982b-481d4fa22be2',
+  }) async {
     FirebaseFirestore.instance.collection("equipments").doc(docId).set({
       'id': docId,
       'TagName': tagName,
@@ -44,8 +50,7 @@ class DatabaseService {
       'Workshop': workshop,
       'CreatedOn': Timestamp.now(),
       'UpdatedOn': Timestamp.now(),
-      'Photo':
-          'https://firebasestorage.googleapis.com/v0/b/pfe-gmao-11445214.appspot.com/o/default%20picture.jpg?alt=media&token=c964483d-03dd-4ce2-982b-481d4fa22be2',
+      'Photo': photoURL,
     });
     //_equipmentsRef.id;
   }
@@ -72,5 +77,24 @@ class DatabaseService {
     Equipment equipment,
   ) {
     _equipmentsRef.doc(idEquipment).update(equipment.toJson());
+  }
+
+  // Method to upload the selected profile picture to Firebase Storage and
+  //get it doawload URL
+  Future<String> addEquipmentPicture({
+    required String equipmentPictureRef,
+    required File equipmnetPicture,
+  }) async {
+    // Get references to Firebase Storage
+    Reference rootReference = FirebaseStorage.instance.ref();
+    Reference profilePicturesDir = rootReference.child(equipmnetPictureDic);
+    Reference imageToUploadRef = profilePicturesDir.child(equipmentPictureRef);
+    // Upload the profile picture file to Firebase Storage
+    await imageToUploadRef.putFile(
+      equipmnetPicture,
+      SettableMetadata(contentType: 'image/jpeg'),
+    );
+    // Get the download URL of the uploaded image
+    return await imageToUploadRef.getDownloadURL();
   }
 }
