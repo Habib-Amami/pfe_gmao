@@ -7,7 +7,7 @@ class EquipmentCameraPermissionDeniedAlert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Permissiondenied !"),
+      title: const Text("Permission denied !"),
       content: const Text(
         "you can't add a equipment's picture, please change the camera permission from the settings",
       ),
