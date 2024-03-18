@@ -651,15 +651,14 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                               .generateUniqueId();
                                           // createNewEquipment();
                                           if (selectedImageFile != null) {
-                                            String photoURL =
-                                                await DatabaseService()
-                                                    .addEquipmentPicture(
-                                                        equipmentPictureRef:
-                                                            "${_tagName}_profile_picture",
-                                                        equipmnetPicture:
-                                                            selectedImageFile!);
+                                            _photoURL = await DatabaseService()
+                                                .addEquipmentPicture(
+                                                    equipmentPictureRef:
+                                                        "${_tagName}_profile_picture",
+                                                    equipmnetPicture:
+                                                        selectedImageFile!);
                                             DatabaseService().addEquipment(
-                                              photoURL: photoURL,
+                                              photoURL: _photoURL,
                                               tagName: _tagName,
                                               docId: docId,
                                               description: _description,
