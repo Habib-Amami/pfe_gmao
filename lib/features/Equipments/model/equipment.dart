@@ -42,6 +42,7 @@ class Equipment {
         );
 
   Equipment copyWith({
+    String? id,
     String? TagName,
     String? Description,
     bool? Status,

@@ -1,10 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pfe_gmao/features/Equipments/services/db_service.dart';
+import 'package:pfe_gmao/features/Equipments/services/uid_generator.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import 'alerts/equipment_camera_permission_denied_alert.dart';
@@ -54,10 +55,10 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
   File? selectedImageFile;
 
   // Variables to store equipment details
-  String _tagName = "";
-  String _area = "";
+  String _tagName = "1";
+  String _area = "1";
   String _workShop = "";
-  String _discipline = "";
+  String _discipline = "1";
   String _priority = "";
   String _status = "";
   String _description = "";
@@ -639,7 +640,19 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                     ),
                                     TextButton(
                                       onPressed: () {
+                                        String docId = UniqueIdGenerator
+                                            .generateUniqueId();
                                         // createNewEquipment();
+
+                                        DatabaseService().addEquipment(
+                                          tagName: _tagName,
+                                          docId: docId,
+                                          description: _description,
+                                          area: _area,
+                                          discipline: _discipline,
+                                          workshop: _workShop,
+                                        );
+
                                         Navigator.pop(context);
                                       },
                                       child: const Text("Confirm"),
@@ -667,20 +680,15 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
 
   // Future<void> createNewEquipment() async {
   //   FirebaseFirestore.instance.collection("equipments").add({
-  //     'TagName': tagNameTextEditingController.text,
-  //     'Description': descriptionTextEditingController.text,
+  //     'TagName': _tagName,
+  //     'Description': _description,
   //     'Status': false,
-  //     'Photo': '',
-  //     'Area': areaEditingController.text,
+  //     'Photo': selectedImageFile,
+  //     'Area': _area,
   //     'CreatedOn': Timestamp.now(),
   //     'UpdatedOn': Timestamp.now(),
-  //     'Workshop': workshopEditingController.text,
-  //     'Discipline': disciplineEditingController.text,
+  //     'Workshop': _workShop,
+  //     'Discipline': _discipline,
   //   });
-  //   tagNameTextEditingController.clear();
-  //   descriptionTextEditingController.clear();
-  //   areaEditingController.clear();
-  //   disciplineEditingController.clear();
-  //   workshopEditingController.clear();
   // }
 }

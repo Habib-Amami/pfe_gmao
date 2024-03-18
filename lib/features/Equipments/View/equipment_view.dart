@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:pfe_gmao/features/Equipments/View/equipment_picture_bottom_sheet.dart';
+import 'package:pfe_gmao/features/Equipments/model/equipment.dart';
+import 'package:pfe_gmao/features/Equipments/services/my_equipment_functions.dart';
 import '../model/equipment.dart';
 import 'equipment_picture_bottom_sheet.dart';
 
@@ -44,23 +46,27 @@ class _EquipmentViewState extends State<EquipmentView> {
             return const Center(child: Text('Equipment not found'));
           }
           var equipmentData = snapshot.data!.data() as Map<String, dynamic>;
+          //String picture = NetworkImage(equipmentData['Photo']);
           return ListView(
             padding: const EdgeInsets.only(left: 20, right: 20),
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: CircleAvatar(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  radius: 50,
+                padding: const EdgeInsets.only(top: 10),
+                child: Container(
+                  height: 150,
                   child: CircleAvatar(
-                    radius: 48,
-                    backgroundImage: NetworkImage(equipmentData['Photo']),
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
+                    radius: 150,
+                    child: CircleAvatar(
+                      radius: 72,
+                      backgroundImage: NetworkImage(equipmentData['Photo']),
+                    ),
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
-                child: ElevatedButton(
+                child: TextButton(
                   style: const ButtonStyle(
                     elevation: MaterialStatePropertyAll(2),
                   ),
@@ -76,92 +82,41 @@ class _EquipmentViewState extends State<EquipmentView> {
                       },
                     );
                   },
-                  child: const Text(
+                  child: Text(
                     "Change Equipment Picture",
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Text(
-                  'TagName',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.only(left: 14),
-                height: 58,
-                margin: const EdgeInsets.only(top: 8),
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey, width: 1.0),
-                    borderRadius: BorderRadius.circular(12)),
-                child: GestureDetector(
-                  onTap: _alertDialogForEdit,
-                  child: TextFormField(
-                    enabled: false,
-                    initialValue: equipmentData['TagName'],
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w400, fontSize: 20),
-                    decoration: InputDecoration(
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.background,
-                        ),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.background,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              )
+              myProperty('TagName', equipmentData['TagName'],
+                  const Icon(Icons.local_offer_outlined)),
+              myProperty(
+                  'Description',
+                  equipmentData['Description'],
+                  const Icon(
+                    Icons.description_outlined,
+                  )),
+              myProperty('Area', equipmentData['Area'],
+                  const Icon(Icons.location_on_outlined)),
+              myProperty(
+                  'Discipline',
+                  equipmentData['Discipline'],
+                  const Icon(
+                    Icons.build_circle_outlined,
+                  )),
+              myProperty(
+                  'Workshop',
+                  equipmentData['Workshop'],
+                  const Icon(
+                    Icons.build_outlined,
+                  )),
+              myProperty(
+                  'Status',
+                  equipmentData['Status'] ? 'Active' : 'Stand By',
+                  const Icon(Icons.power)),
             ],
           );
         },
       ),
     );
-  }
-
-  Future _alertDialogForEdit() {
-    TextEditingController textEditingController = TextEditingController();
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("Edit the TagName"),
-            content: TextField(
-              decoration: InputDecoration(
-                hintText: "New TagName",
-                hintStyle: TextStyle(
-                  color: Colors.grey.shade500,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              controller: textEditingController,
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text(
-                    "Cancel",
-                    style: TextStyle(color: Colors.grey),
-                  )),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "Confirm",
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.primary),
-                ),
-              )
-            ],
-          );
-        });
   }
 }
