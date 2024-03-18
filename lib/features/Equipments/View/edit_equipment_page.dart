@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '../model/equipment.dart';
+import 'equipment_picture_bottom_sheet.dart';
 
 // Define an enumeration for equipment priorities
 enum Priority {
@@ -112,6 +113,28 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                               backgroundImage:
                                   NetworkImage(equipmentData['Photo']),
                             ),
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: TextButton(
+                          style: const ButtonStyle(
+                            elevation: MaterialStatePropertyAll(2),
+                          ),
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return EquipmentPictureBottomSheet(
+                                  equipmentId: equipmentData['id'],
+                                  equipmentImageUrl: equipmentData['Photo'],
+                                  tagName: equipmentData['TagName'],
+                                );
+                              },
+                            );
+                          },
+                          child: const Text(
+                            "Change Equipment Picture",
                           ),
                         ),
                       ),

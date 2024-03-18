@@ -4,8 +4,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pfe_gmao/features/Equipments/services/db_service.dart';
-import 'package:pfe_gmao/features/Equipments/services/uid_generator.dart';
+import '../services/db_service.dart';
+import '../services/uid_generator.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import 'alerts/equipment_camera_permission_denied_alert.dart';
@@ -63,11 +63,9 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
   String _area = "";
   String _workShop = "";
   String _discipline = "";
-  String _priority = "";
-  String _status = "";
   String _description = "";
-
-  late bool equipmentStatus;
+  Priority defaultPriority = Priority.Medium;
+  Status defaultStatus = Status.Active;
 
   // Future method to pick an image from the gallery or camera
   Future<CroppedFile?> pickImage({required ImageSource imageSource}) async {
@@ -95,10 +93,6 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
     }
     return null;
   }
-
-  Priority defaultPriority = Priority.Medium;
-
-  Status defaultStatus = Status.Active;
 
   @override
   Widget build(BuildContext context) {
@@ -504,7 +498,6 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                       onSelectionChanged: (Set<Priority> newvalue) {
                         setState(() {
                           defaultPriority = newvalue.first;
-                          _priority = defaultPriority.priorityToShortString();
                         });
                       },
                       showSelectedIcon: false,
@@ -546,7 +539,6 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                       onSelectionChanged: (Set<Status> newvalue) {
                         setState(() {
                           defaultStatus = newvalue.first;
-                          _status = defaultStatus.statusToShortString();
                         });
                       },
                       showSelectedIcon: false,
@@ -665,6 +657,10 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                               area: _area,
                                               discipline: _discipline,
                                               workshop: _workShop,
+                                              status: defaultStatus
+                                                  .statusToShortString(),
+                                              priority: defaultPriority
+                                                  .priorityToShortString(),
                                             );
                                           } else {
                                             DatabaseService().addEquipment(
@@ -674,6 +670,10 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                               area: _area,
                                               discipline: _discipline,
                                               workshop: _workShop,
+                                              status: defaultStatus
+                                                  .statusToShortString(),
+                                              priority: defaultPriority
+                                                  .priorityToShortString(),
                                             );
                                           }
                                           if (context.mounted) {
@@ -703,18 +703,4 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
       ),
     );
   }
-
-  // Future<void> createNewEquipment() async {
-  //   FirebaseFirestore.instance.collection("equipments").add({
-  //     'TagName': _tagName,
-  //     'Description': _description,
-  //     'Status': false,
-  //     'Photo': selectedImageFile,
-  //     'Area': _area,
-  //     'CreatedOn': Timestamp.now(),
-  //     'UpdatedOn': Timestamp.now(),
-  //     'Workshop': _workShop,
-  //     'Discipline': _discipline,
-  //   });
-  // }
 }

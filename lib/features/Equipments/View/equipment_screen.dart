@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:pfe_gmao/features/Equipments/View/edit_equipment_page.dart';
+import 'edit_equipment_page.dart';
 
 import '../model/equipment.dart';
 import '../services/db_service.dart';
@@ -101,43 +101,43 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     const Text("Status:"),
-                                    equipment.Status
-                                        ? IconButton(
-                                            alignment: Alignment.center,
-                                            icon: const Icon(
-                                              Ionicons.checkmark_circle,
-                                              color: Colors.green,
-                                            ),
-                                            onPressed: () {
-                                              // changing the status of the equipment
-                                              Equipment updatedEquipment =
-                                                  equipment.copyWith(
-                                                Status: false,
-                                                UpdatedOn: Timestamp.now(),
-                                              );
-                                              DatabaseService().updateEquipment(
-                                                  idEquipment,
-                                                  updatedEquipment);
-                                            },
-                                          )
-                                        : IconButton(
-                                            alignment: Alignment.center,
-                                            icon: const Icon(
-                                              Ionicons.warning,
-                                              size: 20,
-                                              color: Colors.red,
-                                            ),
-                                            onPressed: () {
-                                              Equipment updatedEquipment =
-                                                  equipment.copyWith(
-                                                Status: true,
-                                                UpdatedOn: Timestamp.now(),
-                                              );
-                                              DatabaseService().updateEquipment(
-                                                  idEquipment,
-                                                  updatedEquipment);
-                                            },
-                                          ),
+                                    // equipment.Status
+                                    //     ? IconButton(
+                                    //         alignment: Alignment.center,
+                                    //         icon: const Icon(
+                                    //           Ionicons.checkmark_circle,
+                                    //           color: Colors.green,
+                                    //         ),
+                                    //         onPressed: () {
+                                    //           // changing the status of the equipment
+                                    //           Equipment updatedEquipment =
+                                    //               equipment.copyWith(
+                                    //             Status: false,
+                                    //             UpdatedOn: Timestamp.now(),
+                                    //           );
+                                    //           DatabaseService().updateEquipment(
+                                    //               idEquipment,
+                                    //               updatedEquipment);
+                                    //         },
+                                    //       )
+                                    //     : IconButton(
+                                    //         alignment: Alignment.center,
+                                    //         icon: const Icon(
+                                    //           Ionicons.warning,
+                                    //           size: 20,
+                                    //           color: Colors.red,
+                                    //         ),
+                                    //         onPressed: () {
+                                    //           Equipment updatedEquipment =
+                                    //               equipment.copyWith(
+                                    //             Status: true,
+                                    //             UpdatedOn: Timestamp.now(),
+                                    //           );
+                                    //           DatabaseService().updateEquipment(
+                                    //               idEquipment,
+                                    //               updatedEquipment);
+                                    //         },
+                                    //       ),
                                   ],
                                 ),
                               ),

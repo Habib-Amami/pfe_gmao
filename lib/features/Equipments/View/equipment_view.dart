@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:pfe_gmao/features/Equipments/model/equipment.dart';
-import 'package:pfe_gmao/features/Equipments/services/my_equipment_functions.dart';
+import '../model/equipment.dart';
+import '../services/my_equipment_functions.dart';
 
 class EquipmentView extends StatefulWidget {
   //final String equipmentId;
@@ -107,9 +107,7 @@ class _EquipmentViewState extends State<EquipmentView> {
                     Icons.build_outlined,
                   )),
               myProperty(
-                  'Status',
-                  equipmentData['Status'] ? 'Active' : 'Stand By',
-                  const Icon(Icons.power)),
+                  'Status', equipmentData['Status'], const Icon(Icons.power)),
             ],
           );
         },
