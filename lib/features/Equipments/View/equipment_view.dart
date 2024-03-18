@@ -87,13 +87,32 @@ class _EquipmentViewState extends State<EquipmentView> {
                   ),
                 ),
               ),
-              myProperty('TagName', equipmentData['TagName']),
-              myProperty('Description', equipmentData['Description']),
-              myProperty('Area', equipmentData['Area']),
-              myProperty('Discipline', equipmentData['Discipline']),
-              myProperty('Workshop', equipmentData['Workshop']),
+              myProperty('TagName', equipmentData['TagName'],
+                  const Icon(Icons.local_offer_outlined)),
               myProperty(
-                  'Status', equipmentData['Status'] ? 'Active' : 'Stand By'),
+                  'Description',
+                  equipmentData['Description'],
+                  const Icon(
+                    Icons.description_outlined,
+                  )),
+              myProperty('Area', equipmentData['Area'],
+                  const Icon(Icons.location_on_outlined)),
+              myProperty(
+                  'Discipline',
+                  equipmentData['Discipline'],
+                  const Icon(
+                    Icons.build_circle_outlined,
+                  )),
+              myProperty(
+                  'Workshop',
+                  equipmentData['Workshop'],
+                  const Icon(
+                    Icons.build_outlined,
+                  )),
+              myProperty(
+                  'Status',
+                  equipmentData['Status'] ? 'Active' : 'Stand By',
+                  const Icon(Icons.power)),
             ],
           );
         },

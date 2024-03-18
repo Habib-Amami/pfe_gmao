@@ -7,7 +7,7 @@ String formattedDate(timeStamp) {
   return DateFormat('dd-MM-yyyy').format(dateFromTimestamp);
 }
 
-Widget myProperty(String myTitle, String myValue) {
+Widget myProperty(String myTitle, String myValue, Widget myIcon) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 10),
     child: Column(
@@ -29,17 +29,19 @@ Widget myProperty(String myTitle, String myValue) {
           decoration: BoxDecoration(
             border: Border.all(
               color: Colors.grey.shade500,
-              width: 1,
+              width: 1.4,
             ),
             borderRadius: BorderRadius.circular(15),
           ),
-          child: TextFormField(
-            enabled: false,
-            initialValue: myValue,
-            style: const TextStyle(fontSize: 20, color: Colors.black),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
+          child: Center(
+            child: TextFormField(
+              enabled: false,
+              initialValue: myValue,
+              style: const TextStyle(fontSize: 20, color: Colors.black),
+              decoration: InputDecoration(
+                prefixIcon: myIcon,
+                border: InputBorder.none,
+              ),
             ),
           ),
         )
