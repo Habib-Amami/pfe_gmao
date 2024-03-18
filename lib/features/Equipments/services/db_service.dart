@@ -28,18 +28,19 @@ class DatabaseService {
   // Create method
   void addEquipment(
       {required String tagName,
+      //required String photo,
       required String docId,
-      required String desc,
+      required String description,
       required String area,
-      required String dis,
+      required String discipline,
       required String workshop}) async {
     FirebaseFirestore.instance.collection("equipments").doc(docId).set({
       'id': docId,
       'TagName': tagName,
-      'Description': desc,
+      'Description': description,
       'Area': area,
       'Status': false,
-      'Discipline': dis,
+      'Discipline': discipline,
       'Workshop': workshop,
       'CreatedOn': Timestamp.now(),
       'UpdatedOn': Timestamp.now(),
