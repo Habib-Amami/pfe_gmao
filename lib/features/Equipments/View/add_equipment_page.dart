@@ -6,13 +6,13 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pfe_gmao/features/Equipments/View/alerts/equipment_location_service_alert.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../services/db_service.dart';
 import '../services/uid_generator.dart';
 import 'alerts/equipment_camera_permission_denied_alert.dart';
 import 'alerts/equipment_location_permission_denied_alert.dart';
+import 'alerts/equipment_location_service_alert.dart';
 
 // Define an enumeration for equipment priorities
 enum Priority {
@@ -582,7 +582,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                             child: TextFormField(
                               controller: latitudeController,
                               keyboardType: TextInputType.multiline,
-                              textInputAction: TextInputAction.done,
+                              textInputAction: TextInputAction.next,
                               decoration: InputDecoration(
                                 border: const OutlineInputBorder(
                                   borderRadius: BorderRadius.all(
