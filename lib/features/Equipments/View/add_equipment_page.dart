@@ -78,9 +78,9 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
   //controllers for the latitude and longitude fields
   TextEditingController latitudeController = TextEditingController();
   TextEditingController longitudeController = TextEditingController();
-  //inial value of the priority
+  //initial value of the priority
   Priority defaultPriority = Priority.Medium;
-  //inial value of the status
+  //initial value of the status
   Status defaultStatus = Status.Active;
 
   // Future method to pick an image from the gallery or camera
@@ -733,7 +733,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                           if (serviceEnabled) {
                             Position currentPosition =
                                 await Geolocator.getCurrentPosition();
-                            setState(() {});
+
                             _formkey.currentState!.setState(() {
                               latitudeController.text =
                                   currentPosition.latitude.toString();
