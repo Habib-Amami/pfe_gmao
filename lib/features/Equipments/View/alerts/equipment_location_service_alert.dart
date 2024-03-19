@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:geolocator/geolocator.dart';
 
-class EquipmentCameraPermissionDeniedAlert extends StatelessWidget {
-  const EquipmentCameraPermissionDeniedAlert({super.key});
+class EquipmentLocationServiceAlert extends StatelessWidget {
+  const EquipmentLocationServiceAlert({super.key});
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Permission denied !"),
+      title: const Text("Location service disabled !"),
       content: const Text(
-        "you can't add a equipment's picture, please change the camera permission from the settings",
+        "you can't locate an equipment, please enable the location service from the settings",
       ),
       actions: [
         TextButton(
@@ -17,7 +17,7 @@ class EquipmentCameraPermissionDeniedAlert extends StatelessWidget {
           child: const Text("cancel"),
         ),
         TextButton(
-          onPressed: () => openAppSettings().then(
+          onPressed: () => Geolocator.openLocationSettings().then(
             (_) => Navigator.pop(context),
           ),
           child: const Text(

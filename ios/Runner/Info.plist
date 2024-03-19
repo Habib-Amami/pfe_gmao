@@ -49,6 +49,8 @@
 	<string>We need access to your device's camera to capture profile pictures.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need access to your device's photo library to allow you to select and upload photos for your profile.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to location when open to locat equipments.</string>
 
 </dict>
 </plist>
