@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pfe_gmao/features/Equipments/View/alerts/equipment_location_service_alert.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../services/db_service.dart';
@@ -66,7 +68,12 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
   String _workShop = "";
   String _discipline = "";
   String _description = "";
+  //controllers for the latitude and longitude fields
+  TextEditingController latitudeController = TextEditingController();
+  TextEditingController longitudeController = TextEditingController();
+  //inial value of the priority
   Priority defaultPriority = Priority.Medium;
+  //inial value of the status
   Status defaultStatus = Status.Active;
 
   // Future method to pick an image from the gallery or camera
@@ -150,9 +157,11 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       FilledButton.icon(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.add_a_photo_outlined,
-                          color: Colors.black,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
                         ),
                         style: ButtonStyle(
                           elevation: const MaterialStatePropertyAll(2),
@@ -192,10 +201,12 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                             }
                           }).request();
                         },
-                        label: const Text(
+                        label: Text(
                           "Gallery",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer,
                           ),
                         ),
                       ),
@@ -203,44 +214,55 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                         width: 20,
                       ),
                       FilledButton.icon(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.add_a_photo_outlined,
-                          color: Colors.black,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
                         ),
                         style: ButtonStyle(
                           elevation: const MaterialStatePropertyAll(2),
                           backgroundColor: MaterialStatePropertyAll(
-                              Theme.of(context).colorScheme.secondaryContainer),
+                            Theme.of(context).colorScheme.secondaryContainer,
+                          ),
                         ),
                         onPressed: () async {
                           // Handle camera permissions and image picking
-                          await Permission.camera
-                              .onDeniedCallback(() {
-                                if (context.mounted) {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) =>
-                                          const EquipmentCameraPermissionDeniedAlert(),
-                                      barrierDismissible: false);
-                                }
-                              })
-                              .onGrantedCallback(() async {})
-                              .onPermanentlyDeniedCallback(() {
-                                if (context.mounted) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) =>
-                                        const EquipmentCameraPermissionDeniedAlert(),
-                                    barrierDismissible: false,
-                                  );
-                                }
-                              })
-                              .request();
+                          await Permission.camera.onDeniedCallback(() {
+                            if (context.mounted) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) =>
+                                      const EquipmentCameraPermissionDeniedAlert(),
+                                  barrierDismissible: false);
+                            }
+                          }).onGrantedCallback(() async {
+                            CroppedFile? pickedImge = await pickImage(
+                              imageSource: ImageSource.camera,
+                            );
+                            if (pickedImge != null) {
+                              selectedImageFile = File(pickedImge.path);
+                            } else {
+                              selectedImageFile = null;
+                            }
+                            setState(() {});
+                          }).onPermanentlyDeniedCallback(() {
+                            if (context.mounted) {
+                              showDialog(
+                                context: context,
+                                builder: (context) =>
+                                    const EquipmentCameraPermissionDeniedAlert(),
+                                barrierDismissible: false,
+                              );
+                            }
+                          }).request();
                         },
-                        label: const Text(
+                        label: Text(
                           "Camera",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer,
                           ),
                         ),
                       )
@@ -474,7 +496,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.only(bottom: 8),
                   // Description input field
                   child: TextFormField(
                     keyboardType: TextInputType.multiline,
@@ -551,6 +573,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                             padding: const EdgeInsets.only(bottom: 16),
                             // Description input field
                             child: TextFormField(
+                              controller: latitudeController,
                               keyboardType: TextInputType.multiline,
                               textInputAction: TextInputAction.done,
                               decoration: InputDecoration(
@@ -591,6 +614,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                 }
                                 return null;
                               },
+
                               // onSaved: (newValue) {
                               //   _description = newValue!.trim();
                               // },
@@ -619,6 +643,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                             padding: const EdgeInsets.only(bottom: 16),
                             // Description input field
                             child: TextFormField(
+                              controller: longitudeController,
                               keyboardType: TextInputType.multiline,
                               textInputAction: TextInputAction.done,
                               decoration: InputDecoration(
@@ -659,6 +684,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                 }
                                 return null;
                               },
+
                               // onSaved: (newValue) {
                               //   _description = newValue!.trim();
                               // },
@@ -673,9 +699,10 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                   padding: const EdgeInsets.only(bottom: 16),
                   child: Center(
                     child: FilledButton.icon(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.location_searching_outlined,
-                        color: Colors.black,
+                        color:
+                            Theme.of(context).colorScheme.onSecondaryContainer,
                       ),
                       style: ButtonStyle(
                         elevation: const MaterialStatePropertyAll(2),
@@ -694,15 +721,29 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                             );
                           }
                         }).onGrantedCallback(() async {
-                          CroppedFile? pickedImge = await pickImage(
-                            imageSource: ImageSource.gallery,
-                          );
-                          if (pickedImge != null) {
-                            selectedImageFile = File(pickedImge.path);
+                          bool serviceEnabled =
+                              await Geolocator.isLocationServiceEnabled();
+                          if (serviceEnabled) {
+                            Position currentPosition =
+                                await Geolocator.getCurrentPosition();
+                            setState(() {});
+                            _formkey.currentState!.setState(() {
+                              latitudeController.text =
+                                  currentPosition.latitude.toString();
+
+                              longitudeController.text =
+                                  currentPosition.longitude.toString();
+                            });
                           } else {
-                            selectedImageFile = null;
+                            if (context.mounted) {
+                              showDialog(
+                                context: context,
+                                builder: (context) =>
+                                    const EquipmentLocationServiceAlert(),
+                                barrierDismissible: false,
+                              );
+                            }
                           }
-                          setState(() {});
                         }).onPermanentlyDeniedCallback(() {
                           if (context.mounted) {
                             showDialog(
@@ -713,13 +754,23 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                           }
                         }).request();
                       },
-                      label: const Text(
+                      label: Text(
                         "Locate equipment",
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
                         ),
                       ),
                     ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Text(
+                    "Note : Please make sure you are close to the equipment to accurately locate and save its coordinates.",
+                    style: Theme.of(context).textTheme.bodySmall,
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 // Segmented Button for entering equipment details
@@ -736,21 +787,30 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                   padding: const EdgeInsets.only(bottom: 16),
                   child: Center(
                     child: SegmentedButton(
-                      segments: const [
+                      segments: [
                         ButtonSegment(
                           value: Status.Standby,
-                          label: Text("Standby"),
-                          icon: Icon(Icons.pause_circle_outline),
+                          label: Text(
+                            "Standby",
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
+                          icon: const Icon(Icons.pause_circle_outline),
                         ),
                         ButtonSegment(
                           value: Status.Active,
-                          label: Text("Active"),
-                          icon: Icon(Icons.access_time),
+                          label: Text(
+                            "Active",
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
+                          icon: const Icon(Icons.access_time),
                         ),
                         ButtonSegment(
                           value: Status.Shutdown,
-                          label: Text("Shutdown"),
-                          icon: Icon(Icons.power_off),
+                          label: Text(
+                            "Shutdown",
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
+                          icon: const Icon(Icons.power_off),
                         ),
                       ],
                       selected: <Status>{defaultStatus},
@@ -773,36 +833,43 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                     textAlign: TextAlign.start,
                   ),
                 ),
-                SizedBox(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: Center(
-                      child: SegmentedButton(
-                        segments: const [
-                          ButtonSegment(
-                            value: Priority.Low,
-                            label: Text("Low"),
-                            icon: Icon(Ionicons.checkmark_circle_outline),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 32),
+                  child: Center(
+                    child: SegmentedButton(
+                      segments: [
+                        ButtonSegment(
+                          value: Priority.Low,
+                          label: Text(
+                            "Low",
+                            style: Theme.of(context).textTheme.labelMedium,
                           ),
-                          ButtonSegment(
-                            value: Priority.Medium,
-                            label: Text("Medium"),
-                            icon: Icon(Ionicons.information_circle_outline),
+                          icon: const Icon(Ionicons.checkmark_circle_outline),
+                        ),
+                        ButtonSegment(
+                          value: Priority.Medium,
+                          label: Text(
+                            "Medium",
+                            style: Theme.of(context).textTheme.labelMedium,
                           ),
-                          ButtonSegment(
-                            value: Priority.High,
-                            label: Text("High"),
-                            icon: Icon(Ionicons.alert_circle_outline),
+                          icon: const Icon(Ionicons.information_circle_outline),
+                        ),
+                        ButtonSegment(
+                          value: Priority.High,
+                          label: Text(
+                            "High",
+                            style: Theme.of(context).textTheme.labelMedium,
                           ),
-                        ],
-                        selected: <Priority>{defaultPriority},
-                        onSelectionChanged: (Set<Priority> newvalue) {
-                          setState(() {
-                            defaultPriority = newvalue.first;
-                          });
-                        },
-                        showSelectedIcon: false,
-                      ),
+                          icon: const Icon(Ionicons.alert_circle_outline),
+                        ),
+                      ],
+                      selected: <Priority>{defaultPriority},
+                      onSelectionChanged: (Set<Priority> newvalue) {
+                        setState(() {
+                          defaultPriority = newvalue.first;
+                        });
+                      },
+                      showSelectedIcon: false,
                     ),
                   ),
                 ),
