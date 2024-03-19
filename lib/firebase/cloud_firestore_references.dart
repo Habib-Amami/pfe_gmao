@@ -18,3 +18,6 @@ const String equipmentCollectionRef = "equipments";
 
 //Reference to the equipment pictures folder in the firebase storage
 const String equipmnetPictureDic = "equipment_pictures";
+
+//Reference to the tag name collection
+const String tagNamesCollectionRef = "equipment_tag_names";
