@@ -55,6 +55,13 @@ class AddEquipmentPage extends StatefulWidget {
 }
 
 class AddEquipmentPageState extends State<AddEquipmentPage> {
+  @override
+  void dispose() {
+    latitudeController.dispose();
+    longitudeController.dispose();
+    super.dispose();
+  }
+
   // Form key for managing the state of the add equipment form
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
