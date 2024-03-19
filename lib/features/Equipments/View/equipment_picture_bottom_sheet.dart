@@ -169,7 +169,7 @@ class Download extends State<EquipmentPictureBottomSheet> {
                           "${widget.tagName}_equipment_picture",
                       equipmentPicture: imageFile!,
                     );
-                    await DatabaseService().updateEquipmentPicture(
+                    await download().updateEquipmentPicture(
                         imageUrl: equipmentImageURL,
                         idEquipment: widget.equipmentId);
                     if (context.mounted) {

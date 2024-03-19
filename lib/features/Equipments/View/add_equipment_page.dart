@@ -643,13 +643,13 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                               .generateUniqueId();
                                           // createNewEquipment();
                                           if (selectedImageFile != null) {
-                                            _photoURL = await DatabaseService()
+                                            _photoURL = await download()
                                                 .addEquipmentPicture(
                                                     equipmentPictureRef:
                                                         "${_tagName}_profile_picture",
-                                                    equipmnetPicture:
+                                                    equipmentPicture:
                                                         selectedImageFile!);
-                                            DatabaseService().addEquipment(
+                                            download().addEquipment(
                                               photoURL: _photoURL,
                                               tagName: _tagName,
                                               docId: docId,
@@ -663,7 +663,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                                   .priorityToShortString(),
                                             );
                                           } else {
-                                            DatabaseService().addEquipment(
+                                            download().addEquipment(
                                               tagName: _tagName,
                                               docId: docId,
                                               description: _description,
