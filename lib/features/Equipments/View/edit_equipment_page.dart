@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-
+import '../../../firebase/cloud_firestore_references.dart';
 import '../model/equipment.dart';
 import 'equipment_picture_bottom_sheet.dart';
 
@@ -32,7 +32,7 @@ enum Status {
 }
 
 // Extension to convert enum values to strings
-extension StatusToString on Priority {
+extension StatusToString on Status {
   String statusToShortString() {
     return toString().split('.').last;
   }
@@ -49,7 +49,12 @@ class EditEquipmentPage extends StatefulWidget {
 }
 
 class _EditEquipmentPageState extends State<EditEquipmentPage> {
+  // Form key for managing the state of the add equipment form
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+
+  //
   late Future<DocumentSnapshot> _equipmentFuture;
+
   @override
   void initState() {
     super.initState();
@@ -59,16 +64,11 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
         .get();
   }
 
-  // Variables to store equipment details
-  String _tagName = "";
-  String _area = "";
-  String _workShop = "";
-  String _discipline = "";
-  String _priority = "";
-  String _status = "";
-  String _description = "";
-  late bool equipmentStatus;
-
+  //  Variables to store equipment details
+  // final TextEditingController _area = TextEditingController(text: widget.equipment.Area);
+  // final TextEditingController _workShop = TextEditingController(text: widget.equipment.Workshop) ;
+  // final TextEditingController _discipline = TextEditingController(text: widget.equipment.Discipline);
+  // final TextEditingController _description =TextEditingController(text: widget.equipment.Description);
   Priority defaultPriority = Priority.Medium;
 
   Status defaultStatus = Status.Active;
@@ -79,489 +79,551 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
         title: const Text("Edit Equipment"),
       ),
       body: FutureBuilder<DocumentSnapshot>(
-          future: _equipmentFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            }
-            if (!snapshot.hasData || !snapshot.data!.exists) {
-              return const Center(child: Text('Equipment not found'));
-            }
-            var equipmentData = snapshot.data!.data() as Map<String, dynamic>;
+        future: _equipmentFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+          if (!snapshot.hasData || !snapshot.data!.exists) {
+            return const Center(child: Text('Equipment not found'));
+          }
+          var equipmentData = snapshot.data!.data() as Map<String, dynamic>;
+          // Variables to store equipment details
+          TextEditingController _tagName =
+              TextEditingController(text: equipmentData[tagName]);
+          final TextEditingController _area =
+              TextEditingController(text: equipmentData[area]);
+          final TextEditingController _workShop =
+              TextEditingController(text: equipmentData[workshop]);
+          final TextEditingController _discipline =
+              TextEditingController(text: equipmentData[discipline]);
+          final TextEditingController _description =
+              TextEditingController(text: equipmentData[description]);
 
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Form(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(
-                        // Display the selected image or a default image
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Form(
+                key: _formkey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      // Display the selected image or a default image
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: CircleAvatar(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                          radius: 50,
                           child: CircleAvatar(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                            radius: 50,
-                            child: CircleAvatar(
-                              radius: 48,
-                              backgroundImage:
-                                  NetworkImage(equipmentData['Photo']),
-                            ),
+                            radius: 48,
+                            backgroundImage:
+                                NetworkImage(equipmentData['Photo']),
                           ),
                         ),
                       ),
-                      Center(
-                        child: TextButton(
-                          style: const ButtonStyle(
-                            elevation: MaterialStatePropertyAll(2),
+                    ),
+                    Center(
+                      child: TextButton(
+                        style: const ButtonStyle(
+                          elevation: MaterialStatePropertyAll(2),
+                        ),
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return EquipmentPictureBottomSheet(
+                                equipmentId: equipmentData['id'],
+                                equipmentImageUrl: equipmentData['Photo'],
+                                tagName: equipmentData['TagName'],
+                              );
+                            },
+                          );
+                        },
+                        child: const Text(
+                          "Change Equipment Picture",
+                        ),
+                      ),
+                    ),
+                    // Form fields for entering equipment details
+                    // Tag Name
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        "Tag name",
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    // Tag Name input field
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: TextFormField(
+                        controller: _tagName,
+                        //initialValue: equipmentData['TagName'],
+                        keyboardType: TextInputType.name,
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8),
+                            ),
                           ),
-                          onPressed: () {
-                            showModalBottomSheet(
+                          hintText: "Enter the Tag name",
+                          hintStyle: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          prefixIcon: const Icon(
+                            Icons.local_offer_outlined,
+                          ),
+                          prefixIconColor: MaterialStateColor.resolveWith(
+                            (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.focused)) {
+                                return Theme.of(context).colorScheme.primary;
+                              }
+                              if (states.contains(MaterialState.error)) {
+                                return Theme.of(context).colorScheme.error;
+                              }
+                              return Colors.grey.shade500;
+                            },
+                          ),
+                        ),
+                        validator: (value) {
+                          //create a email validation
+                          if (value == null || value.isEmpty) {
+                            return "please provide an tag name";
+                          }
+                          return null;
+                        },
+                        onSaved: (newValue) {
+                          _tagName.text = newValue!.trim();
+                        },
+                      ),
+                    ),
+                    // Form fields for entering equipment details
+                    // Area
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        "Area",
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      // Area input field
+                      child: TextFormField(
+                        controller: _area,
+                        //initialValue: equipmentData['Area'],
+                        keyboardType: TextInputType.name,
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8),
+                            ),
+                          ),
+                          hintText: "Enter the Area ",
+                          hintStyle: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          prefixIcon: const Icon(
+                            Icons.location_on_outlined,
+                          ),
+                          prefixIconColor: MaterialStateColor.resolveWith(
+                            (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.focused)) {
+                                return Theme.of(context).colorScheme.primary;
+                              }
+                              if (states.contains(MaterialState.error)) {
+                                return Theme.of(context).colorScheme.error;
+                              }
+                              return Colors.grey.shade500;
+                            },
+                          ),
+                        ),
+                        validator: (value) {
+                          //create a email validation
+                          if (value == null || value.isEmpty) {
+                            return "please provide an area";
+                          }
+                          return null;
+                        },
+                        onSaved: (newValue) {
+                          _area.text = newValue!.trim();
+                        },
+                      ),
+                    ),
+                    // Form fields for entering equipment details
+                    // Workshop
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        "Workshop",
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      // Workshop input field
+                      child: TextFormField(
+                        //initialValue: equipmentData['Workshop'],
+                        controller: _workShop,
+                        keyboardType: TextInputType.name,
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8),
+                            ),
+                          ),
+                          hintText: "Enter the Workshop",
+                          hintStyle: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          prefixIcon: const Icon(
+                            Icons.build_outlined,
+                          ),
+                          prefixIconColor: MaterialStateColor.resolveWith(
+                            (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.focused)) {
+                                return Theme.of(context).colorScheme.primary;
+                              }
+                              if (states.contains(MaterialState.error)) {
+                                return Theme.of(context).colorScheme.error;
+                              }
+                              return Colors.grey.shade500;
+                            },
+                          ),
+                        ),
+                        validator: (value) {
+                          //create a email validation
+                          if (value == null || value.isEmpty) {
+                            return "please provide a workshop";
+                          }
+                          return null;
+                        },
+                        onSaved: (newValue) {
+                          _workShop.text = newValue!.trim();
+                        },
+                      ),
+                    ),
+                    // Form fields for entering equipment details
+                    // Discipline
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        "Discipline",
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      // Discipline input field
+                      child: TextFormField(
+                        controller: _discipline,
+                        //initialValue: equipmentData['Discipline'],
+                        keyboardType: TextInputType.name,
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8),
+                            ),
+                          ),
+                          hintText: "Enter the Discipline",
+                          hintStyle: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          prefixIcon: const Icon(
+                            Icons.build_circle_outlined,
+                          ),
+                          prefixIconColor: MaterialStateColor.resolveWith(
+                            (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.focused)) {
+                                return Theme.of(context).colorScheme.primary;
+                              }
+                              if (states.contains(MaterialState.error)) {
+                                return Theme.of(context).colorScheme.error;
+                              }
+                              return Colors.grey.shade500;
+                            },
+                          ),
+                        ),
+                        validator: (value) {
+                          //create a email validation
+                          if (value == null || value.isEmpty) {
+                            return "please provide an discipline";
+                          }
+                          return null;
+                        },
+                        onSaved: (newValue) {
+                          _discipline.text = newValue!.trim();
+                        },
+                      ),
+                    ),
+                    // Segmented Button for entering equipment details
+                    // Priority
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        "Priority",
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: Center(
+                        child: SegmentedButton(
+                          segments: const [
+                            ButtonSegment(
+                              value: Priority.Low,
+                              label: Text("Low"),
+                              icon: Icon(Ionicons.checkmark_circle_outline),
+                            ),
+                            ButtonSegment(
+                              value: Priority.Medium,
+                              label: Text("Medium"),
+                              icon: Icon(Ionicons.information_circle_outline),
+                            ),
+                            ButtonSegment(
+                              value: Priority.High,
+                              label: Text("High"),
+                              icon: Icon(Ionicons.alert_circle_outline),
+                            ),
+                          ],
+                          selected: <Priority>{defaultPriority},
+                          onSelectionChanged: (Set<Priority> newvalue) {
+                            setState(() {
+                              defaultPriority = newvalue.first;
+                            });
+                          },
+                          showSelectedIcon: false,
+                        ),
+                      ),
+                    ),
+                    // Segmented Button for entering equipment details
+                    // State
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        "State",
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: Center(
+                        child: SegmentedButton(
+                          segments: const [
+                            ButtonSegment(
+                              value: Status.Standby,
+                              label: Text("Standby"),
+                              icon: Icon(Icons.pause_circle_outline),
+                            ),
+                            ButtonSegment(
+                              value: Status.Active,
+                              label: Text("Active"),
+                              icon: Icon(Icons.access_time),
+                            ),
+                            ButtonSegment(
+                              value: Status.Shutdown,
+                              label: Text("Shutdown"),
+                              icon: Icon(Icons.power_off),
+                            ),
+                          ],
+                          selected: <Status>{defaultStatus},
+                          onSelectionChanged: (Set<Status> newvalue) {
+                            setState(() {
+                              defaultStatus = newvalue.first;
+                            });
+                          },
+                          showSelectedIcon: false,
+                        ),
+                      ),
+                    ),
+                    // Form fields for entering equipment details
+                    // Description
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        "Description",
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      // Description input field
+                      child: TextFormField(
+                        //initialValue: equipmentData['Description'],
+                        controller: _description,
+                        keyboardType: TextInputType.multiline,
+                        textInputAction: TextInputAction.done,
+                        maxLines: 3,
+                        maxLength: 200,
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8),
+                            ),
+                          ),
+                          hintText: "Enter a brief Description",
+                          hintStyle: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          prefixIcon: const Padding(
+                            padding: EdgeInsets.only(bottom: 48),
+                            child: Icon(
+                              Icons.description_outlined,
+                            ),
+                          ),
+                          prefixIconColor: MaterialStateColor.resolveWith(
+                            (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.focused)) {
+                                return Theme.of(context).colorScheme.primary;
+                              }
+                              if (states.contains(MaterialState.error)) {
+                                return Theme.of(context).colorScheme.error;
+                              }
+                              return Colors.grey.shade500;
+                            },
+                          ),
+                        ),
+                        validator: (value) {
+                          //create a email validation
+                          if (value == null || value.isEmpty) {
+                            return "please provide a description";
+                          }
+                          return null;
+                        },
+                        onSaved: (newValue) {
+                          _description.text = newValue!.trim();
+                        },
+                      ),
+                    ),
+                    // Button to create new equipment
+                    Center(
+                      child: SizedBox(
+                        height: 48,
+                        child: FilledButton(
+                          onPressed: () async {
+                            // Show a confirmation dialog before creating new equipment
+                            return showDialog(
                               context: context,
                               builder: (context) {
-                                return EquipmentPictureBottomSheet(
-                                  equipmentId: equipmentData['id'],
-                                  equipmentImageUrl: equipmentData['Photo'],
-                                  tagName: equipmentData['TagName'],
+                                return AlertDialog(
+                                  title: const Text("Confirmation"),
+                                  content: const Text(
+                                    "Do you want to edit this equipment ?",
+                                  ),
+                                  actions: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: Text(
+                                            "Cancel",
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                            ),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            try {
+                                              if (_formkey.currentState!
+                                                  .validate()) {
+                                                _formkey.currentState!
+                                                    .validate();
+                                                DocumentReference
+                                                    documentReference =
+                                                    FirebaseFirestore.instance
+                                                        .collection(
+                                                            'equipments')
+                                                        .doc(widget
+                                                            .equipment.id);
+                                                Map<String, dynamic>
+                                                    updatedEquipment = {
+                                                  tagName: _tagName.text,
+                                                  area: _area.text,
+                                                  workshop: _workShop.text,
+                                                  discipline: _discipline.text,
+                                                  priority: defaultPriority
+                                                      .priorityToShortString(),
+                                                  status: defaultStatus
+                                                      .statusToShortString(),
+                                                  description:
+                                                      _description.text,
+                                                  updatedOn: Timestamp.now(),
+                                                };
+
+                                                //Update the document with the new data
+                                                documentReference
+                                                    .update(updatedEquipment);
+
+                                                // Show success message
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(equipmentData[
+                                                            tagName] +
+                                                        ' updated successfully'),
+                                                  ),
+                                                );
+                                              }
+                                            } catch (e) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    'Failed to update document: $e'),
+                                              ));
+                                            }
+                                            // createNewEquipment();
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text("Confirm"),
+                                        )
+                                      ],
+                                    ),
+                                  ],
                                 );
                               },
                             );
                           },
                           child: const Text(
-                            "Change Equipment Picture",
+                            "Finish Editing",
                           ),
                         ),
                       ),
-                      // Form fields for entering equipment details
-                      // Tag Name
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text(
-                          "Tag name",
-                          style: Theme.of(context).textTheme.titleLarge,
-                          textAlign: TextAlign.start,
-                        ),
-                      ),
-                      // Tag Name input field
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: TextFormField(
-                          initialValue: equipmentData['TagName'],
-                          keyboardType: TextInputType.name,
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8),
-                              ),
-                            ),
-                            hintText: "Enter the Tag name",
-                            hintStyle: TextStyle(
-                              color: Colors.grey.shade500,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            prefixIcon: const Icon(
-                              Icons.local_offer_outlined,
-                            ),
-                            prefixIconColor: MaterialStateColor.resolveWith(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.focused)) {
-                                  return Theme.of(context).colorScheme.primary;
-                                }
-                                if (states.contains(MaterialState.error)) {
-                                  return Theme.of(context).colorScheme.error;
-                                }
-                                return Colors.grey.shade500;
-                              },
-                            ),
-                          ),
-                          validator: (value) {
-                            //create a email validation
-                            if (value == null || value.isEmpty) {
-                              return "please provide an tag name";
-                            }
-                            return null;
-                          },
-                          onSaved: (newValue) {
-                            _tagName = newValue!.trim();
-                          },
-                        ),
-                      ),
-                      // Form fields for entering equipment details
-                      // Area
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text(
-                          "Area",
-                          style: Theme.of(context).textTheme.titleLarge,
-                          textAlign: TextAlign.start,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        // Area input field
-                        child: TextFormField(
-                          initialValue: equipmentData['Area'],
-                          keyboardType: TextInputType.name,
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8),
-                              ),
-                            ),
-                            hintText: "Enter the Area ",
-                            hintStyle: TextStyle(
-                              color: Colors.grey.shade500,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            prefixIcon: const Icon(
-                              Icons.location_on_outlined,
-                            ),
-                            prefixIconColor: MaterialStateColor.resolveWith(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.focused)) {
-                                  return Theme.of(context).colorScheme.primary;
-                                }
-                                if (states.contains(MaterialState.error)) {
-                                  return Theme.of(context).colorScheme.error;
-                                }
-                                return Colors.grey.shade500;
-                              },
-                            ),
-                          ),
-                          validator: (value) {
-                            //create a email validation
-                            if (value == null || value.isEmpty) {
-                              return "please provide an area";
-                            }
-                            return null;
-                          },
-                          onSaved: (newValue) {
-                            _area = newValue!.trim();
-                          },
-                        ),
-                      ),
-                      // Form fields for entering equipment details
-                      // Workshop
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text(
-                          "Workshop",
-                          style: Theme.of(context).textTheme.titleLarge,
-                          textAlign: TextAlign.start,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        // Workshop input field
-                        child: TextFormField(
-                          initialValue: equipmentData['Workshop'],
-                          keyboardType: TextInputType.name,
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8),
-                              ),
-                            ),
-                            hintText: "Enter the Workshop",
-                            hintStyle: TextStyle(
-                              color: Colors.grey.shade500,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            prefixIcon: const Icon(
-                              Icons.build_outlined,
-                            ),
-                            prefixIconColor: MaterialStateColor.resolveWith(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.focused)) {
-                                  return Theme.of(context).colorScheme.primary;
-                                }
-                                if (states.contains(MaterialState.error)) {
-                                  return Theme.of(context).colorScheme.error;
-                                }
-                                return Colors.grey.shade500;
-                              },
-                            ),
-                          ),
-                          validator: (value) {
-                            //create a email validation
-                            if (value == null || value.isEmpty) {
-                              return "please provide a workshop";
-                            }
-                            return null;
-                          },
-                          onSaved: (newValue) {
-                            _workShop = newValue!.trim();
-                          },
-                        ),
-                      ),
-                      // Form fields for entering equipment details
-                      // Discipline
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text(
-                          "Discipline",
-                          style: Theme.of(context).textTheme.titleLarge,
-                          textAlign: TextAlign.start,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        // Discipline input field
-                        child: TextFormField(
-                          initialValue: equipmentData['Discipline'],
-                          keyboardType: TextInputType.name,
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8),
-                              ),
-                            ),
-                            hintText: "Enter the Discipline",
-                            hintStyle: TextStyle(
-                              color: Colors.grey.shade500,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            prefixIcon: const Icon(
-                              Icons.build_circle_outlined,
-                            ),
-                            prefixIconColor: MaterialStateColor.resolveWith(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.focused)) {
-                                  return Theme.of(context).colorScheme.primary;
-                                }
-                                if (states.contains(MaterialState.error)) {
-                                  return Theme.of(context).colorScheme.error;
-                                }
-                                return Colors.grey.shade500;
-                              },
-                            ),
-                          ),
-                          validator: (value) {
-                            //create a email validation
-                            if (value == null || value.isEmpty) {
-                              return "please provide an discipline";
-                            }
-                            return null;
-                          },
-                          onSaved: (newValue) {
-                            _discipline = newValue!.trim();
-                          },
-                        ),
-                      ),
-                      // Segmented Button for entering equipment details
-                      // Priority
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text(
-                          "Priority",
-                          style: Theme.of(context).textTheme.titleLarge,
-                          textAlign: TextAlign.start,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: Center(
-                          child: SegmentedButton(
-                            segments: const [
-                              ButtonSegment(
-                                value: Priority.Low,
-                                label: Text("Low"),
-                                icon: Icon(Ionicons.checkmark_circle_outline),
-                              ),
-                              ButtonSegment(
-                                value: Priority.Medium,
-                                label: Text("Medium"),
-                                icon: Icon(Ionicons.information_circle_outline),
-                              ),
-                              ButtonSegment(
-                                value: Priority.High,
-                                label: Text("High"),
-                                icon: Icon(Ionicons.alert_circle_outline),
-                              ),
-                            ],
-                            selected: <Priority>{defaultPriority},
-                            onSelectionChanged: (Set<Priority> newvalue) {
-                              setState(() {
-                                defaultPriority = newvalue.first;
-                                _priority =
-                                    defaultPriority.priorityToShortString();
-                              });
-                            },
-                            showSelectedIcon: false,
-                          ),
-                        ),
-                      ),
-                      // Segmented Button for entering equipment details
-                      // State
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text(
-                          "State",
-                          style: Theme.of(context).textTheme.titleLarge,
-                          textAlign: TextAlign.start,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: Center(
-                          child: SegmentedButton(
-                            segments: const [
-                              ButtonSegment(
-                                value: Status.Standby,
-                                label: Text("Standby"),
-                                icon: Icon(Icons.pause_circle_outline),
-                              ),
-                              ButtonSegment(
-                                value: Status.Active,
-                                label: Text("Active"),
-                                icon: Icon(Icons.access_time),
-                              ),
-                              ButtonSegment(
-                                value: Status.Shutdown,
-                                label: Text("Shutdown"),
-                                icon: Icon(Icons.power_off),
-                              ),
-                            ],
-                            selected: <Status>{defaultStatus},
-                            onSelectionChanged: (Set<Status> newvalue) {
-                              setState(() {
-                                defaultStatus = newvalue.first;
-                                _status =
-                                    defaultPriority.priorityToShortString();
-                              });
-                            },
-                            showSelectedIcon: false,
-                          ),
-                        ),
-                      ),
-                      // Form fields for entering equipment details
-                      // Description
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text(
-                          "Description",
-                          style: Theme.of(context).textTheme.titleLarge,
-                          textAlign: TextAlign.start,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        // Description input field
-                        child: TextFormField(
-                          initialValue: equipmentData['Description'],
-                          keyboardType: TextInputType.multiline,
-                          textInputAction: TextInputAction.done,
-                          maxLines: 3,
-                          maxLength: 200,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8),
-                              ),
-                            ),
-                            hintText: "Enter a brief Description",
-                            hintStyle: TextStyle(
-                              color: Colors.grey.shade500,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            prefixIcon: const Padding(
-                              padding: EdgeInsets.only(bottom: 48),
-                              child: Icon(
-                                Icons.description_outlined,
-                              ),
-                            ),
-                            prefixIconColor: MaterialStateColor.resolveWith(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.focused)) {
-                                  return Theme.of(context).colorScheme.primary;
-                                }
-                                if (states.contains(MaterialState.error)) {
-                                  return Theme.of(context).colorScheme.error;
-                                }
-                                return Colors.grey.shade500;
-                              },
-                            ),
-                          ),
-                          validator: (value) {
-                            //create a email validation
-                            if (value == null || value.isEmpty) {
-                              return "please provide a description";
-                            }
-                            return null;
-                          },
-                          onSaved: (newValue) {
-                            _description = newValue!.trim();
-                          },
-                        ),
-                      ),
-                      // Button to create new equipment
-                      Center(
-                        child: SizedBox(
-                          height: 48,
-                          child: FilledButton(
-                            onPressed: () async {
-                              // Show a confirmation dialog before creating new equipment
-                              return showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text("Confirmation"),
-                                    content: const Text(
-                                      "Do you want to edit this equipment ?",
-                                    ),
-                                    actions: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context),
-                                            child: Text(
-                                              "Cancel",
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                              ),
-                                            ),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              // createNewEquipment();
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Text("Confirm"),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            child: const Text(
-                              "Finish Editing",
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                    )
+                  ],
                 ),
               ),
-            );
-          }),
+            ),
+          );
+        },
+      ),
     );
   }
 }

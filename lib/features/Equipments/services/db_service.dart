@@ -7,9 +7,11 @@ import '../../../firebase/cloud_firestore_references.dart';
 import '../model/equipment.dart';
 
 class DatabaseService {
+  String equipmentCollectionRef = "equipments";
+
   final _firestore = FirebaseFirestore.instance;
   late final CollectionReference _equipmentsRef;
-  DatabaseService() {
+  download() {
     _equipmentsRef =
         _firestore.collection(equipmentCollectionRef).withConverter<Equipment>(
               fromFirestore: (snapshots, _) => Equipment.fromJSON(
@@ -18,6 +20,7 @@ class DatabaseService {
               toFirestore: (equipment, _) => equipment.toJson(),
             );
   }
+
   // Get method
   Stream<QuerySnapshot> getEquipments() {
     return _equipmentsRef.snapshots();
@@ -91,10 +94,10 @@ class DatabaseService {
   }
 
   // Method to upload the selected profile picture to Firebase Storage and
-  //get it doawload URL
+  //get it download URL
   Future<String> addEquipmentPicture({
     required String equipmentPictureRef,
-    required File equipmnetPicture,
+    required File equipmentPicture,
   }) async {
     // Get references to Firebase Storage
     Reference rootReference = FirebaseStorage.instance.ref();
@@ -102,7 +105,7 @@ class DatabaseService {
     Reference imageToUploadRef = profilePicturesDir.child(equipmentPictureRef);
     // Upload the profile picture file to Firebase Storage
     await imageToUploadRef.putFile(
-      equipmnetPicture,
+      equipmentPicture,
       SettableMetadata(contentType: 'image/jpeg'),
     );
     // Get the download URL of the uploaded image

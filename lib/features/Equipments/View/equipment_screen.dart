@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ionicons/ionicons.dart';
@@ -75,8 +74,7 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                   backgroundColor:
                                       const Color.fromARGB(255, 237, 24, 9),
                                   onPressed: (context) {
-                                    DatabaseService()
-                                        .deleteEquipment(idEquipment);
+                                    download().deleteEquipment(idEquipment);
                                   }),
                             ],
                           ),
@@ -162,7 +160,7 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                     },
                   );
                 },
-                stream: DatabaseService().getEquipments(),
+                stream: download().getEquipments(),
               ),
             ),
           ],

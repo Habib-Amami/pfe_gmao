@@ -79,9 +79,9 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
   //controllers for the latitude and longitude fields
   TextEditingController latitudeController = TextEditingController();
   TextEditingController longitudeController = TextEditingController();
-  //inial value of the priority
+  //initial value of the priority
   Priority defaultPriority = Priority.Medium;
-  //inial value of the status
+  //initial value of the status
   Status defaultStatus = Status.Active;
   //a boolean flag to check if the Tagname is unique
   bool isTagNameNotUnique = false;
@@ -756,7 +756,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                           if (serviceEnabled) {
                             Position currentPosition =
                                 await Geolocator.getCurrentPosition();
-                            setState(() {});
+
                             _formkey.currentState!.setState(() {
                               latitudeController.text =
                                   currentPosition.latitude.toString();
@@ -959,12 +959,14 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                                 .generateUniqueId();
                                             // createNewEquipment();
                                             if (selectedImageFile != null) {
-                                              _photoURL = await DatabaseService()
-                                                  .addEquipmentPicture(
-                                                      equipmentPictureRef:
-                                                          "${_tagName}_profile_picture",
-                                                      equipmnetPicture:
-                                                          selectedImageFile!);
+                                              _photoURL =
+                                                  await DatabaseService()
+                                                      .addEquipmentPicture(
+                                                equipmentPictureRef:
+                                                    "${_tagName}_profile_picture",
+                                                equipmentPicture:
+                                                    selectedImageFile!,
+                                              );
                                               DatabaseService().addEquipment(
                                                 photoURL: _photoURL,
                                                 tagName: _tagName,
@@ -993,7 +995,6 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                               );
                                             }
                                           }
-
                                           if (context.mounted) {
                                             Navigator.pop(context);
                                           }
