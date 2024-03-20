@@ -30,6 +30,8 @@ const String status = 'Status';
 const String createdOn = 'CreatedOn';
 const String updatedOn = 'UpdatedOn';
 const String workshop = 'Workshop';
+const String longitude = 'Longitude';
+const String latitude = 'Latitude';
 
 //Reference to the equipment pictures folder in the firebase storage
 const String equipmnetPictureDic = "equipment_pictures";
