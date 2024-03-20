@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -82,6 +83,28 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
   Priority defaultPriority = Priority.Medium;
   //inial value of the status
   Status defaultStatus = Status.Active;
+  //a boolean flag to check if the Tagname is unique
+  bool isTagNameNotUnique = false;
+
+  //Future methode to check if the tag name is unique or not
+  Future<bool> checkDocumentExistence(
+    String collectionName,
+    String documentId,
+  ) async {
+    // Get a reference to the document
+    DocumentReference docRef =
+        FirebaseFirestore.instance.collection(collectionName).doc(documentId);
+
+    // Get the document snapshot
+    DocumentSnapshot docSnapshot = await docRef.get();
+
+    // Check if the document exists
+    if (docSnapshot.exists) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   // Future method to pick an image from the gallery or camera
   Future<CroppedFile?> pickImage({required ImageSource imageSource}) async {
@@ -319,7 +342,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                       ),
                     ),
                     validator: (value) {
-                      //create a email validation
+                      //create a tag name validation
                       if (value == null || value.isEmpty) {
                         return "please provide an tag name";
                       }
@@ -507,7 +530,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                   // Description input field
                   child: TextFormField(
                     keyboardType: TextInputType.multiline,
-                    textInputAction: TextInputAction.done,
+                    textInputAction: TextInputAction.next,
                     maxLines: 3,
                     maxLength: 200,
                     decoration: InputDecoration(
@@ -915,43 +938,62 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                       onPressed: () async {
                                         if (_formkey.currentState!.validate()) {
                                           _formkey.currentState!.save();
-                                          String docId = UniqueIdGenerator
-                                              .generateUniqueId();
-                                          // createNewEquipment();
-                                          if (selectedImageFile != null) {
-                                            _photoURL = await DatabaseService()
-                                                .addEquipmentPicture(
-                                                    equipmentPictureRef:
-                                                        "${_tagName}_profile_picture",
-                                                    equipmnetPicture:
-                                                        selectedImageFile!);
-                                            DatabaseService().addEquipment(
-                                              photoURL: _photoURL,
-                                              tagName: _tagName,
-                                              docId: docId,
-                                              description: _description,
-                                              area: _area,
-                                              discipline: _discipline,
-                                              workshop: _workShop,
-                                              status: defaultStatus
-                                                  .statusToShortString(),
-                                              priority: defaultPriority
-                                                  .priorityToShortString(),
-                                            );
+                                          isTagNameNotUnique =
+                                              await checkDocumentExistence(
+                                            tagNamesCollectionRef,
+                                            _tagName,
+                                          );
+                                          if (isTagNameNotUnique) {
+                                            if (context.mounted) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                    "Tag name already exist! please provide a unique tag name",
+                                                  ),
+                                                ),
+                                              );
+                                            }
                                           } else {
-                                            DatabaseService().addEquipment(
-                                              tagName: _tagName,
-                                              docId: docId,
-                                              description: _description,
-                                              area: _area,
-                                              discipline: _discipline,
-                                              workshop: _workShop,
-                                              status: defaultStatus
-                                                  .statusToShortString(),
-                                              priority: defaultPriority
-                                                  .priorityToShortString(),
-                                            );
+                                            String docId = UniqueIdGenerator
+                                                .generateUniqueId();
+                                            // createNewEquipment();
+                                            if (selectedImageFile != null) {
+                                              _photoURL = await DatabaseService()
+                                                  .addEquipmentPicture(
+                                                      equipmentPictureRef:
+                                                          "${_tagName}_profile_picture",
+                                                      equipmnetPicture:
+                                                          selectedImageFile!);
+                                              DatabaseService().addEquipment(
+                                                photoURL: _photoURL,
+                                                tagName: _tagName,
+                                                docId: docId,
+                                                description: _description,
+                                                area: _area,
+                                                discipline: _discipline,
+                                                workshop: _workShop,
+                                                status: defaultStatus
+                                                    .statusToShortString(),
+                                                priority: defaultPriority
+                                                    .priorityToShortString(),
+                                              );
+                                            } else {
+                                              DatabaseService().addEquipment(
+                                                tagName: _tagName,
+                                                docId: docId,
+                                                description: _description,
+                                                area: _area,
+                                                discipline: _discipline,
+                                                workshop: _workShop,
+                                                status: defaultStatus
+                                                    .statusToShortString(),
+                                                priority: defaultPriority
+                                                    .priorityToShortString(),
+                                              );
+                                            }
                                           }
+
                                           if (context.mounted) {
                                             Navigator.pop(context);
                                           }
