@@ -14,6 +14,8 @@ class Equipment {
   String Discipline;
   String Workshop;
   String Photo;
+  String Longitude;
+  String Latitude;
 
   Equipment({
     required this.id,
@@ -27,6 +29,8 @@ class Equipment {
     required this.Discipline,
     required this.Workshop,
     required this.Photo,
+    required this.Longitude,
+    required this.Latitude,
   });
 
   Equipment.fromJSON(Map<String, dynamic> json)
@@ -42,6 +46,8 @@ class Equipment {
           Discipline: json["Discipline"]! as String,
           Workshop: json["Workshop"]! as String,
           Photo: json['Photo'] as String,
+          Longitude: json['Longitude'] as String,
+          Latitude: json['Latitude'] as String,
         );
 
   Equipment copyWith({
@@ -56,6 +62,8 @@ class Equipment {
     String? Discipline,
     String? Workshop,
     String? Photo,
+    String? Longitude,
+    String? Latitude,
   }) {
     return Equipment(
       id: id ?? this.id,
@@ -69,6 +77,8 @@ class Equipment {
       Discipline: Discipline ?? this.Discipline,
       Workshop: Workshop ?? this.Workshop,
       Photo: Photo ?? this.Photo,
+      Longitude: Longitude ?? this.Longitude,
+      Latitude: Latitude ?? this.Latitude,
     );
   }
 
@@ -85,6 +95,8 @@ class Equipment {
       'Discipline': Discipline,
       'WorkShop': Workshop,
       'Photo': Photo,
+      'Longitude': Longitude,
+      'Latitude': Latitude,
     };
   }
 }
