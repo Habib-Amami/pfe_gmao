@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ionicons/ionicons.dart';
-import 'edit_equipment_page.dart';
 
 import '../model/equipment.dart';
 import '../services/db_service.dart';
 import 'add_equipment_page.dart';
+import 'edit_equipment_page.dart';
 import 'equipment_view.dart';
 
 class EquipmentScreen extends StatefulWidget {
@@ -24,9 +24,11 @@ class EquipmentScreenState extends State<EquipmentScreen> {
         child: const Icon(Icons.library_add),
         onPressed: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const AddEquipmentPage()));
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddEquipmentPage(),
+            ),
+          );
         },
       ),
       body: SafeArea(
@@ -40,7 +42,8 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                   List equipments = snapshot.data?.docs ?? [];
                   if (equipments.isEmpty) {
                     return const Center(
-                        child: Text("Equipments list is empty!"));
+                      child: Text("Equipments list is empty!"),
+                    );
                   }
                   return ListView.builder(
                     itemCount: equipments.length,
@@ -74,7 +77,8 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                   backgroundColor:
                                       const Color.fromARGB(255, 237, 24, 9),
                                   onPressed: (context) {
-                                    download().deleteEquipment(idEquipment);
+                                    DatabaseService()
+                                        .deleteEquipment(idEquipment);
                                   }),
                             ],
                           ),
@@ -160,7 +164,7 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                     },
                   );
                 },
-                stream: download().getEquipments(),
+                stream: DatabaseService().getEquipments(),
               ),
             ),
           ],

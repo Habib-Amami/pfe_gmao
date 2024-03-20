@@ -1,8 +1,10 @@
 import 'dart:io';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+
 import '../services/db_service.dart';
 
 // Import the profile model for updating profile information
@@ -169,7 +171,7 @@ class Download extends State<EquipmentPictureBottomSheet> {
                           "${widget.tagName}_equipment_picture",
                       equipmentPicture: imageFile!,
                     );
-                    await download().updateEquipmentPicture(
+                    await DatabaseService().updateEquipmentPicture(
                         imageUrl: equipmentImageURL,
                         idEquipment: widget.equipmentId);
                     if (context.mounted) {

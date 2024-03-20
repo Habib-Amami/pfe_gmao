@@ -49,7 +49,7 @@ class _EquipmentViewState extends State<EquipmentView> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 10, bottom: 8),
-                child: Container(
+                child: SizedBox(
                   height: 150,
                   child: CircleAvatar(
                     backgroundColor: Theme.of(context).colorScheme.tertiary,

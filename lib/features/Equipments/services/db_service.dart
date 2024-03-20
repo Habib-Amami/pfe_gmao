@@ -11,7 +11,7 @@ class DatabaseService {
 
   final _firestore = FirebaseFirestore.instance;
   late final CollectionReference _equipmentsRef;
-  download() {
+  DatabaseService() {
     _equipmentsRef =
         _firestore.collection(equipmentCollectionRef).withConverter<Equipment>(
               fromFirestore: (snapshots, _) => Equipment.fromJSON(
@@ -68,7 +68,10 @@ class DatabaseService {
   }
 
   // update method
-  void updateEquipment(String idEquipment, Equipment equipment) {
+  void updateEquipment(
+    String idEquipment,
+    Equipment equipment,
+  ) {
     _equipmentsRef.doc(idEquipment).update(equipment.toJson());
   }
 
