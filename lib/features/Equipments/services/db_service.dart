@@ -2,12 +2,9 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import '../View/add_equipment_page.dart';
 import '../../../firebase/cloud_firestore_references.dart';
 
 import '../model/equipment.dart';
-
-const String equipmentCollectionRef = "equipments";
 
 class DatabaseService {
   final _firestore = FirebaseFirestore.instance;
@@ -15,8 +12,9 @@ class DatabaseService {
   DatabaseService() {
     _equipmentsRef =
         _firestore.collection(equipmentCollectionRef).withConverter<Equipment>(
-              fromFirestore: (snapshots, _) =>
-                  Equipment.fromJSON(snapshots.data()!),
+              fromFirestore: (snapshots, _) => Equipment.fromJSON(
+                snapshots.data()!,
+              ),
               toFirestore: (equipment, _) => equipment.toJson(),
             );
   }
@@ -43,7 +41,14 @@ class DatabaseService {
     String photoURL =
         'https://firebasestorage.googleapis.com/v0/b/pfe-gmao-11445214.appspot.com/o/default%20picture.jpg?alt=media&token=c964483d-03dd-4ce2-982b-481d4fa22be2',
   }) async {
-    FirebaseFirestore.instance.collection("equipments").doc(docId).set({
+    FirebaseFirestore.instance
+        .collection(tagNamesCollectionRef)
+        .doc(tagName)
+        .set({});
+    FirebaseFirestore.instance
+        .collection(equipmentCollectionRef)
+        .doc(docId)
+        .set({
       'id': docId,
       'TagName': tagName,
       'Description': description,
@@ -65,8 +70,10 @@ class DatabaseService {
   }
 
   // update method
-  Future<void> updateEquipmentPicture(
-      {required String idEquipment, required String imageUrl}) async {
+  Future<void> updateEquipmentPicture({
+    required String idEquipment,
+    required String imageUrl,
+  }) async {
     await _equipmentsRef.doc(idEquipment).update({'Photo': imageUrl});
   }
 
