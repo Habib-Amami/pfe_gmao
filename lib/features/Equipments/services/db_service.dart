@@ -41,6 +41,8 @@ class DatabaseService {
     required String workshop,
     required String status,
     required String priority,
+    required String longitude,
+    required String latitude,
     String photoURL =
         'https://firebasestorage.googleapis.com/v0/b/pfe-gmao-11445214.appspot.com/o/default%20picture.jpg?alt=media&token=c964483d-03dd-4ce2-982b-481d4fa22be2',
   }) async {
@@ -63,6 +65,8 @@ class DatabaseService {
       'CreatedOn': Timestamp.now(),
       'UpdatedOn': Timestamp.now(),
       'Photo': photoURL,
+      'Longitude': longitude,
+      'Latitude': latitude,
     });
     //_equipmentsRef.id;
   }
