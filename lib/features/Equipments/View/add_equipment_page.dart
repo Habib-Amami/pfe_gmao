@@ -7,6 +7,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pfe_gmao/home.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../services/db_service.dart';
@@ -603,6 +604,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                             padding: const EdgeInsets.only(bottom: 16),
                             // Description input field
                             child: TextFormField(
+                              enabled: false,
                               controller: latitudeController,
                               keyboardType: TextInputType.multiline,
                               textInputAction: TextInputAction.next,
@@ -673,6 +675,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                             padding: const EdgeInsets.only(bottom: 16),
                             // Description input field
                             child: TextFormField(
+                              enabled: false,
                               controller: longitudeController,
                               keyboardType: TextInputType.multiline,
                               textInputAction: TextInputAction.done,
@@ -730,7 +733,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                   child: Center(
                     child: FilledButton.icon(
                       icon: Icon(
-                        Icons.location_searching_outlined,
+                        Icons.my_location_outlined,
                         color:
                             Theme.of(context).colorScheme.onSecondaryContainer,
                       ),
@@ -804,56 +807,6 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                   ),
                 ),
                 // Segmented Button for entering equipment details
-                // State
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Text(
-                    "State",
-                    style: Theme.of(context).textTheme.titleLarge,
-                    textAlign: TextAlign.start,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: Center(
-                    child: SegmentedButton(
-                      segments: [
-                        ButtonSegment(
-                          value: Status.Standby,
-                          label: Text(
-                            "Standby",
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                          icon: const Icon(Icons.pause_circle_outline),
-                        ),
-                        ButtonSegment(
-                          value: Status.Active,
-                          label: Text(
-                            "Active",
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                          icon: const Icon(Icons.access_time),
-                        ),
-                        ButtonSegment(
-                          value: Status.Shutdown,
-                          label: Text(
-                            "Shutdown",
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                          icon: const Icon(Icons.power_off),
-                        ),
-                      ],
-                      selected: <Status>{defaultStatus},
-                      onSelectionChanged: (Set<Status> newvalue) {
-                        setState(() {
-                          defaultStatus = newvalue.first;
-                        });
-                      },
-                      showSelectedIcon: false,
-                    ),
-                  ),
-                ),
-                // Segmented Button for entering equipment details
                 // Priority
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
@@ -864,7 +817,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 32),
+                  padding: const EdgeInsets.only(bottom: 16),
                   child: Center(
                     child: SegmentedButton(
                       segments: [
@@ -903,6 +856,58 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                     ),
                   ),
                 ),
+
+                // Segmented Button for entering equipment details
+                // State
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    "State",
+                    style: Theme.of(context).textTheme.titleLarge,
+                    textAlign: TextAlign.start,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 32),
+                  child: Center(
+                    child: SegmentedButton(
+                      segments: [
+                        ButtonSegment(
+                          value: Status.Standby,
+                          label: Text(
+                            "Standby",
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
+                          icon: const Icon(Icons.pause_circle_outline),
+                        ),
+                        ButtonSegment(
+                          value: Status.Active,
+                          label: Text(
+                            "Active",
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
+                          icon: const Icon(Icons.access_time),
+                        ),
+                        ButtonSegment(
+                          value: Status.Shutdown,
+                          label: Text(
+                            "Shutdown",
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
+                          icon: const Icon(Icons.power_off),
+                        ),
+                      ],
+                      selected: <Status>{defaultStatus},
+                      onSelectionChanged: (Set<Status> newvalue) {
+                        setState(() {
+                          defaultStatus = newvalue.first;
+                        });
+                      },
+                      showSelectedIcon: false,
+                    ),
+                  ),
+                ),
+
                 // Button to create new equipment
                 Center(
                   child: SizedBox(
@@ -979,6 +984,10 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                                     .statusToShortString(),
                                                 priority: defaultPriority
                                                     .priorityToShortString(),
+                                                longitude:
+                                                    longitudeController.text,
+                                                latitude:
+                                                    longitudeController.text,
                                               );
                                             } else {
                                               DatabaseService().addEquipment(
@@ -992,12 +1001,23 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                                     .statusToShortString(),
                                                 priority: defaultPriority
                                                     .priorityToShortString(),
+                                                longitude:
+                                                    longitudeController.text,
+                                                latitude:
+                                                    latitudeController.text,
                                               );
                                             }
                                           }
                                           if (context.mounted) {
                                             Navigator.pop(context);
                                           }
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const Home()));
+                                        } else {
+                                          Navigator.pop(context);
                                         }
                                       },
                                       child: const Text("Confirm"),

@@ -1,8 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:pfe_gmao/features/Equipments/services/db_service.dart';
+import 'package:pfe_gmao/home.dart';
 import '../../../firebase/cloud_firestore_references.dart';
 import '../model/equipment.dart';
+import 'alerts/equipment_location_permission_denied_alert.dart';
+import 'alerts/equipment_location_service_alert.dart';
 import 'equipment_picture_bottom_sheet.dart';
 
 // Define an enumeration for equipment priorities
@@ -55,6 +61,8 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
   //
   late Future<DocumentSnapshot> _equipmentFuture;
 
+  late Priority defaultPriority;
+  late Status defaultStatus;
   @override
   void initState() {
     super.initState();
@@ -62,16 +70,23 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
         .collection('equipments')
         .doc(widget.equipment.id)
         .get();
+    if (widget.equipment.Priority == 'Medium') {
+      defaultPriority = Priority.Medium;
+    } else if (widget.equipment.Priority == 'High') {
+      defaultPriority = Priority.High;
+    } else {
+      defaultPriority = Priority.Low;
+    }
+
+    if (widget.equipment.Status == 'Active') {
+      defaultStatus = Status.Active;
+    } else if (widget.equipment.Status == 'Standby') {
+      defaultStatus = Status.Standby;
+    } else {
+      defaultStatus = Status.Shutdown;
+    }
   }
 
-  //  Variables to store equipment details
-  // final TextEditingController _area = TextEditingController(text: widget.equipment.Area);
-  // final TextEditingController _workShop = TextEditingController(text: widget.equipment.Workshop) ;
-  // final TextEditingController _discipline = TextEditingController(text: widget.equipment.Discipline);
-  // final TextEditingController _description =TextEditingController(text: widget.equipment.Description);
-  Priority defaultPriority = Priority.Medium;
-
-  Status defaultStatus = Status.Active;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,6 +117,10 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
               TextEditingController(text: equipmentData[discipline]);
           final TextEditingController _description =
               TextEditingController(text: equipmentData[description]);
+          final TextEditingController longitudeController =
+              TextEditingController(text: equipmentData[longitude]);
+          final TextEditingController latitudeController =
+              TextEditingController(text: equipmentData[latitude]);
 
           return SingleChildScrollView(
             child: Padding(
@@ -115,15 +134,18 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                     Center(
                       // Display the selected image or a default image
                       child: Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: CircleAvatar(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          radius: 50,
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: SizedBox(
+                          height: 150,
                           child: CircleAvatar(
-                            radius: 48,
-                            backgroundImage:
-                                NetworkImage(equipmentData['Photo']),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            radius: 150,
+                            child: CircleAvatar(
+                              radius: 72,
+                              backgroundImage:
+                                  NetworkImage(equipmentData['Photo']),
+                            ),
                           ),
                         ),
                       ),
@@ -153,7 +175,7 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                     // Form fields for entering equipment details
                     // Tag Name
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.only(bottom: 8, top: 8),
                       child: Text(
                         "Tag name",
                         style: Theme.of(context).textTheme.titleLarge,
@@ -374,89 +396,6 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                         },
                       ),
                     ),
-                    // Segmented Button for entering equipment details
-                    // Priority
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Text(
-                        "Priority",
-                        style: Theme.of(context).textTheme.titleLarge,
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: Center(
-                        child: SegmentedButton(
-                          segments: const [
-                            ButtonSegment(
-                              value: Priority.Low,
-                              label: Text("Low"),
-                              icon: Icon(Ionicons.checkmark_circle_outline),
-                            ),
-                            ButtonSegment(
-                              value: Priority.Medium,
-                              label: Text("Medium"),
-                              icon: Icon(Ionicons.information_circle_outline),
-                            ),
-                            ButtonSegment(
-                              value: Priority.High,
-                              label: Text("High"),
-                              icon: Icon(Ionicons.alert_circle_outline),
-                            ),
-                          ],
-                          selected: <Priority>{defaultPriority},
-                          onSelectionChanged: (Set<Priority> newvalue) {
-                            setState(() {
-                              defaultPriority = newvalue.first;
-                            });
-                          },
-                          showSelectedIcon: false,
-                        ),
-                      ),
-                    ),
-                    // Segmented Button for entering equipment details
-                    // State
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Text(
-                        "State",
-                        style: Theme.of(context).textTheme.titleLarge,
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: Center(
-                        child: SegmentedButton(
-                          segments: const [
-                            ButtonSegment(
-                              value: Status.Standby,
-                              label: Text("Standby"),
-                              icon: Icon(Icons.pause_circle_outline),
-                            ),
-                            ButtonSegment(
-                              value: Status.Active,
-                              label: Text("Active"),
-                              icon: Icon(Icons.access_time),
-                            ),
-                            ButtonSegment(
-                              value: Status.Shutdown,
-                              label: Text("Shutdown"),
-                              icon: Icon(Icons.power_off),
-                            ),
-                          ],
-                          selected: <Status>{defaultStatus},
-                          onSelectionChanged: (Set<Status> newvalue) {
-                            setState(() {
-                              defaultStatus = newvalue.first;
-                            });
-                          },
-                          showSelectedIcon: false,
-                        ),
-                      ),
-                    ),
-                    // Form fields for entering equipment details
                     // Description
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8),
@@ -517,11 +456,389 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                         },
                       ),
                     ),
+                    // Form fields for entering equipment details
+                    // Description
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        "Location",
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: Text(
+                                "latitude",
+                                style: Theme.of(context).textTheme.titleSmall,
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.sizeOf(context).width / 2 - 24,
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 16),
+                                // Description input field
+                                child: TextFormField(
+                                  enabled: false,
+                                  controller: latitudeController,
+                                  keyboardType: TextInputType.multiline,
+                                  textInputAction: TextInputAction.next,
+                                  decoration: InputDecoration(
+                                    border: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(8),
+                                      ),
+                                    ),
+                                    hintText: "latitude value",
+                                    hintStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    prefixIcon: const Icon(
+                                      Icons.location_on_outlined,
+                                    ),
+                                    prefixIconColor:
+                                        MaterialStateColor.resolveWith(
+                                      (Set<MaterialState> states) {
+                                        if (states
+                                            .contains(MaterialState.focused)) {
+                                          return Theme.of(context)
+                                              .colorScheme
+                                              .primary;
+                                        }
+                                        if (states
+                                            .contains(MaterialState.error)) {
+                                          return Theme.of(context)
+                                              .colorScheme
+                                              .error;
+                                        }
+                                        return Colors.grey.shade500;
+                                      },
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    //create a email validation
+                                    if (value == null || value.isEmpty) {
+                                      return "please provide a latitude";
+                                    }
+                                    return null;
+                                  },
+
+                                  // onSaved: (newValue) {
+                                  //   _description = newValue!.trim();
+                                  // },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: Text(
+                                "longitude",
+                                style: Theme.of(context).textTheme.titleSmall,
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.sizeOf(context).width / 2 - 24,
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 16),
+                                // Description input field
+                                child: TextFormField(
+                                  enabled: false,
+                                  controller: longitudeController,
+                                  keyboardType: TextInputType.multiline,
+                                  textInputAction: TextInputAction.done,
+                                  decoration: InputDecoration(
+                                    border: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(8),
+                                      ),
+                                    ),
+                                    hintText: "longitude value",
+                                    hintStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    prefixIcon: const Icon(
+                                      Icons.location_on_outlined,
+                                    ),
+                                    prefixIconColor:
+                                        MaterialStateColor.resolveWith(
+                                      (Set<MaterialState> states) {
+                                        if (states
+                                            .contains(MaterialState.focused)) {
+                                          return Theme.of(context)
+                                              .colorScheme
+                                              .primary;
+                                        }
+                                        if (states
+                                            .contains(MaterialState.error)) {
+                                          return Theme.of(context)
+                                              .colorScheme
+                                              .error;
+                                        }
+                                        return Colors.grey.shade500;
+                                      },
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    //create a email validation
+                                    if (value == null || value.isEmpty) {
+                                      return "please provide a longitude";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: Center(
+                        child: FilledButton.icon(
+                          icon: Icon(
+                            Icons.my_location_outlined,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer,
+                          ),
+                          style: ButtonStyle(
+                            elevation: const MaterialStatePropertyAll(2),
+                            backgroundColor: MaterialStatePropertyAll(
+                              Theme.of(context).colorScheme.secondaryContainer,
+                            ),
+                          ),
+                          onPressed: () async {
+                            // Handle location permissions and image picking
+                            await Permission.location.onDeniedCallback(() {
+                              if (context.mounted) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) =>
+                                      const EquipmentLocationPermissionDeniedAlert(),
+                                );
+                              }
+                            }).onGrantedCallback(() async {
+                              bool serviceEnabled =
+                                  await Geolocator.isLocationServiceEnabled();
+                              if (serviceEnabled) {
+                                Position currentPosition =
+                                    await Geolocator.getCurrentPosition();
+
+                                _formkey.currentState!.setState(() {
+                                  latitudeController.text =
+                                      currentPosition.latitude.toString();
+
+                                  longitudeController.text =
+                                      currentPosition.longitude.toString();
+                                });
+                              } else {
+                                if (context.mounted) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) =>
+                                        const EquipmentLocationServiceAlert(),
+                                    barrierDismissible: false,
+                                  );
+                                }
+                              }
+                            }).onPermanentlyDeniedCallback(() {
+                              if (context.mounted) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) =>
+                                      const EquipmentLocationPermissionDeniedAlert(),
+                                );
+                              }
+                            }).request();
+                          },
+                          label: Text(
+                            "Locate equipment",
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: Text(
+                        "Note : Please make sure you are close to the equipment to accurately locate and save its coordinates.",
+                        style: Theme.of(context).textTheme.bodySmall,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                     // Button to create new equipment
-                    Center(
-                      child: SizedBox(
-                        height: 48,
-                        child: FilledButton(
+                    // Segmented Button for entering equipment details
+                    // Priority
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        "Priority",
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: Center(
+                        child: SegmentedButton(
+                          segments: const [
+                            ButtonSegment(
+                              value: Priority.Low,
+                              label: Text("Low"),
+                              icon: Icon(Ionicons.checkmark_circle_outline),
+                            ),
+                            ButtonSegment(
+                              value: Priority.Medium,
+                              label: Text("Medium"),
+                              icon: Icon(Ionicons.information_circle_outline),
+                            ),
+                            ButtonSegment(
+                              value: Priority.High,
+                              label: Text("High"),
+                              icon: Icon(Ionicons.alert_circle_outline),
+                            ),
+                          ],
+                          selected: <Priority>{defaultPriority},
+                          onSelectionChanged: (Set<Priority> newvalue) {
+                            setState(() {
+                              defaultPriority = newvalue.first;
+                            });
+                          },
+                          showSelectedIcon: false,
+                        ),
+                      ),
+                    ),
+                    // Segmented Button for entering equipment details
+                    // State
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        "State",
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 32),
+                      child: Center(
+                        child: SegmentedButton(
+                          segments: const [
+                            ButtonSegment(
+                              value: Status.Standby,
+                              label: Text("Standby"),
+                              icon: Icon(Icons.pause_circle_outline),
+                            ),
+                            ButtonSegment(
+                              value: Status.Active,
+                              label: Text("Active"),
+                              icon: Icon(Icons.access_time),
+                            ),
+                            ButtonSegment(
+                              value: Status.Shutdown,
+                              label: Text("Shutdown"),
+                              icon: Icon(Icons.power_off),
+                            ),
+                          ],
+                          selected: <Status>{defaultStatus},
+                          onSelectionChanged: (Set<Status> newvalue) {
+                            setState(() {
+                              defaultStatus = newvalue.first;
+                            });
+                          },
+                          showSelectedIcon: false,
+                        ),
+                      ),
+                    ),
+                    // Form fields for entering equipment details
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: () async {
+                            return showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text('Confirmation'),
+                                    content: const Text(
+                                        'Are you sure you want to delete this equipment?'),
+                                    actions: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: Text(
+                                              "Cancel",
+                                              style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
+                                              ),
+                                            ),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              DatabaseService().deleteEquipment(
+                                                  equipmentData['id']);
+                                              // Show success message
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(equipmentData[
+                                                          tagName] +
+                                                      ' deleted successfully'),
+                                                ),
+                                              );
+
+                                              // close the alert dialog
+                                              Navigator.pop(context);
+
+                                              // go back to home
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: ((context) =>
+                                                          const Home())));
+                                            },
+                                            child: const Text("Confirm"),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  );
+                                });
+                          },
+                          child: const Text(
+                            'Delete this equipment',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                        FilledButton(
                           onPressed: () async {
                             // Show a confirmation dialog before creating new equipment
                             return showDialog(
@@ -615,7 +932,7 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                             "Finish Editing",
                           ),
                         ),
-                      ),
+                      ],
                     )
                   ],
                 ),
