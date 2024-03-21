@@ -155,28 +155,34 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: selectedImageFile != null
-                        ? CircleAvatar(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                            radius: 50,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(48),
-                              child: Image.file(
-                                selectedImageFile!,
-                                height: 96,
-                                width: 96,
-                                fit: BoxFit.contain,
+                        ? SizedBox(
+                            height: 150,
+                            child: CircleAvatar(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              radius: 150,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(90),
+                                child: Image.file(
+                                  selectedImageFile!,
+                                  height: 145,
+                                  width: 145,
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                           )
-                        : CircleAvatar(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                            radius: 50,
-                            child: const CircleAvatar(
-                              radius: 48,
-                              backgroundImage:
-                                  NetworkImage(defaultEquipmentPicture),
+                        : SizedBox(
+                            height: 150,
+                            child: CircleAvatar(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              radius: 150,
+                              child: const CircleAvatar(
+                                radius: 72,
+                                backgroundImage:
+                                    NetworkImage(defaultEquipmentPicture),
+                              ),
                             ),
                           ),
                   ),
