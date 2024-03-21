@@ -83,7 +83,6 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                             ],
                           ),
                           child: ExpansionTile(
-                            initiallyExpanded: true,
                             title: Text(
                               equipment.TagName,
                               style: TextStyle(
