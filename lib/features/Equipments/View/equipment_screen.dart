@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:pfe_gmao/features/Equipments/services/my_equipment_functions.dart';
 
 import '../model/equipment.dart';
 import '../services/db_service.dart';
 import 'add_equipment_page.dart';
 import 'edit_equipment_page.dart';
-import 'equipment_view.dart';
 
 class EquipmentScreen extends StatefulWidget {
   const EquipmentScreen({super.key});
@@ -83,78 +83,157 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                             ],
                           ),
                           child: ExpansionTile(
-                            title: Text(equipment.TagName),
-                            leading: equipment.Photo == ''
-                                ? const CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage: NetworkImage(
-                                        'https://firebasestorage.googleapis.com/v0/b/pfe-gmao-11445214.appspot.com/o/default%20picture.jpg?alt=media&token=c964483d-03dd-4ce2-982b-481d4fa22be2'),
-                                  )
-                                : CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage:
-                                        NetworkImage(equipment.Photo),
-                                  ),
-                            subtitle: Text(equipment.Description),
+                            initiallyExpanded: true,
+                            title: Text(
+                              equipment.TagName,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                            leading: CircleAvatar(
+                              radius: 30,
+                              backgroundImage: NetworkImage(equipment.Photo),
+                            ),
+                            subtitle: showState(equipment.Status),
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Column(
                                   children: [
-                                    const Text("Status:"),
-                                    // equipment.Status
-                                    //     ? IconButton(
-                                    //         alignment: Alignment.center,
-                                    //         icon: const Icon(
-                                    //           Ionicons.checkmark_circle,
-                                    //           color: Colors.green,
-                                    //         ),
-                                    //         onPressed: () {
-                                    //           // changing the status of the equipment
-                                    //           Equipment updatedEquipment =
-                                    //               equipment.copyWith(
-                                    //             Status: false,
-                                    //             UpdatedOn: Timestamp.now(),
-                                    //           );
-                                    //           DatabaseService().updateEquipment(
-                                    //               idEquipment,
-                                    //               updatedEquipment);
-                                    //         },
-                                    //       )
-                                    //     : IconButton(
-                                    //         alignment: Alignment.center,
-                                    //         icon: const Icon(
-                                    //           Ionicons.warning,
-                                    //           size: 20,
-                                    //           color: Colors.red,
-                                    //         ),
-                                    //         onPressed: () {
-                                    //           Equipment updatedEquipment =
-                                    //               equipment.copyWith(
-                                    //             Status: true,
-                                    //             UpdatedOn: Timestamp.now(),
-                                    //           );
-                                    //           DatabaseService().updateEquipment(
-                                    //               idEquipment,
-                                    //               updatedEquipment);
-                                    //         },
-                                    //       ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          width: 90,
+                                          height: 21,
+                                          child: Text(
+                                            "Description:",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(equipment.Description)
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(
+                                            width: 90,
+                                            height: 21,
+                                            child: Text(
+                                              "Created at:",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Text(formattedDate(
+                                              equipment.CreatedOn))
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(
+                                            width: 90,
+                                            height: 21,
+                                            child: Text(
+                                              "Priority:",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Text(equipment.Priority)
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(
+                                            width: 90,
+                                            height: 21,
+                                            child: Text(
+                                              "Discipline:",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Text(equipment.Discipline)
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(
+                                            width: 90,
+                                            height: 21,
+                                            child: Text(
+                                              "Workshop:",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Text(equipment.Workshop)
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(
+                                            height: 21,
+                                            width: 90,
+                                            child: Text(
+                                              "Area:",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Text(equipment.Area)
+                                        ],
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
                               TextButton(
-                                child: const Text("More details"),
+                                child: const Text("Show equipment location"),
                                 onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => EquipmentView(
-                                        equipmentId: idEquipment,
-                                        equipment: equipment,
-                                      ),
-                                    ),
-                                  );
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => EquipmentView(
+                                  //       equipmentId: idEquipment,
+                                  //       equipment: equipment,
+                                  //     ),
+                                  //   ),
+                                  // );
                                 },
                               )
                             ],
