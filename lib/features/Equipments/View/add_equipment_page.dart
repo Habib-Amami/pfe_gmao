@@ -8,10 +8,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pfe_gmao/home.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../services/db_service.dart';
-import '../services/uid_generator.dart';
 import 'alerts/equipment_camera_permission_denied_alert.dart';
 import 'alerts/equipment_location_permission_denied_alert.dart';
 import 'alerts/equipment_location_service_alert.dart';
@@ -122,8 +122,8 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
       CroppedFile? croppedFile = await cropper.cropImage(
         sourcePath: pickedImage.path,
         aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
-        maxHeight: 96,
-        maxWidth: 96,
+        maxHeight: 145,
+        maxWidth: 145,
       );
       if (croppedFile != null) {
         return croppedFile;
@@ -652,10 +652,6 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                 }
                                 return null;
                               },
-
-                              // onSaved: (newValue) {
-                              //   _description = newValue!.trim();
-                              // },
                             ),
                           ),
                         ),
@@ -723,10 +719,6 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                 }
                                 return null;
                               },
-
-                              // onSaved: (newValue) {
-                              //   _description = newValue!.trim();
-                              // },
                             ),
                           ),
                         ),
@@ -966,8 +958,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                               );
                                             }
                                           } else {
-                                            String docId = UniqueIdGenerator
-                                                .generateUniqueId();
+                                            String docId = const Uuid().v4();
                                             // createNewEquipment();
                                             if (selectedImageFile != null) {
                                               _photoURL =
@@ -1016,12 +1007,14 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                           }
                                           if (context.mounted) {
                                             Navigator.pop(context);
-                                          }
-                                          Navigator.push(
+                                            Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const Home()));
+                                                builder: (context) =>
+                                                    const Home(),
+                                              ),
+                                            );
+                                          }
                                         } else {
                                           Navigator.pop(context);
                                         }
