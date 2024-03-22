@@ -808,6 +808,8 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                                                     equipmentData['id'],
                                                 tagName:
                                                     equipmentData['TagName'],
+                                                photoURL:
+                                                    equipmentData['Photo'],
                                               );
                                               // Show success message
                                               ScaffoldMessenger.of(context)

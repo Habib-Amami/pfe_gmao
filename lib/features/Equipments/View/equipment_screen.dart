@@ -52,6 +52,7 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                       Equipment equipment = equipments[index].data();
                       String idEquipment = equipments[index].id;
                       String equipmentTagName = equipment.TagName;
+                      String equipmentPictureURL = equipment.Photo;
                       return Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 10),
@@ -84,6 +85,7 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                   DatabaseService().deleteEquipment(
                                     idEquipment: idEquipment,
                                     tagName: equipmentTagName,
+                                    photoURL: equipmentPictureURL,
                                   );
                                 },
                               ),
