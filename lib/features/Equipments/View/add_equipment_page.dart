@@ -965,7 +965,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                                   await DatabaseService()
                                                       .addEquipmentPicture(
                                                 equipmentPictureRef:
-                                                    "${_tagName}_profile_picture",
+                                                    "${_tagName}_equipment_picture",
                                                 equipmentPicture:
                                                     selectedImageFile!,
                                               );
