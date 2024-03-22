@@ -96,6 +96,11 @@ class DatabaseService {
         .collection(tagNamesCollectionRef)
         .doc(tagName)
         .delete();
+    Reference equipmentPictureRef = FirebaseStorage.instance
+        .ref()
+        .child(equipmnetPictureDic)
+        .child("${tagName}_equipment_picture");
+    equipmentPictureRef.delete();
     _equipmentsRef.doc(idEquipment).delete();
   }
 
