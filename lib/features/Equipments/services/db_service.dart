@@ -91,16 +91,19 @@ class DatabaseService {
   void deleteEquipment({
     required String idEquipment,
     required String tagName,
+    required String photoURL,
   }) {
     FirebaseFirestore.instance
         .collection(tagNamesCollectionRef)
         .doc(tagName)
         .delete();
-    Reference equipmentPictureRef = FirebaseStorage.instance
-        .ref()
-        .child(equipmnetPictureDic)
-        .child("${tagName}_equipment_picture");
-    equipmentPictureRef.delete();
+    if (photoURL != defaultEquipmentPicture) {
+      Reference equipmentPictureRef = FirebaseStorage.instance
+          .ref()
+          .child(equipmnetPictureDic)
+          .child("${tagName}_equipment_picture");
+      equipmentPictureRef.delete();
+    }
     _equipmentsRef.doc(idEquipment).delete();
   }
 
