@@ -804,7 +804,11 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                                           TextButton(
                                             onPressed: () {
                                               DatabaseService().deleteEquipment(
-                                                  equipmentData['id']);
+                                                idEquipment:
+                                                    equipmentData['id'],
+                                                tagName:
+                                                    equipmentData['TagName'],
+                                              );
                                               // Show success message
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
@@ -820,10 +824,12 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
 
                                               // go back to home
                                               Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: ((context) =>
-                                                          const Home())));
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: ((context) =>
+                                                      const Home()),
+                                                ),
+                                              );
                                             },
                                             child: const Text("Confirm"),
                                           )

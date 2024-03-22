@@ -51,6 +51,7 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                     itemBuilder: (context, index) {
                       Equipment equipment = equipments[index].data();
                       String idEquipment = equipments[index].id;
+                      String equipmentTagName = equipment.TagName;
                       return Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 10),
@@ -80,8 +81,10 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                 backgroundColor:
                                     const Color.fromARGB(255, 237, 24, 9),
                                 onPressed: (context) {
-                                  DatabaseService()
-                                      .deleteEquipment(idEquipment);
+                                  DatabaseService().deleteEquipment(
+                                    idEquipment: idEquipment,
+                                    tagName: equipmentTagName,
+                                  );
                                 },
                               ),
                             ],
