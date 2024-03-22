@@ -20,8 +20,9 @@ class EquipmentScreenState extends State<EquipmentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.library_add),
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text("Add"),
+        icon: const Icon(Icons.library_add),
         onPressed: () {
           Navigator.push(
             context,
@@ -58,31 +59,41 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                             motion: const StretchMotion(),
                             children: [
                               SlidableAction(
-                                  icon: Icons.edit_outlined,
-                                  label: "Edit",
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .primaryContainer,
-                                  onPressed: (context) => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              EditEquipmentPage(
-                                                equipmentId: idEquipment,
-                                                equipment: equipment,
-                                              )))),
+                                icon: Icons.edit_outlined,
+                                label: "Edit",
+                                backgroundColor: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
+                                onPressed: (context) => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditEquipmentPage(
+                                      equipmentId: idEquipment,
+                                      equipment: equipment,
+                                    ),
+                                  ),
+                                ),
+                              ),
                               SlidableAction(
-                                  icon: Ionicons.trash_bin,
-                                  label: "Delete",
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 237, 24, 9),
-                                  onPressed: (context) {
-                                    DatabaseService()
-                                        .deleteEquipment(idEquipment);
-                                  }),
+                                icon: Ionicons.trash_bin,
+                                label: "Delete",
+                                backgroundColor:
+                                    const Color.fromARGB(255, 237, 24, 9),
+                                onPressed: (context) {
+                                  DatabaseService()
+                                      .deleteEquipment(idEquipment);
+                                },
+                              ),
                             ],
                           ),
                           child: ExpansionTile(
+                            collapsedBackgroundColor: Theme.of(context)
+                                .colorScheme
+                                .primaryContainer
+                                .withOpacity(0.25),
+                            collapsedShape: ContinuousRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                             title: Text(
                               equipment.TagName,
                               style: TextStyle(
@@ -234,7 +245,7 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                   //   ),
                                   // );
                                 },
-                              )
+                              ),
                             ],
                           ),
                         ),
