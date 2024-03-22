@@ -88,7 +88,14 @@ class DatabaseService {
   }
 
   // delete method
-  void deleteEquipment(String idEquipment) {
+  void deleteEquipment({
+    required String idEquipment,
+    required String tagName,
+  }) {
+    FirebaseFirestore.instance
+        .collection(tagNamesCollectionRef)
+        .doc(tagName)
+        .delete();
     _equipmentsRef.doc(idEquipment).delete();
   }
 
