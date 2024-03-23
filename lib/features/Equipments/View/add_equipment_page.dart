@@ -7,11 +7,11 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pfe_gmao/features/Equipments/services/db_service.dart';
 import 'package:pfe_gmao/home.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
-import '../services/db_service.dart';
+import '../services/uid_generator.dart';
 import 'alerts/equipment_camera_permission_denied_alert.dart';
 import 'alerts/equipment_location_permission_denied_alert.dart';
 import 'alerts/equipment_location_service_alert.dart';
@@ -122,8 +122,8 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
       CroppedFile? croppedFile = await cropper.cropImage(
         sourcePath: pickedImage.path,
         aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
-        maxHeight: 145,
-        maxWidth: 145,
+        maxHeight: 96,
+        maxWidth: 96,
       );
       if (croppedFile != null) {
         return croppedFile;
@@ -652,6 +652,10 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                 }
                                 return null;
                               },
+
+                              // onSaved: (newValue) {
+                              //   _description = newValue!.trim();
+                              // },
                             ),
                           ),
                         ),
@@ -719,6 +723,10 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                 }
                                 return null;
                               },
+
+                              // onSaved: (newValue) {
+                              //   _description = newValue!.trim();
+                              // },
                             ),
                           ),
                         ),
@@ -905,7 +913,6 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                     ),
                   ),
                 ),
-
                 // Button to create new equipment
                 Center(
                   child: SizedBox(
@@ -958,14 +965,15 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                               );
                                             }
                                           } else {
-                                            String docId = const Uuid().v4();
+                                            String docId = UniqueIdGenerator
+                                                .generateUniqueId();
                                             // createNewEquipment();
                                             if (selectedImageFile != null) {
                                               _photoURL =
                                                   await DatabaseService()
                                                       .addEquipmentPicture(
                                                 equipmentPictureRef:
-                                                    "${_tagName}_equipment_picture",
+                                                    "${_tagName}_profile_picture",
                                                 equipmentPicture:
                                                     selectedImageFile!,
                                               );

@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pfe_gmao/features/Equipments/services/db_service.dart';
-import 'package:pfe_gmao/home.dart';
+
 import '../../../firebase/cloud_firestore_references.dart';
+import '../../../home.dart';
 import '../model/equipment.dart';
+import '../services/db_service.dart';
 import 'alerts/equipment_location_permission_denied_alert.dart';
 import 'alerts/equipment_location_service_alert.dart';
 import 'equipment_picture_bottom_sheet.dart';
@@ -826,12 +827,10 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
 
                                               // go back to home
                                               Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: ((context) =>
-                                                      const Home()),
-                                                ),
-                                              );
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: ((context) =>
+                                                          const Home())));
                                             },
                                             child: const Text("Confirm"),
                                           )
@@ -924,8 +923,14 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                                                     'Failed to update document: $e'),
                                               ));
                                             }
-                                            // createNewEquipment();
+
                                             Navigator.pop(context);
+
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const Home()));
                                           },
                                           child: const Text("Confirm"),
                                         )

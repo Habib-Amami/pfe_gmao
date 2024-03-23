@@ -26,7 +26,7 @@ class DatabaseService {
     return _equipmentsRef.snapshots();
   }
 
-// create method
+  // create method
   // void createEquipments() {
   //   FirebaseFirestore.instance.collection(Equipment_Collection_ref).add();
   // }
@@ -104,19 +104,11 @@ class DatabaseService {
           .child("${tagName}_equipment_picture");
       equipmentPictureRef.delete();
     }
-    _equipmentsRef.doc(idEquipment).delete();
+
+    // Method to upload the selected profile picture to Firebase Storage and
+    //get it download URL
   }
 
-  // update the equipment photo
-  updatePhotoURL(
-    String idEquipment,
-    Equipment equipment,
-  ) {
-    _equipmentsRef.doc(idEquipment).update(equipment.toJson());
-  }
-
-  // Method to upload the selected profile picture to Firebase Storage and
-  //get it download URL
   Future<String> addEquipmentPicture({
     required String equipmentPictureRef,
     required File equipmentPicture,
@@ -132,5 +124,13 @@ class DatabaseService {
     );
     // Get the download URL of the uploaded image
     return await imageToUploadRef.getDownloadURL();
+  }
+
+  // update the equipment photo
+  Future<void> updatePhotoURL(
+    String idEquipment,
+    Equipment equipment,
+  ) async {
+    await _equipmentsRef.doc(idEquipment).update(equipment.toJson());
   }
 }
