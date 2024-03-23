@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
 import 'features/Equipments/View/equipment_screen.dart';
-import 'features/profile_management/view/profile_view.dart';
 import 'menu_screens/calender_screen.dart';
 import 'menu_screens/notification_screen.dart';
 import 'menu_screens/settings.dart';
