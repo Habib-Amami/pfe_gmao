@@ -7,6 +7,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../../../home.dart';
@@ -965,8 +966,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                                               );
                                             }
                                           } else {
-                                            String docId = UniqueIdGenerator
-                                                .generateUniqueId();
+                                            String docId = const Uuid().v4();
                                             // createNewEquipment();
                                             if (selectedImageFile != null) {
                                               _photoURL =
