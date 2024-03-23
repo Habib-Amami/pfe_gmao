@@ -104,11 +104,11 @@ class DatabaseService {
           .child("${tagName}_equipment_picture");
       equipmentPictureRef.delete();
     }
-
-    // Method to upload the selected profile picture to Firebase Storage and
-    //get it download URL
+    _equipmentsRef.doc(idEquipment).delete();
   }
 
+  // Method to upload the selected profile picture to Firebase Storage and
+  //get it download URL
   Future<String> addEquipmentPicture({
     required String equipmentPictureRef,
     required File equipmentPicture,
