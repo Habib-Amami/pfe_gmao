@@ -916,8 +916,14 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                                                     'Failed to update document: $e'),
                                               ));
                                             }
-                                            // createNewEquipment();
+
                                             Navigator.pop(context);
+
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const Home()));
                                           },
                                           child: const Text("Confirm"),
                                         )
