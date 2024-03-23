@@ -10,7 +10,6 @@ import 'menu_screens/work_order_screen.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
-
   @override
   State<Home> createState() => _HomeState();
 }
@@ -23,50 +22,12 @@ class _HomeState extends State<Home> {
     CalenderScreen(),
     WorkOrderScreen(),
     NotificationScreen(),
+    Setting(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: const Color(0x00e4eef4),
-        title: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                height: 60,
-                width: 60,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: IconButton(
-                    icon: const Icon(Ionicons.person),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ProfileScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-              IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Setting(),
-                        ));
-                  },
-                  icon: const Icon(Ionicons.settings_sharp)),
-            ],
-          ),
-        ),
-      ),
       bottomNavigationBar: NavigationBar(
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         onDestinationSelected: (int index) {
@@ -103,10 +64,10 @@ class _HomeState extends State<Home> {
           ),
           NavigationDestination(
               selectedIcon: Icon(
-                Icons.webhook_rounded,
+                Icons.webhook_outlined,
               ),
               icon: Icon(
-                Icons.webhook_sharp,
+                Icons.webhook_rounded,
               ),
               label: "work order",
               tooltip: "work flow order"),
@@ -117,6 +78,16 @@ class _HomeState extends State<Home> {
             ),
             label: "Notifications",
             tooltip: "Notifications",
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(
+              Icons.settings_outlined,
+            ),
+            icon: Icon(
+              Icons.settings_rounded,
+            ),
+            label: "Settings",
+            tooltip: "Settings page",
           ),
         ],
       ),
