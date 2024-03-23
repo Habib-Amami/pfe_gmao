@@ -12,7 +12,6 @@ import 'package:uuid/uuid.dart';
 import '../../../firebase/cloud_firestore_references.dart';
 import '../../../home.dart';
 import '../services/db_service.dart';
-import '../services/uid_generator.dart';
 import 'alerts/equipment_camera_permission_denied_alert.dart';
 import 'alerts/equipment_location_permission_denied_alert.dart';
 import 'alerts/equipment_location_service_alert.dart';
