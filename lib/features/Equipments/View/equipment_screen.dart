@@ -80,8 +80,9 @@ class EquipmentScreenState extends State<EquipmentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.library_add),
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text("Add"),
+        icon: const Icon(Icons.library_add),
         onPressed: () {
           Navigator.push(
             context,
