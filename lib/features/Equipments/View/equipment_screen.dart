@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ionicons/ionicons.dart';
 
-import '../services/my_equipment_functions.dart';
 import '../../../firebase/cloud_firestore_references.dart';
 import '../model/equipment.dart';
 import '../services/db_service.dart';
+import '../services/my_equipment_functions.dart';
 import 'add_equipment_page.dart';
 import 'edit_equipment_page.dart';
 

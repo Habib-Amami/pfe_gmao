@@ -7,10 +7,10 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pfe_gmao/features/Equipments/services/db_service.dart';
-import 'package:pfe_gmao/home.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
+import '../../../home.dart';
+import '../services/db_service.dart';
 import '../services/uid_generator.dart';
 import 'alerts/equipment_camera_permission_denied_alert.dart';
 import 'alerts/equipment_location_permission_denied_alert.dart';
