@@ -60,6 +60,7 @@ dependencies:
   geolocator: ^11.0.0
   #for picking pdf files
   file_picker: ^8.0.0+1
+  open_filex: ^4.4.0
   
   flutter:
     sdk: flutter
