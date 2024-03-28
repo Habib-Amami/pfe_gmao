@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ionicons/ionicons.dart';
 
 import 'add_equipment_information_view.dart';
 import 'add_equipment_intervation_view.dart';
