@@ -2,11 +2,14 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
@@ -138,8 +141,10 @@ class _AddEquipmentInformationScreenState
 
   // Variable to store the selected image file
   File? userManualFile;
+  File? contractFile;
+  List<File> otherFiles = [];
 
-  Future<File?> getUserManual() async {
+  Future<File?> getSinglePDF() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
@@ -150,6 +155,41 @@ class _AddEquipmentInformationScreenState
     } else {
       return null;
     }
+  }
+
+  Future<List<File>> getMultiplePDF() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+    if (result != null) {
+      List<File> files = result.paths.map((path) => File(path!)).toList();
+      return files;
+    } else {
+      return [];
+    }
+  }
+
+  Future<String> uploadUserManual({
+    required String equipmentUserManualRef,
+    required File userManualFile,
+  }) async {
+    // Get references to Firebase Storage
+    Reference rootReference = FirebaseStorage.instance.ref();
+    Reference equipmentUserManuelsDir =
+        rootReference.child(equipmentUserManualsDir);
+    Reference userManualRef =
+        equipmentUserManuelsDir.child(equipmentUserManualRef);
+    // Upload the profile picture file to Firebase Storage
+    await userManualRef.putFile(
+      userManualFile,
+      SettableMetadata(
+        contentType: 'application/pdf',
+      ),
+    );
+    // Get the download URL of the uploaded image
+    return await userManualRef.getDownloadURL();
   }
 
   @override
@@ -916,8 +956,9 @@ class _AddEquipmentInformationScreenState
                   ),
                 ),
               ),
-              // field for add user manual
-              // State
+              //
+              // field for add user manual pdf
+              //
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
@@ -930,45 +971,292 @@ class _AddEquipmentInformationScreenState
                 padding: const EdgeInsets.only(bottom: 16),
                 child: SizedBox(
                   width: double.infinity,
-                  height: 80,
-                  child: GestureDetector(
-                    onTap: () async {
-                      // Handle File permissions and image picking
-                      await Permission.manageExternalStorage
-                          .onGrantedCallback(() async {
-                        userManualFile = await getUserManual();
-                        if (userManualFile != null) {
-                          print(userManualFile!.path);
-                        }
-                      }).request();
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .surfaceVariant
-                            .withOpacity(0.4),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.primaryContainer,
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.cloud_upload_outlined,
+                  height: 64,
+                  child: userManualFile == null
+                      ? GestureDetector(
+                          onTap: () async {
+                            // Handle File permissions and image picking
+                            await Permission.manageExternalStorage
+                                .onGrantedCallback(
+                              () async {
+                                userManualFile = await getSinglePDF();
+                                setState(() {});
+                              },
+                            ).request();
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .surfaceVariant
+                                  .withOpacity(0.4),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.cloud_upload_outlined,
+                                ),
+                                Text(
+                                  "Tap this area to upload the user manual \n for the equipment (pdf)",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.labelSmall,
+                                )
+                              ],
+                            ),
                           ),
-                          Text(
-                            "Tap this area to upload the user manual \n for the equipment",
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.labelSmall,
-                          )
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SvgPicture.asset(
+                              Theme.of(context).brightness == Brightness.light
+                                  ? "assets/light_pdf.svg"
+                                  : "assets/dark_pdf.svg",
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => OpenFilex.open(
+                                  userManualFile!.absolute.path,
+                                ),
+                                child: Text(
+                                  userManualFile!.path.split("/").last,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  userManualFile = null;
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.cancel_outlined,
+                              ),
+                            )
+                          ],
+                        ),
+                ),
+              ),
+              //
+              // field for add contract pdf
+              //
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  "Contract",
+                  style: Theme.of(context).textTheme.titleLarge,
+                  textAlign: TextAlign.start,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 64,
+                  child: contractFile == null
+                      ? GestureDetector(
+                          onTap: () async {
+                            // Handle File permissions and image picking
+                            await Permission.manageExternalStorage
+                                .onGrantedCallback(
+                              () async {
+                                contractFile = await getSinglePDF();
+                                setState(() {});
+                              },
+                            ).request();
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .surfaceVariant
+                                  .withOpacity(0.4),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.cloud_upload_outlined,
+                                ),
+                                Text(
+                                  "Tap this area to upload the contract \n for the equipment (pdf)",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.labelSmall,
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SvgPicture.asset(
+                              Theme.of(context).brightness == Brightness.light
+                                  ? "assets/light_pdf.svg"
+                                  : "assets/dark_pdf.svg",
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => OpenFilex.open(
+                                  contractFile!.absolute.path,
+                                ),
+                                child: Text(
+                                  contractFile!.path.split("/").last,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  contractFile = null;
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.cancel_outlined,
+                              ),
+                            )
+                          ],
+                        ),
+                ),
+              ),
+              //
+              // field for other related equipment pdf files
+              //
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  "Other",
+                  style: Theme.of(context).textTheme.titleLarge,
+                  textAlign: TextAlign.start,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: otherFiles.isEmpty
+                    ? SizedBox(
+                        width: double.infinity,
+                        height: 64,
+                        child: GestureDetector(
+                          onTap: () async {
+                            // Handle File permissions and image picking
+                            await Permission.manageExternalStorage
+                                .onGrantedCallback(
+                              () async {
+                                otherFiles = await getMultiplePDF();
+                                setState(() {});
+                              },
+                            ).request();
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .surfaceVariant
+                                  .withOpacity(0.4),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.cloud_upload_outlined,
+                                ),
+                                Text(
+                                  "Tap this area to upload other related files\n for the equipment (pdf)",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.labelSmall,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    : Column(
+                        children: [
+                          ...otherFiles.map(
+                            (file) => Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  SvgPicture.asset(
+                                    Theme.of(context).brightness ==
+                                            Brightness.light
+                                        ? "assets/light_pdf.svg"
+                                        : "assets/dark_pdf.svg",
+                                  ),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () => OpenFilex.open(
+                                        file.absolute.path,
+                                      ),
+                                      child: Text(
+                                        file.path.split("/").last,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        otherFiles.remove(
+                                          file,
+                                        );
+                                      });
+                                    },
+                                    icon: const Icon(
+                                      Icons.cancel_outlined,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          TextButton.icon(
+                            onPressed: () async {
+                              File? addedFile = await getSinglePDF();
+                              if (addedFile != null) {
+                                setState(() {
+                                  otherFiles.add(
+                                    addedFile,
+                                  );
+                                });
+                              }
+                            },
+                            icon: const Icon(Icons.add),
+                            label: const Text("Add"),
+                          ),
                         ],
                       ),
-                    ),
-                  ),
-                ),
               ),
 
               // Button to create new equipment
