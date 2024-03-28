@@ -58,6 +58,8 @@ dependencies:
   intl: ^0.19.0
   #equipment geolocation
   geolocator: ^11.0.0
+  #for picking pdf files
+  file_picker: ^8.0.0+1
   
   flutter:
     sdk: flutter
