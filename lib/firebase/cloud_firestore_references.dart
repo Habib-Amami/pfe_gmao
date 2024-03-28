@@ -33,8 +33,11 @@ const String workshop = 'Workshop';
 const String longitude = 'Longitude';
 const String latitude = 'Latitude';
 
-//Reference to the equipment pictures folder in the firebase storage
+//Reference to the equipments pictures folder in the firebase storage
 const String equipmnetPictureDic = "equipment_pictures";
+
+//Reference to the equipments user manuels folder in the firebase storage
+const String equipmentUserManualsDir = "equipment_user_manuals";
 
 //Reference to the tag name collection
 const String tagNamesCollectionRef = "equipment_tag_names";
