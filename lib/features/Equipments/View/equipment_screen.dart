@@ -153,8 +153,8 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                           itemBuilder: (context, index) {
                             Equipment equipment = equipments[index].data();
                             String idEquipment = equipments[index].id;
-                            String equipmentTagName = equipment.TagName;
-                            String equipmentPictureURL = equipment.Photo;
+                            // String equipmentTagName = equipment.TagName;
+                            // String equipmentPictureURL = equipment.Photo;
                             return Padding(
                               padding: const EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 10),
