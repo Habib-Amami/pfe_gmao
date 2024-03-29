@@ -81,8 +81,6 @@ class _AddEquipmentInformationScreenState
   String _photoURL = "";
   String _tagName = "";
   String _area = "";
-  String _workShop = "";
-  String _discipline = "";
   String _description = "";
   //controllers for the latitude and longitude fields
   TextEditingController latitudeController = TextEditingController();
@@ -479,6 +477,7 @@ class _AddEquipmentInformationScreenState
                   },
                 ),
               ),
+
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
