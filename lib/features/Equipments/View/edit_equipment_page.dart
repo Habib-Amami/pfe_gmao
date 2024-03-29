@@ -231,6 +231,66 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                         },
                       ),
                     ),
+                    // Description
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        "Description",
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 3),
+                      // Description input field
+                      child: TextFormField(
+                        //initialValue: equipmentData['Description'],
+                        controller: _description,
+                        keyboardType: TextInputType.multiline,
+                        textInputAction: TextInputAction.done,
+                        maxLines: 3,
+                        maxLength: 200,
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8),
+                            ),
+                          ),
+                          hintText: "Enter a brief Description",
+                          hintStyle: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          prefixIcon: const Padding(
+                            padding: EdgeInsets.only(bottom: 48),
+                            child: Icon(
+                              Icons.description_outlined,
+                            ),
+                          ),
+                          prefixIconColor: MaterialStateColor.resolveWith(
+                            (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.focused)) {
+                                return Theme.of(context).colorScheme.primary;
+                              }
+                              if (states.contains(MaterialState.error)) {
+                                return Theme.of(context).colorScheme.error;
+                              }
+                              return Colors.grey.shade500;
+                            },
+                          ),
+                        ),
+                        validator: (value) {
+                          //create a email validation
+                          if (value == null || value.isEmpty) {
+                            return "please provide a description";
+                          }
+                          return null;
+                        },
+                        onSaved: (newValue) {
+                          _description.text = newValue!.trim();
+                        },
+                      ),
+                    ),
                     // Form fields for entering equipment details
                     // Area
                     Padding(
@@ -365,66 +425,6 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                             });
                           },
                         ),
-                      ),
-                    ),
-                    // Description
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Text(
-                        "Description",
-                        style: Theme.of(context).textTheme.titleLarge,
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      // Description input field
-                      child: TextFormField(
-                        //initialValue: equipmentData['Description'],
-                        controller: _description,
-                        keyboardType: TextInputType.multiline,
-                        textInputAction: TextInputAction.done,
-                        maxLines: 3,
-                        maxLength: 200,
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8),
-                            ),
-                          ),
-                          hintText: "Enter a brief Description",
-                          hintStyle: TextStyle(
-                            color: Colors.grey.shade500,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          prefixIcon: const Padding(
-                            padding: EdgeInsets.only(bottom: 48),
-                            child: Icon(
-                              Icons.description_outlined,
-                            ),
-                          ),
-                          prefixIconColor: MaterialStateColor.resolveWith(
-                            (Set<MaterialState> states) {
-                              if (states.contains(MaterialState.focused)) {
-                                return Theme.of(context).colorScheme.primary;
-                              }
-                              if (states.contains(MaterialState.error)) {
-                                return Theme.of(context).colorScheme.error;
-                              }
-                              return Colors.grey.shade500;
-                            },
-                          ),
-                        ),
-                        validator: (value) {
-                          //create a email validation
-                          if (value == null || value.isEmpty) {
-                            return "please provide a description";
-                          }
-                          return null;
-                        },
-                        onSaved: (newValue) {
-                          _description.text = newValue!.trim();
-                        },
                       ),
                     ),
                     // Form fields for entering equipment details
