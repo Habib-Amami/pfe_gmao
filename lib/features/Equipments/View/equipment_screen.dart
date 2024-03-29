@@ -181,19 +181,6 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                             ),
                                           ),
                                         ),
-                                        SlidableAction(
-                                          icon: Ionicons.trash_bin,
-                                          label: "Delete",
-                                          backgroundColor: const Color.fromARGB(
-                                              255, 237, 24, 9),
-                                          onPressed: (context) {
-                                            DatabaseService().deleteEquipment(
-                                              idEquipment: idEquipment,
-                                              tagName: equipmentTagName,
-                                              photoURL: equipmentPictureURL,
-                                            );
-                                          },
-                                        ),
                                       ],
                                     ),
                                     child: ExpansionTile(
