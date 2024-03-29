@@ -26,11 +26,6 @@ class DatabaseService {
     return _equipmentsRef.snapshots();
   }
 
-  // create method
-  // void createEquipments() {
-  //   FirebaseFirestore.instance.collection(Equipment_Collection_ref).add();
-  // }
-
   // Create method
   void addEquipment({
     required String tagName,
