@@ -10,7 +10,7 @@ import '../model/equipment.dart';
 import '../services/db_service.dart';
 import 'alerts/equipment_location_permission_denied_alert.dart';
 import 'alerts/equipment_location_service_alert.dart';
-import 'equipment_picture_bottom_sheet.dart';
+import 'add equipment pages/equipment_picture_bottom_sheet.dart';
 
 // Define an enumeration for equipment priorities
 enum Priority {
