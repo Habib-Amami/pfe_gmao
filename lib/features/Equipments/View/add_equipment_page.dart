@@ -49,6 +49,8 @@ extension StatusToString on Status {
   }
 }
 
+String workshopValue = 'QQTF';
+
 class AddEquipmentPage extends StatefulWidget {
   const AddEquipmentPage({super.key});
 
@@ -425,49 +427,30 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  // Workshop input field
-                  child: TextFormField(
-                    keyboardType: TextInputType.name,
-                    textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(8),
+                    padding: const EdgeInsets.only(bottom: 16),
+                    // Workshop input field
+                    child: DropdownButtonFormField<String>(
+                      items: const [
+                        DropdownMenuItem<String>(
+                          value: 'QQTF',
+                          child: Text('QQTF'),
                         ),
-                      ),
-                      hintText: "Enter the Workshop",
-                      hintStyle: TextStyle(
-                        color: Colors.grey.shade500,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      prefixIcon: const Icon(
-                        Icons.build_outlined,
-                      ),
-                      prefixIconColor: MaterialStateColor.resolveWith(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.focused)) {
-                            return Theme.of(context).colorScheme.primary;
-                          }
-                          if (states.contains(MaterialState.error)) {
-                            return Theme.of(context).colorScheme.error;
-                          }
-                          return Colors.grey.shade500;
-                        },
-                      ),
-                    ),
-                    validator: (value) {
-                      //create a email validation
-                      if (value == null || value.isEmpty) {
-                        return "please provide a workshop";
-                      }
-                      return null;
-                    },
-                    onSaved: (newValue) {
-                      _workShop = newValue!.trim();
-                    },
-                  ),
-                ),
+                        DropdownMenuItem<String>(
+                          value: 'PGTF',
+                          child: Text('PGTF'),
+                        ),
+                        DropdownMenuItem<String>(
+                          value: 'GNTF',
+                          child: Text('GNTF'),
+                        ),
+                      ],
+                      value: workshopValue,
+                      onChanged: (newValue) {
+                        setState(() {
+                          workshopValue = newValue!;
+                        });
+                      },
+                    )),
                 // Form fields for entering equipment details
                 // Discipline
                 Padding(
