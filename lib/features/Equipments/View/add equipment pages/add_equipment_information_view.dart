@@ -67,6 +67,13 @@ class _AddEquipmentInformationScreenState
     super.dispose();
   }
 
+  // Variables to store equipment discipline information
+  final List disciplineValueList = ['Mechanics', 'Electrics', 'Instrumental'];
+  String disciplineValue = 'Mechanics';
+
+  // Variables to store equipment workshop information
+  final List workshopValueList = ['QTTF', 'PGTF', 'GNTF'];
+  String workshopValue = 'QTTF';
   // Form key for managing the state of the add equipment form
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
@@ -413,6 +420,65 @@ class _AddEquipmentInformationScreenState
               ),
               // Form fields for entering equipment details
               // Area
+              // Form fields for entering equipment details
+              // Description
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  "Description",
+                  style: Theme.of(context).textTheme.titleLarge,
+                  textAlign: TextAlign.start,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 3),
+                // Description input field
+                child: TextFormField(
+                  keyboardType: TextInputType.multiline,
+                  textInputAction: TextInputAction.next,
+                  maxLines: 3,
+                  maxLength: 200,
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(8),
+                      ),
+                    ),
+                    hintText: "Enter a brief Description",
+                    hintStyle: TextStyle(
+                      color: Colors.grey.shade500,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    prefixIcon: const Padding(
+                      padding: EdgeInsets.only(bottom: 48),
+                      child: Icon(
+                        Icons.description_outlined,
+                      ),
+                    ),
+                    prefixIconColor: MaterialStateColor.resolveWith(
+                      (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.focused)) {
+                          return Theme.of(context).colorScheme.primary;
+                        }
+                        if (states.contains(MaterialState.error)) {
+                          return Theme.of(context).colorScheme.error;
+                        }
+                        return Colors.grey.shade500;
+                      },
+                    ),
+                  ),
+                  validator: (value) {
+                    //create a email validation
+                    if (value == null || value.isEmpty) {
+                      return "please provide a description";
+                    }
+                    return null;
+                  },
+                  onSaved: (newValue) {
+                    _description = newValue!.trim();
+                  },
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
@@ -478,45 +544,30 @@ class _AddEquipmentInformationScreenState
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 // Workshop input field
-                child: TextFormField(
-                  keyboardType: TextInputType.name,
-                  textInputAction: TextInputAction.next,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(8),
-                      ),
-                    ),
-                    hintText: "Enter the Workshop",
-                    hintStyle: TextStyle(
-                      color: Colors.grey.shade500,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    prefixIcon: const Icon(
-                      Icons.build_outlined,
-                    ),
-                    prefixIconColor: MaterialStateColor.resolveWith(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.focused)) {
-                          return Theme.of(context).colorScheme.primary;
-                        }
-                        if (states.contains(MaterialState.error)) {
-                          return Theme.of(context).colorScheme.error;
-                        }
-                        return Colors.grey.shade500;
-                      },
-                    ),
+                child: Container(
+                  width: 390,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(color: Colors.grey, width: 1.2),
                   ),
-                  validator: (value) {
-                    //create a email validation
-                    if (value == null || value.isEmpty) {
-                      return "please provide a workshop";
-                    }
-                    return null;
-                  },
-                  onSaved: (newValue) {
-                    _workShop = newValue!.trim();
-                  },
+                  child: DropdownButtonFormField(
+                    padding: const EdgeInsets.only(right: 8),
+                    decoration: const InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.build_outlined,
+                          size: 22,
+                        ),
+                        border: InputBorder.none),
+                    items: workshopValueList
+                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                        .toList(),
+                    value: workshopValue,
+                    onChanged: (value) {
+                      setState(() {
+                        workshopValue = value as String;
+                      });
+                    },
+                  ),
                 ),
               ),
               // Form fields for entering equipment details
@@ -532,106 +583,33 @@ class _AddEquipmentInformationScreenState
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 // Discipline input field
-                child: TextFormField(
-                  keyboardType: TextInputType.name,
-                  textInputAction: TextInputAction.next,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(8),
-                      ),
-                    ),
-                    hintText: "Enter the Discipline",
-                    hintStyle: TextStyle(
-                      color: Colors.grey.shade500,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    prefixIcon: const Icon(
-                      Icons.build_circle_outlined,
-                    ),
-                    prefixIconColor: MaterialStateColor.resolveWith(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.focused)) {
-                          return Theme.of(context).colorScheme.primary;
-                        }
-                        if (states.contains(MaterialState.error)) {
-                          return Theme.of(context).colorScheme.error;
-                        }
-                        return Colors.grey.shade500;
-                      },
-                    ),
+                child: Container(
+                  width: 390,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(color: Colors.grey, width: 1.2),
                   ),
-                  validator: (value) {
-                    //create a email validation
-                    if (value == null || value.isEmpty) {
-                      return "please provide an discipline";
-                    }
-                    return null;
-                  },
-                  onSaved: (newValue) {
-                    _discipline = newValue!.trim();
-                  },
-                ),
-              ),
-              // Form fields for entering equipment details
-              // Description
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  "Description",
-                  style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.start,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                // Description input field
-                child: TextFormField(
-                  keyboardType: TextInputType.multiline,
-                  textInputAction: TextInputAction.next,
-                  maxLines: 3,
-                  maxLength: 200,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(8),
-                      ),
-                    ),
-                    hintText: "Enter a brief Description",
-                    hintStyle: TextStyle(
-                      color: Colors.grey.shade500,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    prefixIcon: const Padding(
-                      padding: EdgeInsets.only(bottom: 48),
-                      child: Icon(
-                        Icons.description_outlined,
-                      ),
-                    ),
-                    prefixIconColor: MaterialStateColor.resolveWith(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.focused)) {
-                          return Theme.of(context).colorScheme.primary;
-                        }
-                        if (states.contains(MaterialState.error)) {
-                          return Theme.of(context).colorScheme.error;
-                        }
-                        return Colors.grey.shade500;
-                      },
-                    ),
+                  child: DropdownButtonFormField(
+                    padding: const EdgeInsets.only(right: 8),
+                    decoration: const InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.build_circle_outlined,
+                          size: 25,
+                        ),
+                        border: InputBorder.none),
+                    items: disciplineValueList
+                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                        .toList(),
+                    value: disciplineValue,
+                    onChanged: (value) {
+                      setState(() {
+                        disciplineValue = value as String;
+                      });
+                    },
                   ),
-                  validator: (value) {
-                    //create a email validation
-                    if (value == null || value.isEmpty) {
-                      return "please provide a description";
-                    }
-                    return null;
-                  },
-                  onSaved: (newValue) {
-                    _description = newValue!.trim();
-                  },
                 ),
               ),
+
               // Form fields for entering equipment details
               // Description
               Padding(
@@ -709,9 +687,7 @@ class _AddEquipmentInformationScreenState
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    width: 16,
-                  ),
+                  const SizedBox(width: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -1140,9 +1116,9 @@ class _AddEquipmentInformationScreenState
                         ),
                 ),
               ),
-              //
+
               // field for other related equipment pdf files
-              //
+
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(

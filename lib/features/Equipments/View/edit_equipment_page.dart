@@ -59,7 +59,13 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
   // Form key for managing the state of the add equipment form
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
-  //
+  // Variables to store equipment discipline information
+  final List disciplineValueList = ['Mechanics', 'Electrics', 'Instrumental'];
+  String disciplineValue = 'Mechanics';
+  // Variables to store equipment workshop information
+  final List workshopValueList = ['QTTF', 'PGTF', 'GNTF'];
+  String workshopValue = 'QTTF';
+
   late Future<DocumentSnapshot> _equipmentFuture;
 
   late Priority defaultPriority;
@@ -112,10 +118,6 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
               TextEditingController(text: equipmentData[tagName]);
           final TextEditingController _area =
               TextEditingController(text: equipmentData[area]);
-          final TextEditingController _workShop =
-              TextEditingController(text: equipmentData[workshop]);
-          final TextEditingController _discipline =
-              TextEditingController(text: equipmentData[discipline]);
           final TextEditingController _description =
               TextEditingController(text: equipmentData[description]);
           final TextEditingController longitudeController =
@@ -298,47 +300,31 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       // Workshop input field
-                      child: TextFormField(
-                        //initialValue: equipmentData['Workshop'],
-                        controller: _workShop,
-                        keyboardType: TextInputType.name,
-                        textInputAction: TextInputAction.next,
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8),
-                            ),
-                          ),
-                          hintText: "Enter the Workshop",
-                          hintStyle: TextStyle(
-                            color: Colors.grey.shade500,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          prefixIcon: const Icon(
-                            Icons.build_outlined,
-                          ),
-                          prefixIconColor: MaterialStateColor.resolveWith(
-                            (Set<MaterialState> states) {
-                              if (states.contains(MaterialState.focused)) {
-                                return Theme.of(context).colorScheme.primary;
-                              }
-                              if (states.contains(MaterialState.error)) {
-                                return Theme.of(context).colorScheme.error;
-                              }
-                              return Colors.grey.shade500;
-                            },
-                          ),
+                      child: Container(
+                        width: 390,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: Colors.grey, width: 1.2),
                         ),
-                        validator: (value) {
-                          //create a email validation
-                          if (value == null || value.isEmpty) {
-                            return "please provide a workshop";
-                          }
-                          return null;
-                        },
-                        onSaved: (newValue) {
-                          _workShop.text = newValue!.trim();
-                        },
+                        child: DropdownButtonFormField(
+                          padding: const EdgeInsets.only(right: 8),
+                          decoration: const InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.build_outlined,
+                                size: 22,
+                              ),
+                              border: InputBorder.none),
+                          items: workshopValueList
+                              .map((e) =>
+                                  DropdownMenuItem(value: e, child: Text(e)))
+                              .toList(),
+                          value: equipmentData[workshop],
+                          onChanged: (value) {
+                            setState(() {
+                              workshopValue = value as String;
+                            });
+                          },
+                        ),
                       ),
                     ),
                     // Form fields for entering equipment details
@@ -354,47 +340,31 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       // Discipline input field
-                      child: TextFormField(
-                        controller: _discipline,
-                        //initialValue: equipmentData['Discipline'],
-                        keyboardType: TextInputType.name,
-                        textInputAction: TextInputAction.next,
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8),
-                            ),
-                          ),
-                          hintText: "Enter the Discipline",
-                          hintStyle: TextStyle(
-                            color: Colors.grey.shade500,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          prefixIcon: const Icon(
-                            Icons.build_circle_outlined,
-                          ),
-                          prefixIconColor: MaterialStateColor.resolveWith(
-                            (Set<MaterialState> states) {
-                              if (states.contains(MaterialState.focused)) {
-                                return Theme.of(context).colorScheme.primary;
-                              }
-                              if (states.contains(MaterialState.error)) {
-                                return Theme.of(context).colorScheme.error;
-                              }
-                              return Colors.grey.shade500;
-                            },
-                          ),
+                      child: Container(
+                        width: 390,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: Colors.grey, width: 1.2),
                         ),
-                        validator: (value) {
-                          //create a email validation
-                          if (value == null || value.isEmpty) {
-                            return "please provide an discipline";
-                          }
-                          return null;
-                        },
-                        onSaved: (newValue) {
-                          _discipline.text = newValue!.trim();
-                        },
+                        child: DropdownButtonFormField(
+                          padding: const EdgeInsets.only(right: 8),
+                          decoration: const InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.build_circle_outlined,
+                                size: 25,
+                              ),
+                              border: InputBorder.none),
+                          items: disciplineValueList
+                              .map((e) =>
+                                  DropdownMenuItem(value: e, child: Text(e)))
+                              .toList(),
+                          value: equipmentData[discipline],
+                          onChanged: (value) {
+                            setState(() {
+                              disciplineValue = value as String;
+                            });
+                          },
+                        ),
                       ),
                     ),
                     // Description
@@ -891,8 +861,8 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                                                     updatedEquipment = {
                                                   tagName: _tagName.text,
                                                   area: _area.text,
-                                                  workshop: _workShop.text,
-                                                  discipline: _discipline.text,
+                                                  workshop: workshopValue,
+                                                  discipline: disciplineValue,
                                                   priority: defaultPriority
                                                       .priorityToShortString(),
                                                   status: defaultStatus
