@@ -1,6 +1,8 @@
 // Reference to the users collection in Firestore
 //import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
 const String userCollectionRef = "users";
 
 // References to the fields in the user document
@@ -11,6 +13,8 @@ const String photoURLFieldRef = "photoURL"; // User's photo URL field
 const String updateAtFieldRef =
     "updatedAt"; // User's document update time stamp
 
+// Retrieve the current user
+User? currentUser = FirebaseAuth.instance.currentUser;
 //References to the default equipment picture
 const defaultEquipmentPicture =
     "https://firebasestorage.googleapis.com/v0/b/pfe-gmao-11445214.appspot.com/o/default%20picture.jpg?alt=media&token=c964483d-03dd-4ce2-982b-481d4fa22be2";
