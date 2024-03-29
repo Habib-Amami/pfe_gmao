@@ -418,65 +418,6 @@ class _AddEquipmentInformationScreenState
               ),
               // Form fields for entering equipment details
               // Area
-              // Form fields for entering equipment details
-              // Description
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  "Description",
-                  style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.start,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 3),
-                // Description input field
-                child: TextFormField(
-                  keyboardType: TextInputType.multiline,
-                  textInputAction: TextInputAction.next,
-                  maxLines: 3,
-                  maxLength: 200,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(8),
-                      ),
-                    ),
-                    hintText: "Enter a brief Description",
-                    hintStyle: TextStyle(
-                      color: Colors.grey.shade500,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    prefixIcon: const Padding(
-                      padding: EdgeInsets.only(bottom: 48),
-                      child: Icon(
-                        Icons.description_outlined,
-                      ),
-                    ),
-                    prefixIconColor: MaterialStateColor.resolveWith(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.focused)) {
-                          return Theme.of(context).colorScheme.primary;
-                        }
-                        if (states.contains(MaterialState.error)) {
-                          return Theme.of(context).colorScheme.error;
-                        }
-                        return Colors.grey.shade500;
-                      },
-                    ),
-                  ),
-                  validator: (value) {
-                    //create a email validation
-                    if (value == null || value.isEmpty) {
-                      return "please provide a description";
-                    }
-                    return null;
-                  },
-                  onSaved: (newValue) {
-                    _description = newValue!.trim();
-                  },
-                ),
-              ),
 
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
@@ -540,25 +481,33 @@ class _AddEquipmentInformationScreenState
                   textAlign: TextAlign.start,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                // Workshop input field
-                child: Container(
-                  width: 390,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(color: Colors.grey, width: 1.2),
+              Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                width: double.infinity,
+                height: 64,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.grey,
+                    width: 1.2,
                   ),
+                ),
+                child: Center(
                   child: DropdownButtonFormField(
-                    padding: const EdgeInsets.only(right: 8),
+                    padding: const EdgeInsets.only(right: 16),
                     decoration: const InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.build_outlined,
-                          size: 22,
-                        ),
-                        border: InputBorder.none),
+                      prefixIcon: Icon(
+                        Icons.build_outlined,
+                      ),
+                      border: InputBorder.none,
+                    ),
                     items: workshopValueList
-                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                        .map(
+                          (workshop) => DropdownMenuItem(
+                            value: workshop,
+                            child: Text(workshop),
+                          ),
+                        )
                         .toList(),
                     value: workshopValue,
                     onChanged: (value) {
@@ -579,25 +528,33 @@ class _AddEquipmentInformationScreenState
                   textAlign: TextAlign.start,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                // Discipline input field
-                child: Container(
-                  width: 390,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(color: Colors.grey, width: 1.2),
+              Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                width: double.infinity,
+                height: 64,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.grey,
+                    width: 1.2,
                   ),
+                ),
+                child: Center(
                   child: DropdownButtonFormField(
-                    padding: const EdgeInsets.only(right: 8),
+                    padding: const EdgeInsets.only(right: 16),
                     decoration: const InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.build_circle_outlined,
-                          size: 25,
-                        ),
-                        border: InputBorder.none),
+                      prefixIcon: Icon(
+                        Icons.build_circle_outlined,
+                      ),
+                      border: InputBorder.none,
+                    ),
                     items: disciplineValueList
-                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                        .map(
+                          (discipline) => DropdownMenuItem(
+                            value: discipline,
+                            child: Text(discipline),
+                          ),
+                        )
                         .toList(),
                     value: disciplineValue,
                     onChanged: (value) {
@@ -608,9 +565,65 @@ class _AddEquipmentInformationScreenState
                   ),
                 ),
               ),
-
               // Form fields for entering equipment details
               // Description
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  "Description",
+                  style: Theme.of(context).textTheme.titleLarge,
+                  textAlign: TextAlign.start,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 3),
+                // Description input field
+                child: TextFormField(
+                  keyboardType: TextInputType.multiline,
+                  textInputAction: TextInputAction.next,
+                  maxLines: 3,
+                  maxLength: 200,
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(8),
+                      ),
+                    ),
+                    hintText: "Enter a brief Description",
+                    hintStyle: TextStyle(
+                      color: Colors.grey.shade500,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    prefixIcon: const Padding(
+                      padding: EdgeInsets.only(bottom: 48),
+                      child: Icon(
+                        Icons.description_outlined,
+                      ),
+                    ),
+                    prefixIconColor: MaterialStateColor.resolveWith(
+                      (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.focused)) {
+                          return Theme.of(context).colorScheme.primary;
+                        }
+                        if (states.contains(MaterialState.error)) {
+                          return Theme.of(context).colorScheme.error;
+                        }
+                        return Colors.grey.shade500;
+                      },
+                    ),
+                  ),
+                  validator: (value) {
+                    //create a description validation
+                    if (value == null || value.isEmpty) {
+                      return "please provide a description";
+                    }
+                    return null;
+                  },
+                  onSaved: (newValue) {
+                    _description = newValue!.trim();
+                  },
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
@@ -677,10 +690,6 @@ class _AddEquipmentInformationScreenState
                               }
                               return null;
                             },
-
-                            // onSaved: (newValue) {
-                            //   _description = newValue!.trim();
-                            // },
                           ),
                         ),
                       ),
@@ -743,10 +752,6 @@ class _AddEquipmentInformationScreenState
                               }
                               return null;
                             },
-
-                            // onSaved: (newValue) {
-                            //   _description = newValue!.trim();
-                            // },
                           ),
                         ),
                       ),
