@@ -24,6 +24,7 @@ class EquipmentScreenState extends State<EquipmentScreen> {
       []; // List to store equipment data
   List<Map<String, dynamic>> _filteredEquipmentList =
       []; // List to store filtered equipment data
+
   @override
   void initState() {
     super.initState();
@@ -76,6 +77,22 @@ class EquipmentScreenState extends State<EquipmentScreen> {
     });
   }
 
+  Future<String?> getUserRole() async {
+    // Get the user document from Firestore
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser?.uid)
+        .get();
+
+    // Explicitly cast the result of data() to a Map<String, dynamic>
+    Map<String, dynamic>? userData =
+        userSnapshot.data() as Map<String, dynamic>?;
+
+    //retrieve the role from user collection
+    String? userRole = userData?['role'];
+    return userRole;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,7 +127,7 @@ class EquipmentScreenState extends State<EquipmentScreen> {
             ),
             SizedBox(
               width: MediaQuery.sizeOf(context).width,
-              height: MediaQuery.sizeOf(context).height * 0.7,
+              height: MediaQuery.sizeOf(context).height * 0.75,
               child: StreamBuilder(
                 stream: DatabaseService().getEquipments(),
                 builder: (context, snapshot) {
