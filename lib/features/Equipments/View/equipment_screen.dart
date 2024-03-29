@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:ionicons/ionicons.dart';
-
 import '../../../firebase/cloud_firestore_references.dart';
 import '../model/equipment.dart';
 import '../services/db_service.dart';
@@ -19,6 +17,7 @@ class EquipmentScreen extends StatefulWidget {
 }
 
 class EquipmentScreenState extends State<EquipmentScreen> {
+  bool isAdmin = true;
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> _equipmentList =
       []; // List to store equipment data
@@ -97,18 +96,20 @@ class EquipmentScreenState extends State<EquipmentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      floatingActionButton: FloatingActionButton.extended(
-        label: const Text("Add"),
-        icon: const Icon(Icons.library_add),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const AddEquipmentPage(),
-            ),
-          );
-        },
-      ),
+      floatingActionButton: isAdmin
+          ? FloatingActionButton.extended(
+              label: const Text("Add"),
+              icon: const Icon(Icons.library_add),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddEquipmentPage(),
+                  ),
+                );
+              },
+            )
+          : null,
       body: SafeArea(
         child: ListView(
           children: [
@@ -159,6 +160,15 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                   vertical: 10, horizontal: 10),
                               child: Column(
                                 children: [
+                                  TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          isAdmin = !isAdmin;
+                                        });
+                                      },
+                                      child: isAdmin
+                                          ? Text('admin')
+                                          : Text('moch admin')),
                                   Slidable(
                                     endActionPane: ActionPane(
                                       motion: const StretchMotion(),
