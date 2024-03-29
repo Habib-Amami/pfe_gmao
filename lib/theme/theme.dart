@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 //This ColorSchema will be used in the application's light theme
 const lightColorScheme = ColorScheme(
   brightness: Brightness.light,
-  primary: Color(0xFF166683),
+  primary: Color.fromRGBO(22, 102, 131, 1),
   surfaceTint: Color(0xFF166683),
   onPrimary: Color(0xffffffff),
   primaryContainer: Color(0xffc0e8ff),
