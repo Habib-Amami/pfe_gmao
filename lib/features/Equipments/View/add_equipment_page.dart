@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'add_equipment_information_view.dart';
-import 'add_equipment_intervation_view.dart';
+import 'add_equipment_intervention_view.dart';
 
 class AddEquipmentPage extends StatefulWidget {
   const AddEquipmentPage({super.key});
@@ -60,6 +60,7 @@ class AddEquipmentPageState extends State<AddEquipmentPage> {
           ),
         ],
       ),
+      // toggle between pages
       body: menuScreens[currentPageIndex],
     );
   }
