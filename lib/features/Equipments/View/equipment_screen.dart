@@ -8,7 +8,7 @@ import '../../../firebase/cloud_firestore_references.dart';
 import '../model/equipment.dart';
 import '../services/db_service.dart';
 import '../services/my_equipment_functions.dart';
-import 'add_equipment_page.dart';
+import 'add equipment pages/add_equipment_page.dart';
 import 'edit_equipment_page.dart';
 
 class EquipmentScreen extends StatefulWidget {

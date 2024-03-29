@@ -12,10 +12,10 @@ import 'package:ionicons/ionicons.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../../firebase/cloud_firestore_references.dart';
-import 'alerts/equipment_camera_permission_denied_alert.dart';
-import 'alerts/equipment_location_permission_denied_alert.dart';
-import 'alerts/equipment_location_service_alert.dart';
+import '../../../../firebase/cloud_firestore_references.dart';
+import '../alerts/equipment_camera_permission_denied_alert.dart';
+import '../alerts/equipment_location_permission_denied_alert.dart';
+import '../alerts/equipment_location_service_alert.dart';
 
 // Define an enumeration for equipment priorities
 enum Priority {
