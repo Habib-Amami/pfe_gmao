@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+
 import '../../../firebase/cloud_firestore_references.dart';
-import '../../../firebase/firebase_services.dart';
-import '../../profile_management/model/user.dart';
 import '../model/equipment.dart';
 import '../services/db_service.dart';
 import '../services/my_equipment_functions.dart';
@@ -211,13 +211,15 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                             leading: CircleAvatar(
                                               radius: 30,
                                               backgroundImage: NetworkImage(
-                                                  _filteredEquipmentList[index]
-                                                      ['Photo']),
+                                                _filteredEquipmentList[index]
+                                                    ['Photo'],
+                                              ),
                                             ),
                                             subtitle: showState(
-                                                _filteredEquipmentList[index]
-                                                    [status]),
-                                            children: <Widget>[
+                                              _filteredEquipmentList[index]
+                                                  [status],
+                                            ),
+                                            children: [
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                     left: 20),
@@ -234,23 +236,29 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                                           child: Text(
                                                             "Description:",
                                                             style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
                                                           ),
                                                         ),
                                                         const SizedBox(
-                                                            width: 10),
-                                                        Text(
+                                                          width: 10,
+                                                        ),
+                                                        Expanded(
+                                                          child: Text(
                                                             _filteredEquipmentList[
                                                                     index]
-                                                                [description])
+                                                                [description],
+                                                          ),
+                                                        )
                                                       ],
                                                     ),
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.only(
-                                                              top: 8.0),
+                                                        top: 8.0,
+                                                      ),
                                                       child: Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -262,24 +270,30 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                                             child: Text(
                                                               "Created at:",
                                                               style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
                                                             ),
                                                           ),
                                                           const SizedBox(
-                                                              width: 10),
-                                                          Text(formattedDate(
+                                                            width: 10,
+                                                          ),
+                                                          Text(
+                                                            formattedDate(
                                                               _filteredEquipmentList[
-                                                                      index][
-                                                                  'CreatedOn']))
+                                                                      index]
+                                                                  ['CreatedOn'],
+                                                            ),
+                                                          )
                                                         ],
                                                       ),
                                                     ),
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.only(
-                                                              top: 8.0),
+                                                        top: 8.0,
+                                                      ),
                                                       child: Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -291,24 +305,28 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                                             child: Text(
                                                               "Priority:",
                                                               style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
                                                             ),
                                                           ),
                                                           const SizedBox(
-                                                              width: 10),
+                                                            width: 10,
+                                                          ),
                                                           Text(
-                                                              _filteredEquipmentList[
-                                                                      index]
-                                                                  [priority])
+                                                            _filteredEquipmentList[
+                                                                    index]
+                                                                [priority],
+                                                          )
                                                         ],
                                                       ),
                                                     ),
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.only(
-                                                              top: 8.0),
+                                                        top: 8.0,
+                                                      ),
                                                       child: Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -320,24 +338,28 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                                             child: Text(
                                                               "Discipline:",
                                                               style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
                                                             ),
                                                           ),
                                                           const SizedBox(
-                                                              width: 10),
+                                                            width: 10,
+                                                          ),
                                                           Text(
-                                                              _filteredEquipmentList[
-                                                                      index]
-                                                                  [discipline])
+                                                            _filteredEquipmentList[
+                                                                    index]
+                                                                [discipline],
+                                                          )
                                                         ],
                                                       ),
                                                     ),
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.only(
-                                                              top: 8.0),
+                                                        top: 8.0,
+                                                      ),
                                                       child: Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -349,24 +371,28 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                                             child: Text(
                                                               "Workshop:",
                                                               style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
                                                             ),
                                                           ),
                                                           const SizedBox(
-                                                              width: 10),
+                                                            width: 10,
+                                                          ),
                                                           Text(
-                                                              _filteredEquipmentList[
-                                                                      index]
-                                                                  [workshop])
+                                                            _filteredEquipmentList[
+                                                                    index]
+                                                                [workshop],
+                                                          )
                                                         ],
                                                       ),
                                                     ),
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.only(
-                                                              top: 8.0),
+                                                        top: 8.0,
+                                                      ),
                                                       child: Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -378,16 +404,21 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                                             child: Text(
                                                               "Area:",
                                                               style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
                                                             ),
                                                           ),
                                                           const SizedBox(
-                                                              width: 10),
-                                                          Text(
+                                                            width: 10,
+                                                          ),
+                                                          Expanded(
+                                                            child: Text(
                                                               _filteredEquipmentList[
-                                                                  index][area])
+                                                                  index][area],
+                                                            ),
+                                                          )
                                                         ],
                                                       ),
                                                     ),
@@ -426,16 +457,19 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                           leading: CircleAvatar(
                                             radius: 30,
                                             backgroundImage: NetworkImage(
-                                                _filteredEquipmentList[index]
-                                                    ['Photo']),
+                                              _filteredEquipmentList[index]
+                                                  ['Photo'],
+                                            ),
                                           ),
                                           subtitle: showState(
-                                              _filteredEquipmentList[index]
-                                                  [status]),
-                                          children: <Widget>[
+                                            _filteredEquipmentList[index]
+                                                [status],
+                                          ),
+                                          children: [
                                             Padding(
                                               padding: const EdgeInsets.only(
-                                                  left: 20),
+                                                left: 20,
+                                              ),
                                               child: Column(
                                                 children: [
                                                   Row(
@@ -448,22 +482,26 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                                         child: Text(
                                                           "Description:",
                                                           style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
                                                         ),
                                                       ),
                                                       const SizedBox(width: 10),
-                                                      Text(
+                                                      Expanded(
+                                                        child: Text(
                                                           _filteredEquipmentList[
                                                                   index]
-                                                              [description])
+                                                              [description],
+                                                        ),
+                                                      )
                                                     ],
                                                   ),
                                                   Padding(
                                                     padding:
                                                         const EdgeInsets.only(
-                                                            top: 8.0),
+                                                      top: 8.0,
+                                                    ),
                                                     child: Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -475,24 +513,30 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                                           child: Text(
                                                             "Created at:",
                                                             style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
                                                           ),
                                                         ),
                                                         const SizedBox(
-                                                            width: 10),
-                                                        Text(formattedDate(
+                                                          width: 10,
+                                                        ),
+                                                        Text(
+                                                          formattedDate(
                                                             _filteredEquipmentList[
                                                                     index]
-                                                                ['CreatedOn']))
+                                                                ['CreatedOn'],
+                                                          ),
+                                                        )
                                                       ],
                                                     ),
                                                   ),
                                                   Padding(
                                                     padding:
                                                         const EdgeInsets.only(
-                                                            top: 8.0),
+                                                      top: 8.0,
+                                                    ),
                                                     child: Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -504,24 +548,27 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                                           child: Text(
                                                             "Priority:",
                                                             style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
                                                           ),
                                                         ),
                                                         const SizedBox(
-                                                            width: 10),
+                                                          width: 10,
+                                                        ),
                                                         Text(
-                                                            _filteredEquipmentList[
-                                                                    index]
-                                                                [priority])
+                                                          _filteredEquipmentList[
+                                                              index][priority],
+                                                        )
                                                       ],
                                                     ),
                                                   ),
                                                   Padding(
                                                     padding:
                                                         const EdgeInsets.only(
-                                                            top: 8.0),
+                                                      top: 8.0,
+                                                    ),
                                                     child: Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -533,24 +580,28 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                                           child: Text(
                                                             "Discipline:",
                                                             style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
                                                           ),
                                                         ),
                                                         const SizedBox(
-                                                            width: 10),
+                                                          width: 10,
+                                                        ),
                                                         Text(
-                                                            _filteredEquipmentList[
-                                                                    index]
-                                                                [discipline])
+                                                          _filteredEquipmentList[
+                                                                  index]
+                                                              [discipline],
+                                                        )
                                                       ],
                                                     ),
                                                   ),
                                                   Padding(
                                                     padding:
                                                         const EdgeInsets.only(
-                                                            top: 8.0),
+                                                      top: 8.0,
+                                                    ),
                                                     child: Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -562,24 +613,27 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                                           child: Text(
                                                             "Workshop:",
                                                             style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
                                                           ),
                                                         ),
                                                         const SizedBox(
-                                                            width: 10),
+                                                          width: 10,
+                                                        ),
                                                         Text(
-                                                            _filteredEquipmentList[
-                                                                    index]
-                                                                [workshop])
+                                                          _filteredEquipmentList[
+                                                              index][workshop],
+                                                        )
                                                       ],
                                                     ),
                                                   ),
                                                   Padding(
                                                     padding:
                                                         const EdgeInsets.only(
-                                                            top: 8.0),
+                                                      top: 8.0,
+                                                    ),
                                                     child: Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -597,10 +651,12 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                                           ),
                                                         ),
                                                         const SizedBox(
-                                                            width: 10),
+                                                          width: 10,
+                                                        ),
                                                         Text(
-                                                            _filteredEquipmentList[
-                                                                index][area])
+                                                          _filteredEquipmentList[
+                                                              index][area],
+                                                        )
                                                       ],
                                                     ),
                                                   ),
