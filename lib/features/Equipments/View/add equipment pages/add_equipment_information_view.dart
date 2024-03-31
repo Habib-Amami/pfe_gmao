@@ -22,22 +22,6 @@ import '../alerts/equipment_location_service_alert.dart';
 import '../edit_equipment_page.dart';
 import '../widgets/form_title.dart';
 
-enum Status {
-  // ignore: constant_identifier_names
-  Active,
-  // ignore: constant_identifier_names
-  Standby,
-  // ignore: constant_identifier_names
-  Shutdown
-}
-
-// Extension to convert enum values to strings
-extension StatusToString on Status {
-  String statusToShortString() {
-    return toString().split('.').last;
-  }
-}
-
 class AddEquipmentInformationScreen extends StatefulWidget {
   const AddEquipmentInformationScreen({super.key});
 
