@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class FormTitle extends StatelessWidget {
+class EquipmentFormTitle extends StatelessWidget {
   final String title;
   final TextStyle? textStyle;
-  const FormTitle({
+  const EquipmentFormTitle({
     required this.title,
     this.textStyle,
     super.key,
