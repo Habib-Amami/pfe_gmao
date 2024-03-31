@@ -11,7 +11,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pfe_gmao/features/Equipments/View/widgets/form_title.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../firebase/cloud_firestore_references.dart';
@@ -20,23 +19,8 @@ import '../../services/db_service.dart';
 import '../alerts/equipment_camera_permission_denied_alert.dart';
 import '../alerts/equipment_location_permission_denied_alert.dart';
 import '../alerts/equipment_location_service_alert.dart';
-
-// Define an enumeration for equipment priorities
-enum Priority {
-  // ignore: constant_identifier_names
-  High,
-  // ignore: constant_identifier_names
-  Medium,
-  // ignore: constant_identifier_names
-  Low,
-}
-
-// Extension to convert enum values to strings
-extension PriorityToString on Priority {
-  String priorityToShortString() {
-    return toString().split('.').last;
-  }
-}
+import '../edit_equipment_page.dart';
+import '../widgets/form_title.dart';
 
 enum Status {
   // ignore: constant_identifier_names
