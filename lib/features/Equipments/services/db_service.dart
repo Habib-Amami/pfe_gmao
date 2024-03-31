@@ -128,4 +128,24 @@ class DatabaseService {
   ) async {
     await _equipmentsRef.doc(idEquipment).update(equipment.toJson());
   }
+
+  //Future methode to check if a document exists in a collection in cloud firestore
+  static Future<bool> checkDocumentExistence({
+    required String collectionName,
+    required String documentId,
+  }) async {
+    // Get a reference to the document
+    DocumentReference docRef =
+        FirebaseFirestore.instance.collection(collectionName).doc(documentId);
+
+    // Get the document snapshot
+    DocumentSnapshot docSnapshot = await docRef.get();
+
+    // Check if the document exists
+    if (docSnapshot.exists) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

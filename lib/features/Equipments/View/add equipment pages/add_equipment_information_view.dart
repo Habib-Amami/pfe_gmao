@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -63,26 +62,6 @@ class _AddEquipmentInformationScreenState
   Status defaultStatus = Status.Active;
   //a boolean flag to check if the Tagname is unique
   bool isTagNameNotUnique = false;
-
-  //Future methode to check if the tag name is unique or not
-  Future<bool> checkDocumentExistence(
-    String collectionName,
-    String documentId,
-  ) async {
-    // Get a reference to the document
-    DocumentReference docRef =
-        FirebaseFirestore.instance.collection(collectionName).doc(documentId);
-
-    // Get the document snapshot
-    DocumentSnapshot docSnapshot = await docRef.get();
-
-    // Check if the document exists
-    if (docSnapshot.exists) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
   // Variable to store the selected image file
   File? selectedImageFile;
@@ -1185,9 +1164,10 @@ class _AddEquipmentInformationScreenState
                                       if (_formkey.currentState!.validate()) {
                                         _formkey.currentState!.save();
                                         isTagNameNotUnique =
-                                            await checkDocumentExistence(
-                                          tagNamesCollectionRef,
-                                          _tagName,
+                                            await DatabaseService
+                                                .checkDocumentExistence(
+                                          collectionName: tagNamesCollectionRef,
+                                          documentId: _tagName,
                                         );
                                         if (isTagNameNotUnique) {
                                           if (context.mounted) {
