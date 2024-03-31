@@ -11,8 +11,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pfe_gmao/features/Equipments/View/widgets/form_title.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../../firebase/cloud_firestore_references.dart';
+import '../../../../home.dart';
+import '../../services/db_service.dart';
 import '../alerts/equipment_camera_permission_denied_alert.dart';
 import '../alerts/equipment_location_permission_denied_alert.dart';
 import '../alerts/equipment_location_service_alert.dart';
@@ -364,15 +368,9 @@ class _AddEquipmentInformationScreenState
               ),
               // Form fields for entering equipment details
               // Tag Name
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  "Tag name",
-                  style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.start,
-                ),
+              const FormTitle(
+                title: "Tag name",
               ),
-              // Tag Name input field
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: TextFormField(
@@ -418,14 +416,8 @@ class _AddEquipmentInformationScreenState
               ),
               // Form fields for entering equipment details
               // Area
-
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  "Area",
-                  style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.start,
-                ),
+              const FormTitle(
+                title: "Area",
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
@@ -473,13 +465,8 @@ class _AddEquipmentInformationScreenState
               ),
               // Form fields for entering equipment details
               // Workshop
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  "Workshop",
-                  style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.start,
-                ),
+              const FormTitle(
+                title: "Workshop",
               ),
               Container(
                 margin: const EdgeInsets.only(bottom: 16),
@@ -520,13 +507,8 @@ class _AddEquipmentInformationScreenState
               ),
               // Form fields for entering equipment details
               // Discipline
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  "Discipline",
-                  style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.start,
-                ),
+              const FormTitle(
+                title: "Discipline",
               ),
               Container(
                 margin: const EdgeInsets.only(bottom: 16),
@@ -567,13 +549,8 @@ class _AddEquipmentInformationScreenState
               ),
               // Form fields for entering equipment details
               // Description
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  "Description",
-                  style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.start,
-                ),
+              const FormTitle(
+                title: "Description",
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 3),
@@ -624,26 +601,19 @@ class _AddEquipmentInformationScreenState
                   },
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  "Location",
-                  style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.start,
-                ),
+              // Form fields for entering equipment location
+              // Location
+              const FormTitle(
+                title: "Location",
               ),
               Row(
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text(
-                          "latitude",
-                          style: Theme.of(context).textTheme.titleSmall,
-                          textAlign: TextAlign.start,
-                        ),
+                      FormTitle(
+                        title: "latitude",
+                        textStyle: Theme.of(context).textTheme.titleSmall,
                       ),
                       SizedBox(
                         width: MediaQuery.sizeOf(context).width / 2 - 24,
@@ -695,17 +665,15 @@ class _AddEquipmentInformationScreenState
                       ),
                     ],
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(
+                    width: 16,
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text(
-                          "longitude",
-                          style: Theme.of(context).textTheme.titleSmall,
-                          textAlign: TextAlign.start,
-                        ),
+                      FormTitle(
+                        title: "longitude",
+                        textStyle: Theme.of(context).textTheme.titleSmall,
                       ),
                       SizedBox(
                         width: MediaQuery.sizeOf(context).width / 2 - 24,
@@ -837,13 +805,8 @@ class _AddEquipmentInformationScreenState
               ),
               // Segmented Button for entering equipment details
               // Priority
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  "Priority",
-                  style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.start,
-                ),
+              const FormTitle(
+                title: "Priority",
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
@@ -885,16 +848,10 @@ class _AddEquipmentInformationScreenState
                   ),
                 ),
               ),
-
               // Segmented Button for entering equipment details
               // State
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  "State",
-                  style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.start,
-                ),
+              const FormTitle(
+                title: "State",
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
@@ -939,13 +896,8 @@ class _AddEquipmentInformationScreenState
               //
               // field for add user manual pdf
               //
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  "User Manual",
-                  style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.start,
-                ),
+              const FormTitle(
+                title: "User Manual",
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
@@ -1031,13 +983,8 @@ class _AddEquipmentInformationScreenState
               //
               // field for add contract pdf
               //
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  "Contract",
-                  style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.start,
-                ),
+              const FormTitle(
+                title: "Contract",
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
@@ -1120,16 +1067,11 @@ class _AddEquipmentInformationScreenState
                         ),
                 ),
               ),
-
+              //
               // field for other related equipment pdf files
-
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  "Other",
-                  style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.start,
-                ),
+              //
+              const FormTitle(
+                title: "Other",
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
@@ -1245,119 +1187,119 @@ class _AddEquipmentInformationScreenState
                   height: 48,
                   child: FilledButton(
                     onPressed: () async {
-                      // // Show a confirmation dialog before creating new equipment
-                      // return showDialog(
-                      //   context: context,
-                      //   builder: (context) {
-                      //     return AlertDialog(
-                      //       title: const Text("Confirmation"),
-                      //       content: const Text(
-                      //         "Do you want to add this equipment ?",
-                      //       ),
-                      //       actions: [
-                      //         Row(
-                      //           mainAxisAlignment:
-                      //               MainAxisAlignment.spaceEvenly,
-                      //           children: [
-                      //             TextButton(
-                      //               onPressed: () => Navigator.pop(context),
-                      //               child: Text(
-                      //                 "Cancel",
-                      //                 style: TextStyle(
-                      //                   color: Theme.of(context)
-                      //                       .colorScheme
-                      //                       .primary,
-                      //                 ),
-                      //               ),
-                      //             ),
-                      //             TextButton(
-                      //               onPressed: () async {
-                      //                 // if (_formkey.currentState!.validate()) {
-                      //                 //   _formkey.currentState!.save();
-                      //                 //   isTagNameNotUnique =
-                      //                 //       await checkDocumentExistence(
-                      //                 //     tagNamesCollectionRef,
-                      //                 //     _tagName,
-                      //                 //   );
-                      //                 //   if (isTagNameNotUnique) {
-                      //                 //     if (context.mounted) {
-                      //                 //       ScaffoldMessenger.of(context)
-                      //                 //           .showSnackBar(
-                      //                 //         const SnackBar(
-                      //                 //           content: Text(
-                      //                 //             "Tag name already exist! please provide a unique tag name",
-                      //                 //           ),
-                      //                 //         ),
-                      //                 //       );
-                      //                 //     }
-                      //                 //   } else {
-                      //                 //     String docId = const Uuid().v4();
-                      //                 //     // createNewEquipment();
-                      //                 //     if (selectedImageFile != null) {
-                      //                 //       _photoURL = await DatabaseService()
-                      //                 //           .addEquipmentPicture(
-                      //                 //         equipmentPictureRef:
-                      //                 //             "${_tagName}_profile_picture",
-                      //                 //         equipmentPicture:
-                      //                 //             selectedImageFile!,
-                      //                 //       );
-                      //                 //       DatabaseService().addEquipment(
-                      //                 //         photoURL: _photoURL,
-                      //                 //         tagName: _tagName,
-                      //                 //         docId: docId,
-                      //                 //         description: _description,
-                      //                 //         area: _area,
-                      //                 //         discipline: _discipline,
-                      //                 //         workshop: _workShop,
-                      //                 //         status: defaultStatus
-                      //                 //             .statusToShortString(),
-                      //                 //         priority: defaultPriority
-                      //                 //             .priorityToShortString(),
-                      //                 //         longitude:
-                      //                 //             longitudeController.text,
-                      //                 //         latitude:
-                      //                 //             longitudeController.text,
-                      //                 //       );
-                      //                 //     } else {
-                      //                 //       DatabaseService().addEquipment(
-                      //                 //         tagName: _tagName,
-                      //                 //         docId: docId,
-                      //                 //         description: _description,
-                      //                 //         area: _area,
-                      //                 //         discipline: _discipline,
-                      //                 //         workshop: _workShop,
-                      //                 //         status: defaultStatus
-                      //                 //             .statusToShortString(),
-                      //                 //         priority: defaultPriority
-                      //                 //             .priorityToShortString(),
-                      //                 //         longitude:
-                      //                 //             longitudeController.text,
-                      //                 //         latitude: latitudeController.text,
-                      //                 //       );
-                      //                 //     }
-                      //                 //   }
-                      //                 //   if (context.mounted) {
-                      //                 //     Navigator.pop(context);
-                      //                 //     Navigator.push(
-                      //                 //       context,
-                      //                 //       MaterialPageRoute(
-                      //                 //         builder: (context) =>
-                      //                 //             const Home(),
-                      //                 //       ),
-                      //                 //     );
-                      //                 //   }
-                      //                 // } else {
-                      //                 //   Navigator.pop(context);
-                      //                 // }
-                      //               },
-                      //               child: const Text("Confirm"),
-                      //             )
-                      //           ],
-                      //         ),
-                      //       ],
-                      //     );
-                      //   },
-                      // );
+                      // Show a confirmation dialog before creating new equipment
+                      return showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text("Confirmation"),
+                            content: const Text(
+                              "Do you want to add this equipment ?",
+                            ),
+                            actions: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text(
+                                      "Cancel",
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      if (_formkey.currentState!.validate()) {
+                                        _formkey.currentState!.save();
+                                        isTagNameNotUnique =
+                                            await checkDocumentExistence(
+                                          tagNamesCollectionRef,
+                                          _tagName,
+                                        );
+                                        if (isTagNameNotUnique) {
+                                          if (context.mounted) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                  "Tag name already exist! please provide a unique tag name",
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        } else {
+                                          String docId = const Uuid().v4();
+                                          // createNewEquipment();
+                                          if (selectedImageFile != null) {
+                                            _photoURL = await DatabaseService()
+                                                .addEquipmentPicture(
+                                              equipmentPictureRef:
+                                                  "${_tagName}_profile_picture",
+                                              equipmentPicture:
+                                                  selectedImageFile!,
+                                            );
+                                            DatabaseService().addEquipment(
+                                              photoURL: _photoURL,
+                                              tagName: _tagName,
+                                              docId: docId,
+                                              description: _description,
+                                              area: _area,
+                                              discipline: disciplineValue,
+                                              workshop: workshopValue,
+                                              status: defaultStatus
+                                                  .statusToShortString(),
+                                              priority: defaultPriority
+                                                  .priorityToShortString(),
+                                              longitude:
+                                                  longitudeController.text,
+                                              latitude:
+                                                  longitudeController.text,
+                                            );
+                                          } else {
+                                            DatabaseService().addEquipment(
+                                              tagName: _tagName,
+                                              docId: docId,
+                                              description: _description,
+                                              area: _area,
+                                              discipline: disciplineValue,
+                                              workshop: workshopValue,
+                                              status: defaultStatus
+                                                  .statusToShortString(),
+                                              priority: defaultPriority
+                                                  .priorityToShortString(),
+                                              longitude:
+                                                  longitudeController.text,
+                                              latitude: latitudeController.text,
+                                            );
+                                          }
+                                        }
+                                        if (context.mounted) {
+                                          Navigator.pop(context);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const Home(),
+                                            ),
+                                          );
+                                        }
+                                      } else {
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                    child: const Text("Confirm"),
+                                  )
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
                     child: const Text(
                       "Create new equipment",
