@@ -5,7 +5,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:open_filex/open_filex.dart';
@@ -15,10 +14,10 @@ import 'package:uuid/uuid.dart';
 import '../../../../firebase/cloud_firestore_references.dart';
 import '../../../../home.dart';
 import '../../services/db_service.dart';
-import '../alerts/equipment_camera_permission_denied_alert.dart';
 import '../alerts/equipment_location_permission_denied_alert.dart';
 import '../alerts/equipment_location_service_alert.dart';
 import '../edit_equipment_page.dart';
+import '../widgets/equipment_image_button.dart';
 import '../widgets/form_title.dart';
 
 class AddEquipmentInformationScreen extends StatefulWidget {
@@ -64,36 +63,7 @@ class _AddEquipmentInformationScreenState
   bool isTagNameNotUnique = false;
 
   // Variable to store the selected image file
-  File? selectedImageFile;
-
-  // Future method to pick an image from the gallery or camera
-  Future<CroppedFile?> pickImage({
-    required ImageSource imageSource,
-  }) async {
-    // Use ImagePicker to pick an image
-    ImagePicker picker = ImagePicker();
-    final XFile? pickedImage = await picker.pickImage(
-      source: imageSource,
-      preferredCameraDevice: CameraDevice.front,
-      imageQuality: 100,
-    );
-    if (pickedImage != null) {
-      // Crop the selected image using the ImageCropper package
-      ImageCropper cropper = ImageCropper();
-      CroppedFile? croppedFile = await cropper.cropImage(
-        sourcePath: pickedImage.path,
-        aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
-        maxHeight: 96,
-        maxWidth: 96,
-      );
-      if (croppedFile != null) {
-        return croppedFile;
-      } else {
-        return null;
-      }
-    }
-    return null;
-  }
+  File? equipmentPictureFile;
 
   // Variable to store the selected image file
   File? userManualFile;
@@ -163,7 +133,7 @@ class _AddEquipmentInformationScreenState
                 // Display the selected image or a default image
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 16),
-                  child: selectedImageFile != null
+                  child: equipmentPictureFile != null
                       ? SizedBox(
                           height: 150,
                           child: CircleAvatar(
@@ -173,7 +143,7 @@ class _AddEquipmentInformationScreenState
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(90),
                               child: Image.file(
-                                selectedImageFile!,
+                                equipmentPictureFile!,
                                 height: 145,
                                 width: 145,
                                 fit: BoxFit.contain,
@@ -202,114 +172,27 @@ class _AddEquipmentInformationScreenState
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    FilledButton.icon(
-                      icon: Icon(
-                        Icons.add_a_photo_outlined,
-                        color:
-                            Theme.of(context).colorScheme.onSecondaryContainer,
-                      ),
-                      style: ButtonStyle(
-                        elevation: const MaterialStatePropertyAll(2),
-                        backgroundColor: MaterialStatePropertyAll(
-                          Theme.of(context).colorScheme.secondaryContainer,
-                        ),
-                      ),
-                      onPressed: () async {
-                        // Handle camera permissions and image picking
-                        await Permission.camera.onDeniedCallback(() {
-                          if (context.mounted) {
-                            showDialog(
-                              context: context,
-                              builder: (context) =>
-                                  const EquipmentCameraPermissionDeniedAlert(),
-                              barrierDismissible: false,
-                            );
-                          }
-                        }).onGrantedCallback(() async {
-                          CroppedFile? pickedImge = await pickImage(
-                            imageSource: ImageSource.gallery,
-                          );
-                          if (pickedImge != null) {
-                            selectedImageFile = File(pickedImge.path);
-                          } else {
-                            selectedImageFile = null;
-                          }
-                          setState(() {});
-                        }).onPermanentlyDeniedCallback(() {
-                          if (context.mounted) {
-                            showDialog(
-                              context: context,
-                              builder: (context) =>
-                                  const EquipmentCameraPermissionDeniedAlert(),
-                              barrierDismissible: false,
-                            );
-                          }
-                        }).request();
+                    EquipmentPictureButton(
+                      buttonLable: "Gallery",
+                      imageSource: ImageSource.gallery,
+                      onImageSelected: (File? imageFile) {
+                        setState(() {
+                          equipmentPictureFile = imageFile;
+                        });
                       },
-                      label: Text(
-                        "Gallery",
-                        style: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSecondaryContainer,
-                        ),
-                      ),
                     ),
                     const SizedBox(
                       width: 20,
                     ),
-                    FilledButton.icon(
-                      icon: Icon(
-                        Icons.add_a_photo_outlined,
-                        color:
-                            Theme.of(context).colorScheme.onSecondaryContainer,
-                      ),
-                      style: ButtonStyle(
-                        elevation: const MaterialStatePropertyAll(2),
-                        backgroundColor: MaterialStatePropertyAll(
-                          Theme.of(context).colorScheme.secondaryContainer,
-                        ),
-                      ),
-                      onPressed: () async {
-                        // Handle camera permissions and image picking
-                        await Permission.camera.onDeniedCallback(() {
-                          if (context.mounted) {
-                            showDialog(
-                                context: context,
-                                builder: (context) =>
-                                    const EquipmentCameraPermissionDeniedAlert(),
-                                barrierDismissible: false);
-                          }
-                        }).onGrantedCallback(() async {
-                          CroppedFile? pickedImge = await pickImage(
-                            imageSource: ImageSource.camera,
-                          );
-                          if (pickedImge != null) {
-                            selectedImageFile = File(pickedImge.path);
-                          } else {
-                            selectedImageFile = null;
-                          }
-                          setState(() {});
-                        }).onPermanentlyDeniedCallback(() {
-                          if (context.mounted) {
-                            showDialog(
-                              context: context,
-                              builder: (context) =>
-                                  const EquipmentCameraPermissionDeniedAlert(),
-                              barrierDismissible: false,
-                            );
-                          }
-                        }).request();
+                    EquipmentPictureButton(
+                      buttonLable: "Camera",
+                      imageSource: ImageSource.camera,
+                      onImageSelected: (File? imageFile) {
+                        setState(() {
+                          equipmentPictureFile = imageFile;
+                        });
                       },
-                      label: Text(
-                        "Camera",
-                        style: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSecondaryContainer,
-                        ),
-                      ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -1183,13 +1066,13 @@ class _AddEquipmentInformationScreenState
                                         } else {
                                           String docId = const Uuid().v4();
                                           // createNewEquipment();
-                                          if (selectedImageFile != null) {
+                                          if (equipmentPictureFile != null) {
                                             _photoURL = await DatabaseService()
                                                 .addEquipmentPicture(
                                               equipmentPictureRef:
                                                   "${_tagName}_profile_picture",
                                               equipmentPicture:
-                                                  selectedImageFile!,
+                                                  equipmentPictureFile!,
                                             );
                                             DatabaseService().addEquipment(
                                               photoURL: _photoURL,
