@@ -3,17 +3,13 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../firebase/cloud_firestore_references.dart';
 import '../../../../home.dart';
 import '../../services/db_service.dart';
-import '../alerts/equipment_location_permission_denied_alert.dart';
-import '../alerts/equipment_location_service_alert.dart';
 import '../edit_equipment_page.dart';
 import '../widgets/equipment_dropdown_menu.dart';
 import '../widgets/equipment_file_preview.dart';
@@ -21,6 +17,7 @@ import '../widgets/equipment_file_upload_container.dart';
 import '../widgets/equipment_form_field.dart';
 import '../widgets/equipment_form_title.dart';
 import '../widgets/equipment_image_button.dart';
+import '../widgets/equipment_location_button.dart';
 import '../widgets/equipment_segmented_button.dart';
 
 class AddEquipmentInformationScreen extends StatefulWidget {
@@ -392,75 +389,14 @@ class _AddEquipmentInformationScreenState
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: Center(
-                    child: FilledButton.icon(
-                      icon: Icon(
-                        Icons.my_location_outlined,
-                        color:
-                            Theme.of(context).colorScheme.onSecondaryContainer,
-                      ),
-                      style: ButtonStyle(
-                        elevation: const MaterialStatePropertyAll(2),
-                        backgroundColor: MaterialStatePropertyAll(
-                          Theme.of(context).colorScheme.secondaryContainer,
-                        ),
-                      ),
-                      onPressed: () async {
-                        // Handle location permissions and image picking
-                        await Permission.location.onDeniedCallback(() {
-                          if (context.mounted) {
-                            showDialog(
-                              context: context,
-                              builder: (context) =>
-                                  const EquipmentLocationPermissionDeniedAlert(),
-                            );
-                          }
-                        }).onGrantedCallback(() async {
-                          bool serviceEnabled =
-                              await Geolocator.isLocationServiceEnabled();
-                          if (serviceEnabled) {
-                            Position currentPosition =
-                                await Geolocator.getCurrentPosition();
-
-                            _formkey.currentState!.setState(() {
-                              latitudeController.text =
-                                  currentPosition.latitude.toString();
-
-                              longitudeController.text =
-                                  currentPosition.longitude.toString();
-                            });
-                          } else {
-                            if (context.mounted) {
-                              showDialog(
-                                context: context,
-                                builder: (context) =>
-                                    const EquipmentLocationServiceAlert(),
-                                barrierDismissible: false,
-                              );
-                            }
-                          }
-                        }).onPermanentlyDeniedCallback(() {
-                          if (context.mounted) {
-                            showDialog(
-                              context: context,
-                              builder: (context) =>
-                                  const EquipmentLocationPermissionDeniedAlert(),
-                            );
-                          }
-                        }).request();
-                      },
-                      label: Text(
-                        "Locate equipment",
-                        style: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSecondaryContainer,
-                        ),
-                      ),
-                    ),
-                  ),
+                //button to get the equipment coords
+                EquipmentLocationButton(
+                  onPositionSelected: (position) {
+                    _formkey.currentState!.setState(() {
+                      latitudeController.text = position.latitude.toString();
+                      longitudeController.text = position.longitude.toString();
+                    });
+                  },
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16),
