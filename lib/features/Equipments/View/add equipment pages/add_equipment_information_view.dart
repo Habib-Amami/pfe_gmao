@@ -10,6 +10,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pfe_gmao/features/Equipments/View/widgets/equipment_form_field.dart';
+import 'package:pfe_gmao/features/Equipments/View/widgets/equipment_segmented_button.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../firebase/cloud_firestore_references.dart';
@@ -59,7 +60,7 @@ class _AddEquipmentInformationScreenState
   //initial value of the priority
   Priority defaultPriority = Priority.Medium;
   //initial value of the status
-  Status defaultStatus = Status.Active;
+  Status defaultStatus = Status.Standby;
   //a boolean flag to check if the Tagname is unique
   bool isTagNameNotUnique = false;
 
@@ -504,94 +505,40 @@ class _AddEquipmentInformationScreenState
               const EquipmentFormTitle(
                 title: "Priority",
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: Center(
-                  child: SegmentedButton(
-                    segments: [
-                      ButtonSegment(
-                        value: Priority.Low,
-                        label: Text(
-                          "Low",
-                          style: Theme.of(context).textTheme.labelMedium,
-                        ),
-                        icon: const Icon(Ionicons.checkmark_circle_outline),
-                      ),
-                      ButtonSegment(
-                        value: Priority.Medium,
-                        label: Text(
-                          "Medium",
-                          style: Theme.of(context).textTheme.labelMedium,
-                        ),
-                        icon: const Icon(Ionicons.information_circle_outline),
-                      ),
-                      ButtonSegment(
-                        value: Priority.High,
-                        label: Text(
-                          "High",
-                          style: Theme.of(context).textTheme.labelMedium,
-                        ),
-                        icon: const Icon(Ionicons.alert_circle_outline),
-                      ),
-                    ],
-                    selected: <Priority>{defaultPriority},
-                    onSelectionChanged: (Set<Priority> newvalue) {
-                      setState(() {
-                        defaultPriority = newvalue.first;
-                      });
-                    },
-                    showSelectedIcon: false,
-                  ),
-                ),
+              EquipmentSegmentedButton<Priority>(
+                buttonSegmentIconsList: const [
+                  Icon(Ionicons.alert_circle_outline),
+                  Icon(Ionicons.information_circle_outline),
+                  Icon(Ionicons.checkmark_circle_outline),
+                ],
+                enumValues: Priority.values,
+                selected: <Priority>{defaultPriority},
+                onSelectionChanged: (Set<Priority> newvalue) {
+                  setState(() {
+                    defaultPriority = newvalue.first;
+                  });
+                },
               ),
               // Segmented Button for entering equipment details
               // State
               const EquipmentFormTitle(
                 title: "State",
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: Center(
-                  child: SegmentedButton(
-                    segments: [
-                      ButtonSegment(
-                        value: Status.Standby,
-                        label: Text(
-                          "Standby",
-                          style: Theme.of(context).textTheme.labelMedium,
-                        ),
-                        icon: const Icon(Icons.pause_circle_outline),
-                      ),
-                      ButtonSegment(
-                        value: Status.Active,
-                        label: Text(
-                          "Active",
-                          style: Theme.of(context).textTheme.labelMedium,
-                        ),
-                        icon: const Icon(Icons.access_time),
-                      ),
-                      ButtonSegment(
-                        value: Status.Shutdown,
-                        label: Text(
-                          "Shutdown",
-                          style: Theme.of(context).textTheme.labelMedium,
-                        ),
-                        icon: const Icon(Icons.power_off),
-                      ),
-                    ],
-                    selected: <Status>{defaultStatus},
-                    onSelectionChanged: (Set<Status> newvalue) {
-                      setState(() {
-                        defaultStatus = newvalue.first;
-                      });
-                    },
-                    showSelectedIcon: false,
-                  ),
-                ),
+              EquipmentSegmentedButton<Status>(
+                enumValues: Status.values,
+                buttonSegmentIconsList: const [
+                  Icon(Icons.access_time),
+                  Icon(Icons.pause_circle_outline),
+                  Icon(Icons.power_off),
+                ],
+                selected: <Status>{defaultStatus},
+                onSelectionChanged: (Set<Status> newvalue) {
+                  setState(() {
+                    defaultStatus = newvalue.first;
+                  });
+                },
               ),
-              //
-              // field for add user manual pdf
-              //
+
               const EquipmentFormTitle(
                 title: "User Manual",
               ),
