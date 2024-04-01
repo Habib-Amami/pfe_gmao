@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pfe_gmao/features/Equipments/View/widgets/equipment_form_field.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../firebase/cloud_firestore_references.dart';
@@ -18,7 +19,7 @@ import '../alerts/equipment_location_permission_denied_alert.dart';
 import '../alerts/equipment_location_service_alert.dart';
 import '../edit_equipment_page.dart';
 import '../widgets/equipment_image_button.dart';
-import '../widgets/form_title.dart';
+import '../widgets/equipment_form_title.dart';
 
 class AddEquipmentInformationScreen extends StatefulWidget {
   const AddEquipmentInformationScreen({super.key});
@@ -166,12 +167,13 @@ class _AddEquipmentInformationScreenState
                         ),
                 ),
               ),
+              // Buttons for selecting an image from the gallery or camera
               Padding(
-                // Buttons for selecting an image from the gallery or camera
                 padding: const EdgeInsets.only(bottom: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    //custom button to select equipment image from gallery
                     EquipmentPictureButton(
                       buttonLable: "Gallery",
                       imageSource: ImageSource.gallery,
@@ -184,6 +186,7 @@ class _AddEquipmentInformationScreenState
                     const SizedBox(
                       width: 20,
                     ),
+                    //custom button to select equipment image from camera
                     EquipmentPictureButton(
                       buttonLable: "Camera",
                       imageSource: ImageSource.camera,
@@ -198,104 +201,53 @@ class _AddEquipmentInformationScreenState
               ),
               // Form fields for entering equipment details
               // Tag Name
-              const FormTitle(
+              const EquipmentFormTitle(
                 title: "Tag name",
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: TextFormField(
-                  keyboardType: TextInputType.name,
-                  textInputAction: TextInputAction.next,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(8),
-                      ),
-                    ),
-                    hintText: "Enter the Tag name",
-                    hintStyle: TextStyle(
-                      color: Colors.grey.shade500,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    prefixIcon: const Icon(
-                      Icons.local_offer_outlined,
-                    ),
-                    prefixIconColor: MaterialStateColor.resolveWith(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.focused)) {
-                          return Theme.of(context).colorScheme.primary;
-                        }
-                        if (states.contains(MaterialState.error)) {
-                          return Theme.of(context).colorScheme.error;
-                        }
-                        return Colors.grey.shade500;
-                      },
-                    ),
-                  ),
-                  validator: (value) {
-                    //create a tag name validation
-                    if (value == null || value.isEmpty) {
-                      return "please provide an tag name";
-                    }
-                    return null;
-                  },
-                  onSaved: (newValue) {
-                    _tagName = newValue!.trim();
-                  },
+              EquipmentFormField(
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                hintText: "Enter the Tag name",
+                prefixIcon: const Icon(
+                  Icons.local_offer_outlined,
                 ),
+                validator: (value) {
+                  //create a tag name validation
+                  if (value == null || value.isEmpty) {
+                    return "please provide an tag name";
+                  }
+                  return null;
+                },
+                onSaved: (newValue) {
+                  _tagName = newValue!.trim();
+                },
               ),
               // Form fields for entering equipment details
               // Area
-              const FormTitle(
+              const EquipmentFormTitle(
                 title: "Area",
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                // Area input field
-                child: TextFormField(
-                  keyboardType: TextInputType.name,
-                  textInputAction: TextInputAction.next,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(8),
-                      ),
-                    ),
-                    hintText: "Enter the Area ",
-                    hintStyle: TextStyle(
-                      color: Colors.grey.shade500,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    prefixIcon: const Icon(
-                      Icons.location_on_outlined,
-                    ),
-                    prefixIconColor: MaterialStateColor.resolveWith(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.focused)) {
-                          return Theme.of(context).colorScheme.primary;
-                        }
-                        if (states.contains(MaterialState.error)) {
-                          return Theme.of(context).colorScheme.error;
-                        }
-                        return Colors.grey.shade500;
-                      },
-                    ),
-                  ),
-                  validator: (value) {
-                    //create a email validation
-                    if (value == null || value.isEmpty) {
-                      return "please provide an area";
-                    }
-                    return null;
-                  },
-                  onSaved: (newValue) {
-                    _area = newValue!.trim();
-                  },
+              EquipmentFormField(
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                hintText: "Enter the Area ",
+                prefixIcon: const Icon(
+                  Icons.location_on_outlined,
                 ),
+                validator: (value) {
+                  //create a email validation
+                  if (value == null || value.isEmpty) {
+                    return "please provide an area";
+                  }
+                  return null;
+                },
+                onSaved: (newValue) {
+                  _area = newValue!.trim();
+                },
               ),
               // Form fields for entering equipment details
               // Workshop
-              const FormTitle(
+              const EquipmentFormTitle(
                 title: "Workshop",
               ),
               Container(
@@ -337,7 +289,7 @@ class _AddEquipmentInformationScreenState
               ),
               // Form fields for entering equipment details
               // Discipline
-              const FormTitle(
+              const EquipmentFormTitle(
                 title: "Discipline",
               ),
               Container(
@@ -379,61 +331,35 @@ class _AddEquipmentInformationScreenState
               ),
               // Form fields for entering equipment details
               // Description
-              const FormTitle(
+              const EquipmentFormTitle(
                 title: "Description",
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 3),
-                // Description input field
-                child: TextFormField(
-                  keyboardType: TextInputType.multiline,
-                  textInputAction: TextInputAction.next,
-                  maxLines: 3,
-                  maxLength: 200,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(8),
-                      ),
-                    ),
-                    hintText: "Enter a brief Description",
-                    hintStyle: TextStyle(
-                      color: Colors.grey.shade500,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    prefixIcon: const Padding(
-                      padding: EdgeInsets.only(bottom: 48),
-                      child: Icon(
-                        Icons.description_outlined,
-                      ),
-                    ),
-                    prefixIconColor: MaterialStateColor.resolveWith(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.focused)) {
-                          return Theme.of(context).colorScheme.primary;
-                        }
-                        if (states.contains(MaterialState.error)) {
-                          return Theme.of(context).colorScheme.error;
-                        }
-                        return Colors.grey.shade500;
-                      },
-                    ),
+              EquipmentFormField(
+                keyboardType: TextInputType.multiline,
+                textInputAction: TextInputAction.next,
+                maxLines: 3,
+                maxLength: 200,
+                hintText: "Enter a brief Description",
+                prefixIcon: const Padding(
+                  padding: EdgeInsets.only(bottom: 48),
+                  child: Icon(
+                    Icons.description_outlined,
                   ),
-                  validator: (value) {
-                    //create a description validation
-                    if (value == null || value.isEmpty) {
-                      return "please provide a description";
-                    }
-                    return null;
-                  },
-                  onSaved: (newValue) {
-                    _description = newValue!.trim();
-                  },
                 ),
+                validator: (value) {
+                  //create a description validation
+                  if (value == null || value.isEmpty) {
+                    return "please provide a description";
+                  }
+                  return null;
+                },
+                onSaved: (newValue) {
+                  _description = newValue!.trim();
+                },
               ),
               // Form fields for entering equipment location
               // Location
-              const FormTitle(
+              const EquipmentFormTitle(
                 title: "Location",
               ),
               Row(
@@ -441,56 +367,26 @@ class _AddEquipmentInformationScreenState
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      FormTitle(
+                      EquipmentFormTitle(
                         title: "latitude",
                         textStyle: Theme.of(context).textTheme.titleSmall,
                       ),
                       SizedBox(
                         width: MediaQuery.sizeOf(context).width / 2 - 24,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          // Description input field
-                          child: TextFormField(
-                            enabled: false,
-                            controller: latitudeController,
-                            keyboardType: TextInputType.multiline,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              border: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8),
-                                ),
-                              ),
-                              hintText: "latitude value",
-                              hintStyle: TextStyle(
-                                color: Colors.grey.shade500,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              prefixIcon: const Icon(
-                                Icons.location_on_outlined,
-                              ),
-                              prefixIconColor: MaterialStateColor.resolveWith(
-                                (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.focused)) {
-                                    return Theme.of(context)
-                                        .colorScheme
-                                        .primary;
-                                  }
-                                  if (states.contains(MaterialState.error)) {
-                                    return Theme.of(context).colorScheme.error;
-                                  }
-                                  return Colors.grey.shade500;
-                                },
-                              ),
-                            ),
-                            validator: (value) {
-                              //create a email validation
-                              if (value == null || value.isEmpty) {
-                                return "please provide a latitude";
-                              }
-                              return null;
-                            },
+                        child: EquipmentFormField(
+                          enabled: false,
+                          controller: latitudeController,
+                          hintText: "latitude value",
+                          prefixIcon: const Icon(
+                            Icons.location_on_outlined,
                           ),
+                          validator: (value) {
+                            //create a latitude validation
+                            if (value == null || value.isEmpty) {
+                              return "please provide a latitude";
+                            }
+                            return null;
+                          },
                         ),
                       ),
                     ],
@@ -501,56 +397,26 @@ class _AddEquipmentInformationScreenState
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      FormTitle(
+                      EquipmentFormTitle(
                         title: "longitude",
                         textStyle: Theme.of(context).textTheme.titleSmall,
                       ),
                       SizedBox(
                         width: MediaQuery.sizeOf(context).width / 2 - 24,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          // Description input field
-                          child: TextFormField(
-                            enabled: false,
-                            controller: longitudeController,
-                            keyboardType: TextInputType.multiline,
-                            textInputAction: TextInputAction.done,
-                            decoration: InputDecoration(
-                              border: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8),
-                                ),
-                              ),
-                              hintText: "longitude value",
-                              hintStyle: TextStyle(
-                                color: Colors.grey.shade500,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              prefixIcon: const Icon(
-                                Icons.location_on_outlined,
-                              ),
-                              prefixIconColor: MaterialStateColor.resolveWith(
-                                (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.focused)) {
-                                    return Theme.of(context)
-                                        .colorScheme
-                                        .primary;
-                                  }
-                                  if (states.contains(MaterialState.error)) {
-                                    return Theme.of(context).colorScheme.error;
-                                  }
-                                  return Colors.grey.shade500;
-                                },
-                              ),
-                            ),
-                            validator: (value) {
-                              //create a email validation
-                              if (value == null || value.isEmpty) {
-                                return "please provide a longitude";
-                              }
-                              return null;
-                            },
+                        child: EquipmentFormField(
+                          enabled: false,
+                          controller: longitudeController,
+                          hintText: "longitude value",
+                          prefixIcon: const Icon(
+                            Icons.location_on_outlined,
                           ),
+                          validator: (value) {
+                            //create a latitude validation
+                            if (value == null || value.isEmpty) {
+                              return "please provide a longitude";
+                            }
+                            return null;
+                          },
                         ),
                       ),
                     ],
@@ -635,7 +501,7 @@ class _AddEquipmentInformationScreenState
               ),
               // Segmented Button for entering equipment details
               // Priority
-              const FormTitle(
+              const EquipmentFormTitle(
                 title: "Priority",
               ),
               Padding(
@@ -680,7 +546,7 @@ class _AddEquipmentInformationScreenState
               ),
               // Segmented Button for entering equipment details
               // State
-              const FormTitle(
+              const EquipmentFormTitle(
                 title: "State",
               ),
               Padding(
@@ -726,7 +592,7 @@ class _AddEquipmentInformationScreenState
               //
               // field for add user manual pdf
               //
-              const FormTitle(
+              const EquipmentFormTitle(
                 title: "User Manual",
               ),
               Padding(
@@ -813,7 +679,7 @@ class _AddEquipmentInformationScreenState
               //
               // field for add contract pdf
               //
-              const FormTitle(
+              const EquipmentFormTitle(
                 title: "Contract",
               ),
               Padding(
@@ -900,7 +766,7 @@ class _AddEquipmentInformationScreenState
               //
               // field for other related equipment pdf files
               //
-              const FormTitle(
+              const EquipmentFormTitle(
                 title: "Other",
               ),
               Padding(
