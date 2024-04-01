@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:pfe_gmao/features/Equipments/View/widgets/equipment_picture_avatar.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../firebase/cloud_firestore_references.dart';
@@ -74,20 +74,6 @@ class _AddEquipmentInformationScreenState
   File? contractFile;
   List<File>? otherFiles;
 
-  Future<List<File>> getMultiplePDF() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    );
-    if (result != null) {
-      List<File> files = result.paths.map((path) => File(path!)).toList();
-      return files;
-    } else {
-      return [];
-    }
-  }
-
   Future<String> uploadUserManual({
     required String equipmentUserManualRef,
     required File userManualFile,
@@ -113,7 +99,7 @@ class _AddEquipmentInformationScreenState
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        await Future.delayed(Duration.zero).then(
+        await Future.delayed(Durations.medium4).then(
           (_) {
             _formkey.currentState!.reset();
             equipmentPictureFile = null;
@@ -138,42 +124,9 @@ class _AddEquipmentInformationScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Center(
-                  // Display the selected image or a default image
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: equipmentPictureFile != null
-                        ? SizedBox(
-                            height: 150,
-                            child: CircleAvatar(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary,
-                              radius: 150,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(90),
-                                child: Image.file(
-                                  equipmentPictureFile!,
-                                  height: 145,
-                                  width: 145,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
-                          )
-                        : SizedBox(
-                            height: 150,
-                            child: CircleAvatar(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary,
-                              radius: 150,
-                              child: const CircleAvatar(
-                                radius: 72,
-                                backgroundImage:
-                                    NetworkImage(defaultEquipmentPicture),
-                              ),
-                            ),
-                          ),
-                  ),
+                // Display the selected image or a default image
+                EquipmentPictureAvatar(
+                  equipmentPictureFile: equipmentPictureFile,
                 ),
                 // Buttons for selecting an image from the gallery or camera
                 Padding(
@@ -398,6 +351,7 @@ class _AddEquipmentInformationScreenState
                     });
                   },
                 ),
+                //note the the user when locating an equipment
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: Text(
@@ -451,8 +405,8 @@ class _AddEquipmentInformationScreenState
                   title: "User Manual",
                 ),
                 userManualFile == null
-                    // Render FileUploadContainer if no file is selected
                     ? FileUploadContainer(
+                        // Render FileUploadContainer if no file is selected
                         allowMultiple: false,
                         label:
                             "Tap this area to upload the user manual for the equipment (pdf)",
@@ -466,8 +420,8 @@ class _AddEquipmentInformationScreenState
                           }
                         },
                       )
-                    // Render FilePreviewContainer if a file is selected
                     : FilePreviewContainer(
+                        // Render FilePreviewContainer if a file is selected
                         file: userManualFile,
                         onFileDeleted: () {
                           setState(() {
