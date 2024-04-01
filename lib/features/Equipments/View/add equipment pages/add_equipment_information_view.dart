@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pfe_gmao/features/Equipments/View/widgets/equipment_dropdown_menu.dart';
 import 'package:pfe_gmao/features/Equipments/View/widgets/equipment_form_field.dart';
 import 'package:pfe_gmao/features/Equipments/View/widgets/equipment_segmented_button.dart';
 import 'package:uuid/uuid.dart';
@@ -251,84 +252,42 @@ class _AddEquipmentInformationScreenState
               const EquipmentFormTitle(
                 title: "Workshop",
               ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                width: double.infinity,
-                height: 64,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Colors.grey,
-                    width: 1.2,
-                  ),
-                ),
-                child: Center(
-                  child: DropdownButtonFormField(
-                    padding: const EdgeInsets.only(right: 16),
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.build_outlined,
+              EquipmentDropDownMenu(
+                items: workshopValueList
+                    .map(
+                      (workshop) => DropdownMenuItem(
+                        value: workshop,
+                        child: Text(workshop),
                       ),
-                      border: InputBorder.none,
-                    ),
-                    items: workshopValueList
-                        .map(
-                          (workshop) => DropdownMenuItem(
-                            value: workshop,
-                            child: Text(workshop),
-                          ),
-                        )
-                        .toList(),
-                    value: workshopValue,
-                    onChanged: (value) {
-                      setState(() {
-                        workshopValue = value as String;
-                      });
-                    },
-                  ),
-                ),
+                    )
+                    .toList(),
+                value: workshopValue,
+                onChanged: (value) {
+                  setState(() {
+                    workshopValue = value as String;
+                  });
+                },
               ),
               // Form fields for entering equipment details
               // Discipline
               const EquipmentFormTitle(
                 title: "Discipline",
               ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                width: double.infinity,
-                height: 64,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Colors.grey,
-                    width: 1.2,
-                  ),
-                ),
-                child: Center(
-                  child: DropdownButtonFormField(
-                    padding: const EdgeInsets.only(right: 16),
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.build_circle_outlined,
+              EquipmentDropDownMenu(
+                items: disciplineValueList
+                    .map(
+                      (discipline) => DropdownMenuItem(
+                        value: discipline,
+                        child: Text(discipline),
                       ),
-                      border: InputBorder.none,
-                    ),
-                    items: disciplineValueList
-                        .map(
-                          (discipline) => DropdownMenuItem(
-                            value: discipline,
-                            child: Text(discipline),
-                          ),
-                        )
-                        .toList(),
-                    value: disciplineValue,
-                    onChanged: (value) {
-                      setState(() {
-                        disciplineValue = value as String;
-                      });
-                    },
-                  ),
-                ),
+                    )
+                    .toList(),
+                value: disciplineValue,
+                onChanged: (value) {
+                  setState(() {
+                    disciplineValue = value as String;
+                  });
+                },
               ),
               // Form fields for entering equipment details
               // Description
