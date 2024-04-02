@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
 class EquipmentFormField extends StatelessWidget {
   final String hintText;
   final Widget prefixIcon;
   final String? Function(String?) validator;
-  void Function(String?)? onSaved;
-  TextInputType? keyboardType;
-  TextInputAction? textInputAction;
-  int? maxLines;
-  int? maxLength;
-  bool? enabled;
-  TextEditingController? controller;
+  final void Function(String?)? onSaved;
+  final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
+  final int? maxLines;
+  final int? maxLength;
+  final bool? enabled;
+  final TextEditingController? controller;
+  final String? initialValue;
 
-  EquipmentFormField({
+  const EquipmentFormField({
     required this.hintText,
     required this.prefixIcon,
     required this.validator,
@@ -24,6 +24,7 @@ class EquipmentFormField extends StatelessWidget {
     this.maxLength,
     this.maxLines,
     this.onSaved,
+    this.initialValue,
     super.key,
   });
 
@@ -65,6 +66,7 @@ class EquipmentFormField extends StatelessWidget {
         ),
         validator: validator,
         onSaved: onSaved,
+        initialValue: initialValue,
       ),
     );
   }
