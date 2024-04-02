@@ -1,10 +1,8 @@
 import 'dart:io';
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:pfe_gmao/features/Equipments/View/widgets/equipment_picture_avatar.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../firebase/cloud_firestore_references.dart';
@@ -18,6 +16,7 @@ import '../widgets/equipment_form_field.dart';
 import '../widgets/equipment_form_title.dart';
 import '../widgets/equipment_image_button.dart';
 import '../widgets/equipment_location_button.dart';
+import '../widgets/equipment_picture_avatar.dart';
 import '../widgets/equipment_segmented_button.dart';
 
 class AddEquipmentInformationScreen extends StatefulWidget {
@@ -41,15 +40,16 @@ class _AddEquipmentInformationScreenState
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   // Variables to store equipment discipline information
-  final List disciplineValueList = ['Mechanics', 'Electrics', 'Instrumental'];
-  String disciplineValue = 'Mechanics';
+  final List _disciplineValueList = ['Mechanics', 'Electrics', 'Instrumental'];
+  String _disciplineValue = 'Mechanics';
 
   // Variables to store equipment workshop information
-  final List workshopValueList = ['QTTF', 'PGTF', 'GNTF'];
-  String workshopValue = 'QTTF';
+  final List _workshopValueList = ['QTTF', 'PGTF', 'GNTF'];
+  String _workshopValue = 'QTTF';
 
   // Variables to store equipment details
-  String _photoURL = "";
+  String _photoURL =
+      "https://firebasestorage.googleapis.com/v0/b/pfe-gmao-11445214.appspot.com/o/default%20picture.jpg?alt=media&token=c964483d-03dd-4ce2-982b-481d4fa22be2";
   String _tagName = "";
   String _area = "";
   String _description = "";
@@ -59,41 +59,27 @@ class _AddEquipmentInformationScreenState
   TextEditingController longitudeController = TextEditingController();
 
   //initial value of the priority
-  Priority defaultPriority = Priority.Medium;
+  Priority _defaultPriority = Priority.Medium;
   //initial value of the status
-  Status defaultStatus = Status.Standby;
+  Status _defaultStatus = Status.Standby;
 
   //a boolean flag to check if the Tagname is unique
-  bool isTagNameNotUnique = false;
+  bool _isTagNameUnique = false;
 
   // Variable to store the selected image file
-  File? equipmentPictureFile;
+  File? _equipmentPictureFile;
 
-  // Variable to store the selected image file
-  File? userManualFile;
-  File? contractFile;
-  List<File>? otherFiles;
+  // Variable to store the equipment user manual file
+  File? _userManualFile;
+  String _userManualDowloadURL = "";
 
-  Future<String> uploadUserManual({
-    required String equipmentUserManualRef,
-    required File userManualFile,
-  }) async {
-    // Get references to Firebase Storage
-    Reference rootReference = FirebaseStorage.instance.ref();
-    Reference equipmentUserManuelsDir =
-        rootReference.child(equipmentUserManualsDir);
-    Reference userManualRef =
-        equipmentUserManuelsDir.child(equipmentUserManualRef);
-    // Upload the profile picture file to Firebase Storage
-    await userManualRef.putFile(
-      userManualFile,
-      SettableMetadata(
-        contentType: 'application/pdf',
-      ),
-    );
-    // Get the download URL of the uploaded image
-    return await userManualRef.getDownloadURL();
-  }
+  // Variable to store the equipment contract file
+  File? _contractFile;
+  String _contractDowloadURL = "";
+
+  // List to store the other equipment related files
+  List<File>? _otherFiles;
+  List<String> _otherFilesDowloadURLs = [];
 
   @override
   Widget build(BuildContext context) {
@@ -102,16 +88,16 @@ class _AddEquipmentInformationScreenState
         await Future.delayed(Durations.medium4).then(
           (_) {
             _formkey.currentState!.reset();
-            equipmentPictureFile = null;
-            userManualFile = null;
-            contractFile = null;
-            otherFiles = null;
+            _equipmentPictureFile = null;
+            _userManualFile = null;
+            _contractFile = null;
+            _otherFiles = null;
             longitudeController.clear();
             latitudeController.clear();
-            defaultPriority = Priority.Medium;
-            defaultStatus = Status.Standby;
-            workshopValue = 'QTTF';
-            disciplineValue = 'Mechanics';
+            _defaultPriority = Priority.Medium;
+            _defaultStatus = Status.Standby;
+            _workshopValue = 'QTTF';
+            _disciplineValue = 'Mechanics';
           },
         );
       },
@@ -126,7 +112,7 @@ class _AddEquipmentInformationScreenState
               children: [
                 // Display the selected image or a default image
                 EquipmentPictureAvatar(
-                  equipmentPictureFile: equipmentPictureFile,
+                  equipmentPictureFile: _equipmentPictureFile,
                 ),
                 // Buttons for selecting an image from the gallery or camera
                 Padding(
@@ -140,7 +126,7 @@ class _AddEquipmentInformationScreenState
                         imageSource: ImageSource.gallery,
                         onImageSelected: (File? imageFile) {
                           setState(() {
-                            equipmentPictureFile = imageFile;
+                            _equipmentPictureFile = imageFile;
                           });
                         },
                       ),
@@ -153,7 +139,7 @@ class _AddEquipmentInformationScreenState
                         imageSource: ImageSource.camera,
                         onImageSelected: (File? imageFile) {
                           setState(() {
-                            equipmentPictureFile = imageFile;
+                            _equipmentPictureFile = imageFile;
                           });
                         },
                       ),
@@ -212,7 +198,7 @@ class _AddEquipmentInformationScreenState
                   title: "Workshop",
                 ),
                 EquipmentDropDownMenu(
-                  items: workshopValueList
+                  items: _workshopValueList
                       .map(
                         (workshop) => DropdownMenuItem(
                           value: workshop,
@@ -220,10 +206,10 @@ class _AddEquipmentInformationScreenState
                         ),
                       )
                       .toList(),
-                  value: workshopValue,
+                  value: _workshopValue,
                   onChanged: (value) {
                     setState(() {
-                      workshopValue = value as String;
+                      _workshopValue = value as String;
                     });
                   },
                 ),
@@ -233,7 +219,7 @@ class _AddEquipmentInformationScreenState
                   title: "Discipline",
                 ),
                 EquipmentDropDownMenu(
-                  items: disciplineValueList
+                  items: _disciplineValueList
                       .map(
                         (discipline) => DropdownMenuItem(
                           value: discipline,
@@ -241,10 +227,10 @@ class _AddEquipmentInformationScreenState
                         ),
                       )
                       .toList(),
-                  value: disciplineValue,
+                  value: _disciplineValue,
                   onChanged: (value) {
                     setState(() {
-                      disciplineValue = value as String;
+                      _disciplineValue = value as String;
                     });
                   },
                 ),
@@ -372,10 +358,10 @@ class _AddEquipmentInformationScreenState
                     Icon(Ionicons.checkmark_circle_outline),
                   ],
                   enumValues: Priority.values,
-                  selected: <Priority>{defaultPriority},
+                  selected: <Priority>{_defaultPriority},
                   onSelectionChanged: (Set<Priority> newvalue) {
                     setState(() {
-                      defaultPriority = newvalue.first;
+                      _defaultPriority = newvalue.first;
                     });
                   },
                 ),
@@ -391,10 +377,10 @@ class _AddEquipmentInformationScreenState
                     Icon(Icons.pause_circle_outline),
                     Icon(Icons.power_off),
                   ],
-                  selected: <Status>{defaultStatus},
+                  selected: <Status>{_defaultStatus},
                   onSelectionChanged: (Set<Status> newvalue) {
                     setState(() {
-                      defaultStatus = newvalue.first;
+                      _defaultStatus = newvalue.first;
                     });
                   },
                 ),
@@ -404,7 +390,7 @@ class _AddEquipmentInformationScreenState
                 const EquipmentFormTitle(
                   title: "User Manual",
                 ),
-                userManualFile == null
+                _userManualFile == null
                     ? FileUploadContainer(
                         // Render FileUploadContainer if no file is selected
                         allowMultiple: false,
@@ -413,19 +399,19 @@ class _AddEquipmentInformationScreenState
                         onFileSelected: (files) {
                           if (files != null && files.isNotEmpty) {
                             setState(() {
-                              userManualFile = files.first;
+                              _userManualFile = files.first;
                             });
                           } else {
-                            userManualFile = null;
+                            _userManualFile = null;
                           }
                         },
                       )
                     : FilePreviewContainer(
                         // Render FilePreviewContainer if a file is selected
-                        file: userManualFile,
+                        file: _userManualFile,
                         onFileDeleted: () {
                           setState(() {
-                            userManualFile = null;
+                            _userManualFile = null;
                           });
                         },
                       ),
@@ -435,7 +421,7 @@ class _AddEquipmentInformationScreenState
                 const EquipmentFormTitle(
                   title: "Contract",
                 ),
-                contractFile == null
+                _contractFile == null
                     // Render FileUploadContainer if no file is selected
                     ? FileUploadContainer(
                         allowMultiple: false,
@@ -444,19 +430,19 @@ class _AddEquipmentInformationScreenState
                         onFileSelected: (files) {
                           if (files != null && files.isNotEmpty) {
                             setState(() {
-                              contractFile = files.first;
+                              _contractFile = files.first;
                             });
                           } else {
-                            contractFile = null;
+                            _contractFile = null;
                           }
                         },
                       )
                     // Render FilePreviewContainer if a file is selected
                     : FilePreviewContainer(
-                        file: contractFile,
+                        file: _contractFile,
                         onFileDeleted: () {
                           setState(() {
-                            contractFile = null;
+                            _contractFile = null;
                           });
                         },
                       ),
@@ -466,7 +452,7 @@ class _AddEquipmentInformationScreenState
                 const EquipmentFormTitle(
                   title: "Other",
                 ),
-                otherFiles == null
+                _otherFiles == null
                     ? FileUploadContainer(
                         allowMultiple: true,
                         label:
@@ -474,21 +460,21 @@ class _AddEquipmentInformationScreenState
                         onFileSelected: (files) {
                           if (files != null && files.isNotEmpty) {
                             setState(() {
-                              otherFiles = files;
+                              _otherFiles = files;
                             });
                           } else {
-                            otherFiles = null;
+                            _otherFiles = null;
                           }
                         },
                       )
                     : Column(
                         children: [
-                          ...otherFiles!.map(
+                          ..._otherFiles!.map(
                             (file) => FilePreviewContainer(
                               file: file,
                               onFileDeleted: () {
                                 setState(() {
-                                  otherFiles!.remove(file);
+                                  _otherFiles!.remove(file);
                                 });
                               },
                             ),
@@ -501,7 +487,7 @@ class _AddEquipmentInformationScreenState
                               );
                               if (addedFile != null) {
                                 setState(() {
-                                  otherFiles!.add(
+                                  _otherFiles!.add(
                                     addedFile.first,
                                   );
                                 });
@@ -548,14 +534,14 @@ class _AddEquipmentInformationScreenState
                                       onPressed: () async {
                                         if (_formkey.currentState!.validate()) {
                                           _formkey.currentState!.save();
-                                          isTagNameNotUnique =
+                                          _isTagNameUnique =
                                               await DatabaseService
                                                   .checkDocumentExistence(
                                             collectionName:
                                                 tagNamesCollectionRef,
                                             documentId: _tagName,
                                           );
-                                          if (isTagNameNotUnique) {
+                                          if (_isTagNameUnique) {
                                             if (context.mounted) {
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
@@ -569,50 +555,73 @@ class _AddEquipmentInformationScreenState
                                           } else {
                                             String docId = const Uuid().v4();
                                             // createNewEquipment();
-                                            if (equipmentPictureFile != null) {
-                                              _photoURL =
-                                                  await DatabaseService()
-                                                      .addEquipmentPicture(
-                                                equipmentPictureRef:
-                                                    "${_tagName}_profile_picture",
-                                                equipmentPicture:
-                                                    equipmentPictureFile!,
-                                              );
-                                              DatabaseService().addEquipment(
-                                                photoURL: _photoURL,
-                                                tagName: _tagName,
-                                                docId: docId,
-                                                description: _description,
-                                                area: _area,
-                                                discipline: disciplineValue,
-                                                workshop: workshopValue,
-                                                status: defaultStatus
-                                                    .statusToShortString(),
-                                                priority: defaultPriority
-                                                    .priorityToShortString(),
-                                                longitude:
-                                                    longitudeController.text,
-                                                latitude:
-                                                    longitudeController.text,
-                                              );
-                                            } else {
-                                              DatabaseService().addEquipment(
-                                                tagName: _tagName,
-                                                docId: docId,
-                                                description: _description,
-                                                area: _area,
-                                                discipline: disciplineValue,
-                                                workshop: workshopValue,
-                                                status: defaultStatus
-                                                    .statusToShortString(),
-                                                priority: defaultPriority
-                                                    .priorityToShortString(),
-                                                longitude:
-                                                    longitudeController.text,
-                                                latitude:
-                                                    latitudeController.text,
+                                            if (_equipmentPictureFile != null) {
+                                              _photoURL = await DatabaseService
+                                                  .uploadEquipmentPicture(
+                                                fileName: "${_tagName}_picture",
+                                                file: _equipmentPictureFile!,
                                               );
                                             }
+                                            if (_userManualFile != null) {
+                                              await DatabaseService
+                                                  .uploadEquipmentPDFtoStorage(
+                                                equipmentTagName: _tagName,
+                                                files: [_userManualFile!],
+                                                baseFileName:
+                                                    "${_tagName}_user_manual_",
+                                              ).then(
+                                                (dowloadURLs) =>
+                                                    _userManualDowloadURL =
+                                                        dowloadURLs.first,
+                                              );
+                                            }
+                                            if (_contractFile != null) {
+                                              await DatabaseService
+                                                  .uploadEquipmentPDFtoStorage(
+                                                equipmentTagName: _tagName,
+                                                files: [_contractFile!],
+                                                baseFileName:
+                                                    "${_tagName}_contract_",
+                                              ).then(
+                                                (dowloadURLs) =>
+                                                    _contractDowloadURL =
+                                                        dowloadURLs.first,
+                                              );
+                                            }
+                                            if (_otherFiles != null) {
+                                              await DatabaseService
+                                                  .uploadEquipmentPDFtoStorage(
+                                                equipmentTagName: _tagName,
+                                                files: _otherFiles!,
+                                                baseFileName:
+                                                    "${_tagName}_other_file_",
+                                              ).then(
+                                                (dowloadURLs) =>
+                                                    _otherFilesDowloadURLs =
+                                                        dowloadURLs,
+                                              );
+                                            }
+                                            await DatabaseService()
+                                                .addEquipment(
+                                              tagName: _tagName,
+                                              docId: docId,
+                                              description: _description,
+                                              area: _area,
+                                              discipline: _disciplineValue,
+                                              workshop: _workshopValue,
+                                              status: _defaultStatus
+                                                  .statusToShortString(),
+                                              priority: _defaultPriority
+                                                  .priorityToShortString(),
+                                              longitude:
+                                                  longitudeController.text,
+                                              latitude: latitudeController.text,
+                                              photoURL: _photoURL,
+                                              userManual: _userManualDowloadURL,
+                                              contract: _contractDowloadURL,
+                                              otherFiles:
+                                                  _otherFilesDowloadURLs,
+                                            );
                                           }
                                           if (context.mounted) {
                                             Navigator.pop(context);
