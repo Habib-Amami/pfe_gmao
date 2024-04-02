@@ -16,6 +16,9 @@ class Equipment {
   String Photo;
   String Longitude;
   String Latitude;
+  String userManual;
+  String contract;
+  List<String> otherFiles;
 
   Equipment({
     required this.id,
@@ -31,6 +34,9 @@ class Equipment {
     required this.Photo,
     required this.Longitude,
     required this.Latitude,
+    required this.userManual,
+    required this.contract,
+    required this.otherFiles,
   });
 
   Equipment.fromJSON(Map<String, dynamic> json)
@@ -45,9 +51,15 @@ class Equipment {
           UpdatedOn: json["UpdatedOn"]! as Timestamp,
           Discipline: json["Discipline"]! as String,
           Workshop: json["Workshop"]! as String,
-          Photo: json['Photo'] as String,
-          Longitude: json['Longitude'] as String,
-          Latitude: json['Latitude'] as String,
+          Photo: json['Photo']! as String,
+          Longitude: json['Longitude']! as String,
+          Latitude: json['Latitude']! as String,
+          userManual:
+              json['userManual'] != null ? json['userManual'] as String : '',
+          contract: json['contract'] != null ? json['contract'] as String : '',
+          otherFiles: json['otherFiles'] != null
+              ? List<String>.from(json['otherFiles'])
+              : [],
         );
 
   Equipment copyWith({
@@ -64,6 +76,9 @@ class Equipment {
     String? Photo,
     String? Longitude,
     String? Latitude,
+    String? userManual,
+    String? contract,
+    List<String>? otherFiles,
   }) {
     return Equipment(
       id: id ?? this.id,
@@ -79,6 +94,9 @@ class Equipment {
       Photo: Photo ?? this.Photo,
       Longitude: Longitude ?? this.Longitude,
       Latitude: Latitude ?? this.Latitude,
+      userManual: userManual ?? this.userManual,
+      contract: contract ?? this.contract,
+      otherFiles: otherFiles ?? this.otherFiles,
     );
   }
 
@@ -97,6 +115,9 @@ class Equipment {
       'Photo': Photo,
       'Longitude': Longitude,
       'Latitude': Latitude,
+      'userManual': userManual,
+      'contract': contract,
+      'otherFiles': otherFiles,
     };
   }
 }
