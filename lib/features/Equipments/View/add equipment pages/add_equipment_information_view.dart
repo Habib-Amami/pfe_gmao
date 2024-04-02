@@ -7,6 +7,8 @@ import 'package:uuid/uuid.dart';
 
 import '../../../../firebase/cloud_firestore_references.dart';
 import '../../../../home.dart';
+import '../../model/discipline_list.dart';
+import '../../model/workshop_list.dart';
 import '../../services/db_service.dart';
 import '../edit_equipment_page.dart';
 import '../widgets/equipment_dropdown_menu.dart';
@@ -40,11 +42,11 @@ class _AddEquipmentInformationScreenState
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   // Variables to store equipment discipline information
-  final List _disciplineValueList = ['Mechanics', 'Electrics', 'Instrumental'];
+  // final List _disciplineValueList = ['Mechanics', 'Electrics', 'Instrumental'];
   String _disciplineValue = 'Mechanics';
 
   // Variables to store equipment workshop information
-  final List _workshopValueList = ['QTTF', 'PGTF', 'GNTF'];
+  // final List _workshopValueList = ['QTTF', 'PGTF', 'GNTF'];
   String _workshopValue = 'QTTF';
 
   // Variables to store equipment details
@@ -198,7 +200,7 @@ class _AddEquipmentInformationScreenState
                   title: "Workshop",
                 ),
                 EquipmentDropDownMenu(
-                  items: _workshopValueList
+                  items: workshopValueList
                       .map(
                         (workshop) => DropdownMenuItem(
                           value: workshop,
@@ -219,7 +221,7 @@ class _AddEquipmentInformationScreenState
                   title: "Discipline",
                 ),
                 EquipmentDropDownMenu(
-                  items: _disciplineValueList
+                  items: disciplineValueList
                       .map(
                         (discipline) => DropdownMenuItem(
                           value: discipline,
