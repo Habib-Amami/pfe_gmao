@@ -7,8 +7,6 @@ import '../../../firebase/cloud_firestore_references.dart';
 import '../model/equipment.dart';
 
 class DatabaseService {
-  String equipmentCollectionRef = "equipments";
-
   final _firestore = FirebaseFirestore.instance;
   late final CollectionReference _equipmentsRef;
   DatabaseService() {
@@ -27,7 +25,7 @@ class DatabaseService {
   }
 
   // Create method
-  void addEquipment({
+  Future<void> addEquipment({
     required String tagName,
     required String docId,
     required String description,
@@ -38,17 +36,23 @@ class DatabaseService {
     required String priority,
     required String longitude,
     required String latitude,
-    String photoURL =
-        'https://firebasestorage.googleapis.com/v0/b/pfe-gmao-11445214.appspot.com/o/default%20picture.jpg?alt=media&token=c964483d-03dd-4ce2-982b-481d4fa22be2',
+    required String photoURL,
+    required String userManual,
+    required String contract,
+    required List<String> otherFiles,
   }) async {
-    FirebaseFirestore.instance
-        .collection(tagNamesCollectionRef)
-        .doc(tagName)
-        .set({});
-    FirebaseFirestore.instance
-        .collection(equipmentCollectionRef)
-        .doc(docId)
-        .set({
+    CollectionReference tagNamesCollection =
+        FirebaseFirestore.instance.collection("equipment_tag_names");
+    CollectionReference equipmentCollection =
+        FirebaseFirestore.instance.collection("equipments");
+
+    // Add a document to the tag names collection
+    await tagNamesCollection.doc(tagName).set({
+      'TagName': tagName,
+    });
+
+    // Add a document to the equipment collection
+    await equipmentCollection.doc(docId).set({
       'id': docId,
       'TagName': tagName,
       'Description': description,
@@ -62,8 +66,10 @@ class DatabaseService {
       'Photo': photoURL,
       'Longitude': longitude,
       'Latitude': latitude,
+      'UserManual': userManual,
+      'Contract': contract,
+      'OtherFiles': otherFiles,
     });
-    //_equipmentsRef.id;
   }
 
   // update method
@@ -102,25 +108,6 @@ class DatabaseService {
     _equipmentsRef.doc(idEquipment).delete();
   }
 
-  // Method to upload the selected profile picture to Firebase Storage and
-  //get it download URL
-  Future<String> addEquipmentPicture({
-    required String equipmentPictureRef,
-    required File equipmentPicture,
-  }) async {
-    // Get references to Firebase Storage
-    Reference rootReference = FirebaseStorage.instance.ref();
-    Reference profilePicturesDir = rootReference.child(equipmnetPictureDic);
-    Reference imageToUploadRef = profilePicturesDir.child(equipmentPictureRef);
-    // Upload the profile picture file to Firebase Storage
-    await imageToUploadRef.putFile(
-      equipmentPicture,
-      SettableMetadata(contentType: 'image/jpeg'),
-    );
-    // Get the download URL of the uploaded image
-    return await imageToUploadRef.getDownloadURL();
-  }
-
   // update the equipment photo
   Future<void> updatePhotoURL(
     String idEquipment,
@@ -147,5 +134,62 @@ class DatabaseService {
     } else {
       return false;
     }
+  }
+
+  // Method to upload the selected profile picture to Firebase Storage and
+  //get it download URL
+  static Future<String> uploadEquipmentPicture({
+    required String fileName,
+    required File file,
+  }) async {
+    // Get references to Firebase Storage
+    Reference rootReference = FirebaseStorage.instance.ref();
+    Reference profilePicturesDir = rootReference.child(
+      equipmnetPictureDic,
+    );
+    Reference imageToUploadRef = profilePicturesDir.child(
+      fileName,
+    );
+    // Upload the profile picture file to Firebase Storage
+    await imageToUploadRef.putFile(
+      file,
+      SettableMetadata(contentType: 'image/jpeg'),
+    );
+    // Get the download URL of the uploaded image
+    return await imageToUploadRef.getDownloadURL();
+  }
+
+  static Future<List<String>> uploadEquipmentPDFtoStorage({
+    required String equipmentTagName,
+    required List<File> files,
+    required String baseFileName,
+  }) async {
+    List<String> downloadURLs = [];
+
+    // Get a reference to Firebase Storage
+    Reference rootReference = FirebaseStorage.instance.ref();
+    Reference equipmentFiles = rootReference.child(allEquipmentsFilesFolder);
+    Reference directoryReference = equipmentFiles.child(equipmentTagName);
+
+    // Upload each file in the list to Firebase Storage
+    for (int i = 0; i < files.length; i++) {
+      // Concatenate the base file name with the index
+      String fileName = '$baseFileName$i';
+
+      Reference fileReference = directoryReference.child(fileName);
+
+      // Upload the file to Firebase Storage
+      await fileReference.putFile(
+        files[i],
+        SettableMetadata(
+          contentType: 'application/pdf',
+        ),
+      );
+
+      // Get the download URL of the uploaded file
+      String downloadURL = await fileReference.getDownloadURL();
+      downloadURLs.add(downloadURL);
+    }
+    return downloadURLs;
   }
 }
