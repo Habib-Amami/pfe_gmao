@@ -7,3 +7,9 @@ enum Priority {
   // ignore: constant_identifier_names
   High,
 }
+
+extension PriorityToString on Priority {
+  String priorityToShortString() {
+    return toString().split('.').last;
+  }
+}
