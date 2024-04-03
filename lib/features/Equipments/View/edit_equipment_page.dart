@@ -7,7 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../firebase/cloud_firestore_references.dart';
 import '../../../home.dart';
 import '../model/equipment.dart';
-import '../controller/db_service.dart';
+import '../controller/firebase_api/db_service.dart';
 import 'alerts/equipment_location_permission_denied_alert.dart';
 import 'alerts/equipment_location_service_alert.dart';
 import 'add equipment pages/equipment_picture_bottom_sheet.dart';

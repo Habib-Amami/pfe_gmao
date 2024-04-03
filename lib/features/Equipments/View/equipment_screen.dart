@@ -6,7 +6,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../model/equipment.dart';
-import '../controller/db_service.dart';
+import '../controller/firebase_api/db_service.dart';
 import '../controller/my_equipment_functions.dart';
 import 'add equipment pages/add_equipment_page.dart';
 import 'edit_equipment_page.dart';

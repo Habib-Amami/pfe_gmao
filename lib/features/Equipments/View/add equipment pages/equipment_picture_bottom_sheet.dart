@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../controller/db_service.dart';
+import '../../controller/firebase_api/db_service.dart';
 
 // Import the profile model for updating profile information
 
