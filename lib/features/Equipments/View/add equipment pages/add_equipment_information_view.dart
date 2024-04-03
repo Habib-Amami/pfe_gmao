@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:pfe_gmao/features/Equipments/model/priority_enum.dart';
+import 'package:pfe_gmao/features/Equipments/model/status_enum.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../firebase/cloud_firestore_references.dart';
@@ -10,7 +12,6 @@ import '../../../../home.dart';
 import '../../model/discipline_list.dart';
 import '../../model/workshop_list.dart';
 import '../../services/db_service.dart';
-import '../edit_equipment_page.dart';
 import '../widgets/equipment_dropdown_menu.dart';
 import '../widgets/equipment_file_preview.dart';
 import '../widgets/equipment_file_upload_container.dart';
@@ -42,11 +43,9 @@ class _AddEquipmentInformationScreenState
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   // Variables to store equipment discipline information
-  // final List _disciplineValueList = ['Mechanics', 'Electrics', 'Instrumental'];
   String _disciplineValue = 'Mechanics';
 
   // Variables to store equipment workshop information
-  // final List _workshopValueList = ['QTTF', 'PGTF', 'GNTF'];
   String _workshopValue = 'QTTF';
 
   // Variables to store equipment details
@@ -115,6 +114,7 @@ class _AddEquipmentInformationScreenState
                 // Display the selected image or a default image
                 EquipmentPictureAvatar(
                   equipmentPictureFile: _equipmentPictureFile,
+                  defaultPictureURL: defaultEquipmentPicture,
                 ),
                 // Buttons for selecting an image from the gallery or camera
                 Padding(
