@@ -73,11 +73,50 @@ class DatabaseService {
   }
 
   // update method
-  void updateEquipment(
-    String idEquipment,
-    Equipment equipment,
-  ) {
-    _equipmentsRef.doc(idEquipment).update(equipment.toJson());
+  Future<void> updateEquipment({
+    required String tagName,
+    required String docId,
+    required String description,
+    required String area,
+    required String discipline,
+    required String workshop,
+    required String status,
+    required String priority,
+    required String longitude,
+    required String latitude,
+    required String photoURL,
+    required String userManual,
+    required String contract,
+    required List<String> otherFiles,
+  }) async {
+    CollectionReference tagNamesCollection =
+        FirebaseFirestore.instance.collection("equipment_tag_names");
+    CollectionReference equipmentCollection =
+        FirebaseFirestore.instance.collection("equipments");
+
+    // Add a document to the tag names collection if it doesn't exist
+    await tagNamesCollection.doc(tagName).update({
+      'TagName': tagName,
+    });
+
+    // Add or update the document in the equipment collection
+    await equipmentCollection.doc(docId).update({
+      'id': docId,
+      'TagName': tagName,
+      'Description': description,
+      'Area': area,
+      'Status': status,
+      'Priority': priority,
+      'Discipline': discipline,
+      'Workshop': workshop,
+      'UpdatedOn': Timestamp.now(),
+      'Photo': photoURL,
+      'Longitude': longitude,
+      'Latitude': latitude,
+      'UserManual': userManual,
+      'Contract': contract,
+      'OtherFiles': otherFiles,
+    });
   }
 
   // update method

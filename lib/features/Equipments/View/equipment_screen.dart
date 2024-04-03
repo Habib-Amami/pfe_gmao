@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
@@ -154,7 +153,6 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                           itemCount: _filteredEquipmentList.length,
                           itemBuilder: (context, index) {
                             Equipment equipment = equipments[index].data();
-                            String idEquipment = equipments[index].id;
                             // String equipmentTagName = equipment.TagName;
                             // String equipmentPictureURL = equipment.Photo;
                             return Padding(
@@ -189,7 +187,6 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                                   MaterialPageRoute(
                                                     builder: (context) =>
                                                         EditEquipmentPage(
-                                                      equipmentId: idEquipment,
                                                       equipment: equipment,
                                                     ),
                                                   ),
