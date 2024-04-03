@@ -9,7 +9,7 @@ import '../../../../firebase/cloud_firestore_references.dart';
 import '../../../../home.dart';
 import '../../model/discipline_list.dart';
 import '../../model/workshop_list.dart';
-import '../../services/db_service.dart';
+import '../../controller/db_service.dart';
 import '../edit_equipment_page.dart';
 import '../widgets/equipment_dropdown_menu.dart';
 import '../widgets/equipment_file_preview.dart';
