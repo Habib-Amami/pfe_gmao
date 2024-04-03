@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../model/equipment.dart';
-import '../services/my_equipment_functions.dart';
+import '../controller/my_equipment_functions.dart';
 
 class EquipmentView extends StatefulWidget {
   //final String equipmentId;

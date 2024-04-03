@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import '../../../firebase/cloud_firestore_references.dart';
+import '../../../../firebase/cloud_firestore_references.dart';
 
-import '../model/equipment.dart';
+import '../../model/equipment.dart';
 
 class DatabaseService {
   final _firestore = FirebaseFirestore.instance;

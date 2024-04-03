@@ -3,15 +3,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:pfe_gmao/features/Equipments/model/priority_enum.dart';
-import 'package:pfe_gmao/features/Equipments/model/status_enum.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../firebase/cloud_firestore_references.dart';
 import '../../../../home.dart';
+import '../../controller/firebase_api/db_service.dart';
 import '../../model/discipline_list.dart';
+import '../../model/priority_enum.dart';
+import '../../model/status_enum.dart';
 import '../../model/workshop_list.dart';
-import '../../services/db_service.dart';
 import '../widgets/equipment_dropdown_menu.dart';
 import '../widgets/equipment_file_preview.dart';
 import '../widgets/equipment_file_upload_container.dart';
