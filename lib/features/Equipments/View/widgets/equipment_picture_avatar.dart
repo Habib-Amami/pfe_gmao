@@ -1,13 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:pfe_gmao/firebase/cloud_firestore_references.dart';
 
 class EquipmentPictureAvatar extends StatelessWidget {
   final File? equipmentPictureFile;
+  final String defaultPictureURL;
 
   const EquipmentPictureAvatar({
-    this.equipmentPictureFile,
+    required this.equipmentPictureFile,
+    required this.defaultPictureURL,
     super.key,
   });
 
@@ -38,11 +39,11 @@ class EquipmentPictureAvatar extends StatelessWidget {
                 child: CircleAvatar(
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   radius: 150,
-                  child: const CircleAvatar(
+                  child: CircleAvatar(
                     radius: 72,
                     // Using NetworkImage to load the default picture
                     backgroundImage: NetworkImage(
-                      defaultEquipmentPicture,
+                      defaultPictureURL,
                     ),
                   ),
                 ),
