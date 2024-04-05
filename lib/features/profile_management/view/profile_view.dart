@@ -199,62 +199,59 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       labelWidth: 140,
                     ),
                     // Buttons to edit profile and log out
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          SizedBox(
-                            width: 160,
-                            height: 48,
-                            child: FilledButton.icon(
-                              onPressed: () => showModalBottomSheet(
-                                isScrollControlled: true,
-                                isDismissible: true,
-                                enableDrag: true,
-                                context: context,
-                                builder: (context) {
-                                  return const EditProfileBottomSheet();
-                                },
-                              ),
-
-                              // onPressed: () => showDialog(
-                              //   builder: (context) => const EditProfileAlert(),
-                              //   context: context,
-                              //   barrierDismissible: false,
-                              // ),
-                              icon: const Icon(
-                                Icons.edit_rounded,
-                              ),
-                              label: const Text(
-                                "Edit Profile",
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 160,
-                            height: 48,
-                            child: ElevatedButton.icon(
-                              style: const ButtonStyle(
-                                  elevation: MaterialStatePropertyAll(2)),
-                              onPressed: () async {
-                                await FirebaseService.instance.authInstance
-                                    .signOut();
-                                if (context.mounted) {
-                                  Navigator.popUntil(
-                                      context, (route) => route.isFirst);
-                                }
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SizedBox(
+                          width: 160,
+                          height: 48,
+                          child: FilledButton.icon(
+                            onPressed: () => showModalBottomSheet(
+                              isScrollControlled: true,
+                              isDismissible: true,
+                              enableDrag: true,
+                              context: context,
+                              builder: (context) {
+                                return const EditProfileBottomSheet();
                               },
-                              icon: const Icon(
-                                Icons.exit_to_app_outlined,
-                              ),
-                              label: const Text(
-                                "Log Out",
-                              ),
+                            ),
+
+                            // onPressed: () => showDialog(
+                            //   builder: (context) => const EditProfileAlert(),
+                            //   context: context,
+                            //   barrierDismissible: false,
+                            // ),
+                            icon: const Icon(
+                              Icons.edit_rounded,
+                            ),
+                            label: const Text(
+                              "Edit Profile",
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(
+                          width: 160,
+                          height: 48,
+                          child: ElevatedButton.icon(
+                            style: const ButtonStyle(
+                                elevation: MaterialStatePropertyAll(2)),
+                            onPressed: () async {
+                              await FirebaseService.instance.authInstance
+                                  .signOut();
+                              if (context.mounted) {
+                                Navigator.popUntil(
+                                    context, (route) => route.isFirst);
+                              }
+                            },
+                            icon: const Icon(
+                              Icons.exit_to_app_outlined,
+                            ),
+                            label: const Text(
+                              "Log Out",
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
