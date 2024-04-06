@@ -65,7 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
-                      child: ElevatedButton(
+                      child: FilledButton.tonal(
                         style: const ButtonStyle(
                           elevation: MaterialStatePropertyAll(2),
                         ),
@@ -106,9 +106,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     // Divider for visual separation
-                    const Divider(
+                    Divider(
                       endIndent: 16,
                       indent: 16,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                     // Section for Profile Information
                     const SectionTitle(
@@ -145,7 +146,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // Button to update password
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
-                      child: ElevatedButton.icon(
+                      child: FilledButton.tonalIcon(
                         style: const ButtonStyle(
                             elevation: MaterialStatePropertyAll(2)),
                         onPressed: () {
@@ -164,9 +165,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     // Divider for visual separation
-                    const Divider(
+                    Divider(
                       endIndent: 16,
                       indent: 16,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                     // Section for Personal Information
                     const SectionTitle(
@@ -232,7 +234,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         SizedBox(
                           width: 160,
                           height: 48,
-                          child: ElevatedButton.icon(
+                          child: FilledButton.tonalIcon(
                             style: const ButtonStyle(
                                 elevation: MaterialStatePropertyAll(2)),
                             onPressed: () async {
