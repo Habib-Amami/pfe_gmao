@@ -128,7 +128,7 @@ class _AlertState extends State<PasswordUpdateAlert> {
       // Set the actions (buttons) for the alert dialog
       actions: [
         // Cancel button
-        ElevatedButton(
+        FilledButton.tonal(
           onPressed: () {
             Navigator.pop(context);
           },

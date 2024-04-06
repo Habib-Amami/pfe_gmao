@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pfe_gmao/features/profile_management/view/widgets/alerts/phone_number_update_alert.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../../../firebase/firebase_services.dart';
@@ -184,7 +185,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       titleContentSeperator: 140,
                       onEditPressed: (contex) => showDialog(
                         context: context,
-                        builder: (context) => const UsernameUpdateAlert(),
+                        builder: (context) => const PhoneNumberUpdateAlert(),
                         barrierDismissible: false,
                       ),
                     ),
@@ -209,6 +210,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: 48,
                           child: FilledButton.icon(
                             onPressed: () => showModalBottomSheet(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.surfaceVariant,
                               isScrollControlled: true,
                               isDismissible: true,
                               enableDrag: true,
