@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pfe_gmao/features/profile_management/view/widgets/bottom_sheets/edit_profile_bottom_sheet.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../../../firebase/firebase_services.dart';
@@ -9,6 +8,7 @@ import 'widgets/alerts/email_update_alert.dart';
 import 'widgets/alerts/password_update_alert.dart';
 import 'widgets/alerts/profile_camera_permission_denied_alert.dart';
 import 'widgets/alerts/username_update_alert.dart';
+import 'widgets/bottom_sheets/edit_profile_bottom_sheet.dart';
 import 'widgets/bottom_sheets/profile_picture_bottom_sheet.dart';
 import 'widgets/editiable_row_slidable.dart';
 import 'widgets/labeled_value_row.dart';
