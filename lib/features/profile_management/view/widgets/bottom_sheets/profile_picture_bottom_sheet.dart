@@ -72,11 +72,11 @@ class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       radius: 70,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(48),
+                        borderRadius: BorderRadius.circular(66),
                         child: Image.file(
                           imageFile!,
-                          height: 96,
-                          width: 96,
+                          height: 130,
+                          width: 130,
                           fit: BoxFit.contain,
                         ),
                       ),
