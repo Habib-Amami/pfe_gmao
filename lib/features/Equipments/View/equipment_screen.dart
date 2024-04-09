@@ -2,13 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
-import '../model/equipment.dart';
 import '../controller/firebase_api/db_service.dart';
 import '../controller/my_equipment_functions.dart';
+import '../model/equipment.dart';
 import 'add equipment pages/add_equipment_page.dart';
+import 'alerts/equipment_location_permission_denied_alert.dart';
+import 'alerts/equipment_location_service_alert.dart';
 import 'edit_equipment_page.dart';
+import 'equipment_map.dart';
 
 class EquipmentScreen extends StatefulWidget {
   const EquipmentScreen({super.key});
@@ -422,21 +427,95 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                                   ],
                                                 ),
                                               ),
-                                              TextButton(
-                                                child: const Text(
-                                                    "Show equipment location"),
-                                                onPressed: () {
-                                                  // Navigator.push(
-                                                  //   context,
-                                                  //   MaterialPageRoute(
-                                                  //     builder: (context) => EquipmentView(
-                                                  //       equipmentId: idEquipment,
-                                                  //       equipment: equipment,
-                                                  //     ),
-                                                  //   ),
-                                                  // );
+                                              TextButton.icon(
+                                                icon: const Icon(
+                                                  Icons
+                                                      .location_searching_rounded,
+                                                ),
+                                                label: const Text(
+                                                  "Show equipment location",
+                                                ),
+                                                onPressed: () async {
+                                                  await Permission.location
+                                                      .onDeniedCallback(
+                                                    () {
+                                                      if (context.mounted) {
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return const EquipmentLocationPermissionDeniedAlert();
+                                                          },
+                                                        );
+                                                      }
+                                                    },
+                                                  ).onGrantedCallback(
+                                                    () async {
+                                                      bool serviceEnabled =
+                                                          await Geolocator
+                                                              .isLocationServiceEnabled();
+                                                      if (serviceEnabled) {
+                                                        if (context.mounted) {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                                return EquipmentMap(
+                                                                  equipmentLatitude:
+                                                                      double
+                                                                          .parse(
+                                                                    _filteredEquipmentList[
+                                                                            index]
+                                                                        [
+                                                                        latitude],
+                                                                  ),
+                                                                  equipmentLongitude:
+                                                                      double
+                                                                          .parse(
+                                                                    _filteredEquipmentList[
+                                                                            index]
+                                                                        [
+                                                                        longitude],
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ),
+                                                          );
+                                                        }
+                                                      } else {
+                                                        if (context.mounted) {
+                                                          showDialog(
+                                                            context: context,
+                                                            builder: (context) =>
+                                                                const EquipmentLocationServiceAlert(),
+                                                            barrierDismissible:
+                                                                false,
+                                                          );
+                                                        }
+                                                      }
+                                                    },
+                                                  ).onPermanentlyDeniedCallback(
+                                                    () {
+                                                      if (context.mounted) {
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return const EquipmentLocationPermissionDeniedAlert();
+                                                          },
+                                                        );
+                                                      }
+                                                    },
+                                                  ).request();
                                                 },
-                                              )
+                                              ),
+                                              TextButton.icon(
+                                                onPressed: () {},
+                                                icon: const Icon(
+                                                  Icons.download_rounded,
+                                                ),
+                                                label: const Text(
+                                                    "Download contract"),
+                                              ),
                                             ],
                                           ),
                                         )
@@ -662,17 +741,27 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                             ),
                                             TextButton(
                                               child: const Text(
-                                                  "Show equipment location"),
+                                                "Show equipment location",
+                                              ),
                                               onPressed: () {
-                                                // Navigator.push(
-                                                //   context,
-                                                //   MaterialPageRoute(
-                                                //     builder: (context) => EquipmentView(
-                                                //       equipmentId: idEquipment,
-                                                //       equipment: equipment,
-                                                //     ),
-                                                //   ),
-                                                // );
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        EquipmentMap(
+                                                      equipmentLatitude:
+                                                          double.parse(
+                                                        _filteredEquipmentList[
+                                                            index][latitude],
+                                                      ),
+                                                      equipmentLongitude:
+                                                          double.parse(
+                                                        _filteredEquipmentList[
+                                                            index][longitude],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
                                               },
                                             )
                                           ],
