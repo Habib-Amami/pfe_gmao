@@ -8,6 +8,7 @@
     <application
         android:label="pfe_gmao"
         android:name="${applicationName}"
+        android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -39,5 +40,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data 
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAwePplS2uCBh7P1wS7iNDoLV4qw05QaU4"/>
     </application>
 </manifest>
