@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
@@ -508,14 +510,27 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                                   ).request();
                                                 },
                                               ),
-                                              TextButton.icon(
-                                                onPressed: () {},
-                                                icon: const Icon(
-                                                  Icons.download_rounded,
-                                                ),
-                                                label: const Text(
-                                                    "Download contract"),
-                                              ),
+                                              // TextButton.icon(
+                                              //   onPressed: () async {
+                                              //     await Permission
+                                              //         .manageExternalStorage
+                                              //         .onGrantedCallback(
+                                              //       () async {
+                                              //         downloadPDF(
+                                              //           fileName: "test",
+                                              //           downloadURL:
+                                              //               "https://firebasestorage.googleapis.com/v0/b/pfe-gmao-11445214.appspot.com/o/equipment_pictures%2FSP-3000_picture?alt=media&token=b2c1abc2-1377-4107-a726-a6bb4df08fc8",
+                                              //         );
+                                              //       },
+                                              //     ).request();
+                                              //   },
+                                              //   icon: const Icon(
+                                              //     Icons.download_rounded,
+                                              //   ),
+                                              //   label: const Text(
+                                              //     "Download contract",
+                                              //   ),
+                                              // ),
                                             ],
                                           ),
                                         )
@@ -804,4 +819,20 @@ class EquipmentScreenState extends State<EquipmentScreen> {
       ),
     );
   }
+
+  // void downloadPDF({
+  //   required String fileName,
+  //   required String downloadURL,
+  // }) async {
+  //   final dio = Dio();
+  //   final dir = await getExternalStorageDirectory();
+  //   await dio
+  //       .download(
+  //         downloadURL,
+  //         "${dir!.path}/equipments_files/$fileName",
+  //       )
+  //       .then(
+  //         (_) => print('File downloaded successfully '),
+  //       );
+  // }
 }
