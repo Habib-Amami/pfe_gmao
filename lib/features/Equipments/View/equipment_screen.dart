@@ -7,8 +7,12 @@ import '../../../firebase/firebase_services.dart';
 import '../model/equipment.dart';
 import '../controller/firebase_api/db_service.dart';
 import '../controller/my_equipment_functions.dart';
+import '../model/equipment.dart';
 import 'add equipment pages/add_equipment_page.dart';
+import 'alerts/equipment_location_permission_denied_alert.dart';
+import 'alerts/equipment_location_service_alert.dart';
 import 'edit_equipment_page.dart';
+import 'equipment_map.dart';
 
 class EquipmentScreen extends StatefulWidget {
   const EquipmentScreen({super.key});
@@ -568,4 +572,20 @@ class EquipmentScreenState extends State<EquipmentScreen> {
       ),
     );
   }
+
+  // void downloadPDF({
+  //   required String fileName,
+  //   required String downloadURL,
+  // }) async {
+  //   final dio = Dio();
+  //   final dir = await getExternalStorageDirectory();
+  //   await dio
+  //       .download(
+  //         downloadURL,
+  //         "${dir!.path}/equipments_files/$fileName",
+  //       )
+  //       .then(
+  //         (_) => print('File downloaded successfully '),
+  //       );
+  // }
 }

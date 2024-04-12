@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../controller/profile_controller.dart';
+import '../../../controller/profile_controller.dart';
 
 class UsernameUpdateAlert extends StatefulWidget {
   const UsernameUpdateAlert({super.key});
@@ -110,7 +110,7 @@ class _AlertState extends State<UsernameUpdateAlert> {
       // Set the actions (buttons) for the alert dialog
       actions: [
         // Cancel button
-        ElevatedButton(
+        FilledButton.tonal(
           onPressed: () {
             Navigator.pop(context);
           },

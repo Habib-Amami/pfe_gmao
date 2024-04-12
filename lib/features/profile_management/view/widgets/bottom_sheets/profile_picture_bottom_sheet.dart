@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../controller/profile_controller.dart';
+import '../../../controller/profile_controller.dart';
 
 class ProfilePictureBottomsheet extends StatefulWidget {
   final String profileImageURL;
@@ -57,7 +57,7 @@ class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.sizeOf(context).height / 2,
+      height: MediaQuery.sizeOf(context).height / 3 * 2,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -70,22 +70,22 @@ class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
               child: imageFile != null
                   ? CircleAvatar(
                       backgroundColor: Theme.of(context).colorScheme.primary,
-                      radius: 50,
+                      radius: 70,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(48),
+                        borderRadius: BorderRadius.circular(66),
                         child: Image.file(
                           imageFile!,
-                          height: 96,
-                          width: 96,
+                          height: 130,
+                          width: 130,
                           fit: BoxFit.contain,
                         ),
                       ),
                     )
                   : CircleAvatar(
                       backgroundColor: Theme.of(context).colorScheme.primary,
-                      radius: 50,
+                      radius: 70,
                       child: CircleAvatar(
-                        radius: 48,
+                        radius: 66,
                         backgroundImage: NetworkImage(widget.profileImageURL),
                       ),
                     ),

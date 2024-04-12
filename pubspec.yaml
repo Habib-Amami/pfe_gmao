@@ -61,6 +61,13 @@ dependencies:
   #for picking pdf files
   file_picker: ^8.0.0+1
   open_filex: ^4.4.0
+  #goole maps
+  google_maps_flutter: ^2.6.0
+  flutter_polyline_points: ^2.0.0
+  #http request
+  dio: ^5.4.2+1
+  #managing file paths
+  path_provider: ^2.1.2
   
   flutter:
     sdk: flutter
