@@ -7,7 +7,6 @@ import '../../../firebase/firebase_services.dart';
 import '../model/equipment.dart';
 import '../controller/firebase_api/db_service.dart';
 import '../controller/my_equipment_functions.dart';
-import '../model/equipment.dart';
 import 'add equipment pages/add_equipment_page.dart';
 import 'alerts/equipment_location_permission_denied_alert.dart';
 import 'alerts/equipment_location_service_alert.dart';
