@@ -1,12 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:uuid/uuid.dart';
-
 import '../../../../firebase/cloud_firestore_references.dart';
-import '../../../../home.dart';
 import '../../controller/firebase_api/db_service.dart';
 import '../../model/discipline_list.dart';
 import '../../model/priority_enum.dart';
@@ -627,13 +624,7 @@ class _AddEquipmentInformationScreenState
                                           }
                                           if (context.mounted) {
                                             Navigator.pop(context);
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const Home(),
-                                              ),
-                                            );
+                                            Navigator.pop(context);
                                           }
                                         } else {
                                           Navigator.pop(context);

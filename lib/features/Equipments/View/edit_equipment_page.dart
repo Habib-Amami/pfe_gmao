@@ -1,9 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
-
 import '../controller/firebase_api/db_service.dart';
 import '../model/discipline_list.dart';
 import '../model/equipment.dart';
@@ -42,7 +40,10 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
   String _area = "";
   String _description = "";
 
-  //controllers for the latitude and longitude fields
+  //controllers for the form
+  TextEditingController tagNameController = TextEditingController();
+  TextEditingController areaController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
   TextEditingController latitudeController = TextEditingController();
   TextEditingController longitudeController = TextEditingController();
 
@@ -90,6 +91,10 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
     } else {
       _defaultStatus = Status.Shutdown;
     }
+    tagNameController = TextEditingController(text: widget.equipment.TagName);
+    areaController = TextEditingController(text: widget.equipment.Area);
+    descriptionController =
+        TextEditingController(text: widget.equipment.Description);
     _photoURL = widget.equipment.Photo;
     _disciplineValue = widget.equipment.Discipline;
     _workshopValue = widget.equipment.Workshop;
@@ -155,6 +160,7 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                   title: "Tag name",
                 ),
                 EquipmentFormField(
+                  controller: tagNameController,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   hintText: "Enter the Tag name",
@@ -170,8 +176,9 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                   },
                   onSaved: (newValue) {
                     _tagName = newValue!.trim();
+                    tagNameController.text = _tagName;
                   },
-                  initialValue: widget.equipment.TagName,
+                  //initialValue: widget.equipment.TagName,
                 ),
                 // Form fields for entering equipment details
                 // Area
@@ -179,6 +186,7 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                   title: "Area",
                 ),
                 EquipmentFormField(
+                  controller: areaController,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   hintText: "Enter the Area ",
@@ -194,8 +202,8 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                   },
                   onSaved: (newValue) {
                     _area = newValue!.trim();
+                    areaController.text = _area;
                   },
-                  initialValue: widget.equipment.Area,
                 ),
                 // Form fields for entering equipment details
                 // Workshop
@@ -245,6 +253,7 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                   title: "Description",
                 ),
                 EquipmentFormField(
+                  controller: descriptionController,
                   keyboardType: TextInputType.multiline,
                   textInputAction: TextInputAction.next,
                   maxLines: 3,
@@ -265,8 +274,8 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                   },
                   onSaved: (newValue) {
                     _description = newValue!.trim();
+                    descriptionController.text = _description;
                   },
-                  initialValue: widget.equipment.Description,
                 ),
                 // Form fields for entering equipment location
                 // Location
@@ -553,10 +562,11 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                                             }
 
                                             DatabaseService().updateEquipment(
-                                              tagName: _tagName,
+                                              tagName: tagNameController.text,
                                               docId: widget.equipment.id,
-                                              description: _description,
-                                              area: _area,
+                                              description:
+                                                  descriptionController.text,
+                                              area: areaController.text,
                                               discipline: _disciplineValue,
                                               workshop: _workshopValue,
                                               status: _defaultStatus
@@ -578,10 +588,11 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                                                   .showSnackBar(
                                                 SnackBar(
                                                   content: Text(
-                                                    '$_tagName updated successfully',
+                                                    '${tagNameController.text} updated successfully',
                                                   ),
                                                 ),
                                               );
+                                              Navigator.pop(context);
                                             }
                                           }
                                         } catch (e) {

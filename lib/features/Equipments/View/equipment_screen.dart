@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
+import 'package:pfe_gmao/features/profile_management/model/user.dart';
 import '../../../firebase/cloud_firestore_references.dart';
+import '../../../firebase/firebase_services.dart';
 import '../model/equipment.dart';
 import '../controller/firebase_api/db_service.dart';
 import '../controller/my_equipment_functions.dart';
@@ -19,62 +19,12 @@ class EquipmentScreen extends StatefulWidget {
 
 class EquipmentScreenState extends State<EquipmentScreen> {
   bool isAdmin = true;
-  final TextEditingController _searchController = TextEditingController();
-  List<Map<String, dynamic>> _equipmentList =
-      []; // List to store equipment data
-  List<Map<String, dynamic>> _filteredEquipmentList =
-      []; // List to store filtered equipment data
-
+  //final String userRole = '';
   @override
   void initState() {
     super.initState();
     // Call a method to fetch equipment data from Firestore
-    fetchEquipmentData();
-  }
-
-  void fetchEquipmentData() async {
-    try {
-      // Fetch equipment data from Firestore
-      QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection('equipments').get();
-
-      // Update the equipment list with data from Firestore
-      setState(() {
-        _equipmentList = querySnapshot.docs
-            .map((doc) => doc.data() as Map<String, dynamic>)
-            .toList();
-        // Initialize filtered list with all equipment
-        _filteredEquipmentList = List.from(_equipmentList);
-      });
-    } catch (error) {
-      // Handle error
-      debugPrint('Failed to fetch equipment data: $error');
-    }
-  }
-
-  void filterEquipmentList(String query) {
-    // Filter equipment list based on the search query
-    setState(() {
-      _filteredEquipmentList = _equipmentList.where((equipment) {
-        // Check if any property contains the search query
-        return equipment[tagName]
-                .toString()
-                .toLowerCase()
-                .contains(query.toLowerCase()) ||
-            equipment[workshop]
-                .toString()
-                .toLowerCase()
-                .contains(query.toLowerCase()) ||
-            equipment[area]
-                .toString()
-                .toLowerCase()
-                .contains(query.toLowerCase()) ||
-            equipment[discipline]
-                .toString()
-                .toLowerCase()
-                .contains(query.toLowerCase());
-      }).toList();
-    });
+    //fetchEquipmentData();
   }
 
   Future<String?> getUserRole() async {
@@ -89,7 +39,7 @@ class EquipmentScreenState extends State<EquipmentScreen> {
         userSnapshot.data() as Map<String, dynamic>?;
 
     //retrieve the role from user collection
-    String? userRole = userData?['role'];
+    String? userRole = userData?['role'].toString();
     return userRole;
   }
 
@@ -112,364 +62,128 @@ class EquipmentScreenState extends State<EquipmentScreen> {
             )
           : null,
       body: SafeArea(
-        child: ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-              child: CupertinoSearchTextField(
-                controller: _searchController,
-                suffixIcon: const Icon(Icons.highlight_remove_rounded),
-                onSuffixTap: () {
-                  filterEquipmentList('');
-                  _searchController.clear();
-                },
-                borderRadius: BorderRadius.circular(15),
-                onChanged: (value) => filterEquipmentList(value),
-              ),
-            ),
-            SizedBox(
-              width: MediaQuery.sizeOf(context).width,
-              height: MediaQuery.sizeOf(context).height * 0.75,
-              child: StreamBuilder(
-                stream: DatabaseService().getEquipments(),
-                builder: (context, snapshot) {
-                  List equipments = snapshot.data?.docs ?? [];
-                  if (equipments.isEmpty) {
-                    return const Center(
-                      child: Text("Equipments list is empty!"),
-                    );
-                  }
-                  return _filteredEquipmentList.isEmpty
-                      ? const Padding(
-                          padding: EdgeInsets.all(32.0),
+        child: SizedBox(
+          width: MediaQuery.sizeOf(context).width,
+          height: MediaQuery.sizeOf(context).height * 0.815,
+          child: StreamBuilder(
+            stream: DatabaseService().getEquipments(),
+            builder: (context, snapshot) {
+              List equipments = snapshot.data?.docs ?? [];
+              if (equipments.isEmpty) {
+                return const Center(
+                  child: Text("Equipments list is empty!"),
+                );
+              }
+              return equipments.isEmpty
+                  ? const Padding(
+                      padding: EdgeInsets.all(32.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('No equipment match your search'),
+                        ],
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: equipments.length,
+                      itemBuilder: (context, index) {
+                        Equipment equipment = equipments[index].data();
+                        // String equipmentTagName = equipment.TagName;
+                        // String equipmentPictureURL = equipment.Photo;
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 10),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text('No equipment match your search'),
-                            ],
-                          ),
-                        )
-                      : ListView.builder(
-                          itemCount: _filteredEquipmentList.length,
-                          itemBuilder: (context, index) {
-                            Equipment equipment = equipments[index].data();
-                            // String equipmentTagName = equipment.TagName;
-                            // String equipmentPictureURL = equipment.Photo;
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 10),
-                              child: Column(
-                                children: [
-                                  TextButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          isAdmin = !isAdmin;
-                                        });
-                                      },
-                                      child: isAdmin
-                                          ? Text('admin')
-                                          : Text('moch admin')),
-                                  isAdmin
-                                      ? Slidable(
-                                          endActionPane: ActionPane(
-                                            motion: const StretchMotion(),
-                                            children: [
-                                              SlidableAction(
-                                                icon: Icons.edit_outlined,
-                                                label: "Edit",
-                                                backgroundColor:
-                                                    Theme.of(context)
-                                                        .colorScheme
-                                                        .primaryContainer,
-                                                onPressed: (context) =>
-                                                    Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        EditEquipmentPage(
-                                                      equipment: equipment,
-                                                    ),
-                                                  ),
+                              // TextButton(
+                              //     onPressed: () {
+                              //       setState(() {
+                              //         isAdmin = !isAdmin;
+                              //       });
+                              //     },
+                              //     child: isAdmin
+                              //         ? Text('admin')
+                              //         : Text('moch admin')),
+                              isAdmin
+                                  ? Slidable(
+                                      endActionPane: ActionPane(
+                                        motion: const StretchMotion(),
+                                        children: [
+                                          SlidableAction(
+                                            icon: Icons.edit_outlined,
+                                            label: "Edit",
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .primaryContainer,
+                                            onPressed: (context) =>
+                                                Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditEquipmentPage(
+                                                  equipment: equipment,
                                                 ),
                                               ),
-                                            ],
+                                            ),
                                           ),
-                                          child: ExpansionTile(
-                                            title: Text(
-                                              _filteredEquipmentList[index]
-                                                  [tagName],
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                              ),
-                                            ),
-                                            leading: CircleAvatar(
-                                              radius: 30,
-                                              backgroundImage: NetworkImage(
-                                                _filteredEquipmentList[index]
-                                                    ['Photo'],
-                                              ),
-                                            ),
-                                            subtitle: showState(
-                                              _filteredEquipmentList[index]
-                                                  [status],
-                                            ),
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 20),
-                                                child: Column(
+                                        ],
+                                      ),
+                                      child: ExpansionTile(
+                                        title: Text(
+                                          equipment.TagName,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                          ),
+                                        ),
+                                        leading: CircleAvatar(
+                                          radius: 30,
+                                          backgroundImage: NetworkImage(
+                                            equipment.Photo,
+                                          ),
+                                        ),
+                                        subtitle: showState(
+                                          equipment.Status,
+                                        ),
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 20),
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
                                                   children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        const SizedBox(
-                                                          width: 90,
-                                                          height: 21,
-                                                          child: Text(
-                                                            "Description:",
-                                                            style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                            ),
-                                                          ),
+                                                    const SizedBox(
+                                                      width: 90,
+                                                      height: 21,
+                                                      child: Text(
+                                                        "Description:",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
                                                         ),
-                                                        const SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        Expanded(
-                                                          child: Text(
-                                                            _filteredEquipmentList[
-                                                                    index]
-                                                                [description],
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                        top: 8.0,
-                                                      ),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          const SizedBox(
-                                                            width: 90,
-                                                            height: 21,
-                                                            child: Text(
-                                                              "Created at:",
-                                                              style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          Text(
-                                                            formattedDate(
-                                                              _filteredEquipmentList[
-                                                                      index]
-                                                                  ['CreatedOn'],
-                                                            ),
-                                                          )
-                                                        ],
                                                       ),
                                                     ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                        top: 8.0,
-                                                      ),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          const SizedBox(
-                                                            width: 90,
-                                                            height: 21,
-                                                            child: Text(
-                                                              "Priority:",
-                                                              style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          Text(
-                                                            _filteredEquipmentList[
-                                                                    index]
-                                                                [priority],
-                                                          )
-                                                        ],
-                                                      ),
+                                                    const SizedBox(
+                                                      width: 10,
                                                     ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                        top: 8.0,
+                                                    Expanded(
+                                                      child: Text(
+                                                        equipment.Description,
                                                       ),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          const SizedBox(
-                                                            width: 90,
-                                                            height: 21,
-                                                            child: Text(
-                                                              "Discipline:",
-                                                              style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          Text(
-                                                            _filteredEquipmentList[
-                                                                    index]
-                                                                [discipline],
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                        top: 8.0,
-                                                      ),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          const SizedBox(
-                                                            width: 90,
-                                                            height: 21,
-                                                            child: Text(
-                                                              "Workshop:",
-                                                              style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          Text(
-                                                            _filteredEquipmentList[
-                                                                    index]
-                                                                [workshop],
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                        top: 8.0,
-                                                      ),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          const SizedBox(
-                                                            height: 21,
-                                                            width: 90,
-                                                            child: Text(
-                                                              "Area:",
-                                                              style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          Expanded(
-                                                            child: Text(
-                                                              _filteredEquipmentList[
-                                                                  index][area],
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
+                                                    )
                                                   ],
                                                 ),
-                                              ),
-                                              TextButton(
-                                                child: const Text(
-                                                    "Show equipment location"),
-                                                onPressed: () {
-                                                  // Navigator.push(
-                                                  //   context,
-                                                  //   MaterialPageRoute(
-                                                  //     builder: (context) => EquipmentView(
-                                                  //       equipmentId: idEquipment,
-                                                  //       equipment: equipment,
-                                                  //     ),
-                                                  //   ),
-                                                  // );
-                                                },
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                      : ExpansionTile(
-                                          title: Text(
-                                            _filteredEquipmentList[index]
-                                                [tagName],
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary,
-                                            ),
-                                          ),
-                                          leading: CircleAvatar(
-                                            radius: 30,
-                                            backgroundImage: NetworkImage(
-                                              _filteredEquipmentList[index]
-                                                  ['Photo'],
-                                            ),
-                                          ),
-                                          subtitle: showState(
-                                            _filteredEquipmentList[index]
-                                                [status],
-                                          ),
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                left: 20,
-                                              ),
-                                              child: Column(
-                                                children: [
-                                                  Row(
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    top: 8.0,
+                                                  ),
+                                                  child: Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
                                                     children: [
@@ -477,240 +191,379 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                                                         width: 90,
                                                         height: 21,
                                                         child: Text(
-                                                          "Description:",
+                                                          "Created at:",
                                                           style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.w500,
                                                           ),
                                                         ),
                                                       ),
-                                                      const SizedBox(width: 10),
-                                                      Expanded(
-                                                        child: Text(
-                                                          _filteredEquipmentList[
-                                                                  index]
-                                                              [description],
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Text(
+                                                        formattedDate(
+                                                          equipment.CreatedOn,
                                                         ),
                                                       )
                                                     ],
                                                   ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                      top: 8.0,
-                                                    ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        const SizedBox(
-                                                          width: 90,
-                                                          height: 21,
-                                                          child: Text(
-                                                            "Created at:",
-                                                            style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                            ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    top: 8.0,
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      const SizedBox(
+                                                        width: 90,
+                                                        height: 21,
+                                                        child: Text(
+                                                          "Priority:",
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w500,
                                                           ),
                                                         ),
-                                                        const SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        Text(
-                                                          formattedDate(
-                                                            _filteredEquipmentList[
-                                                                    index]
-                                                                ['CreatedOn'],
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Text(
+                                                        equipment.Priority,
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    top: 8.0,
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      const SizedBox(
+                                                        width: 90,
+                                                        height: 21,
+                                                        child: Text(
+                                                          "Discipline:",
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w500,
                                                           ),
-                                                        )
-                                                      ],
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Text(
+                                                        equipment.Discipline,
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    top: 8.0,
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      const SizedBox(
+                                                        width: 90,
+                                                        height: 21,
+                                                        child: Text(
+                                                          "Workshop:",
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Text(
+                                                        equipment.Workshop,
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    top: 8.0,
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      const SizedBox(
+                                                        height: 21,
+                                                        width: 90,
+                                                        child: Text(
+                                                          "Area:",
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Expanded(
+                                                        child: Text(
+                                                          equipment.Area,
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          TextButton(
+                                            child: const Text(
+                                                "Show equipment location"),
+                                            onPressed: () {
+                                              // Navigator.push(
+                                              //   context,
+                                              //   MaterialPageRoute(
+                                              //     builder: (context) => EquipmentView(
+                                              //       equipmentId: idEquipment,
+                                              //       equipment: equipment,
+                                              //     ),
+                                              //   ),
+                                              // );
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  : ExpansionTile(
+                                      title: Text(
+                                        equipment.TagName,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                      ),
+                                      leading: CircleAvatar(
+                                        radius: 30,
+                                        backgroundImage: NetworkImage(
+                                          equipment.Photo,
+                                        ),
+                                      ),
+                                      subtitle: showState(equipment.Status),
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 20,
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  const SizedBox(
+                                                    width: 90,
+                                                    height: 21,
+                                                    child: Text(
+                                                      "Description:",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
                                                     ),
                                                   ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                      top: 8.0,
+                                                  const SizedBox(width: 10),
+                                                  Expanded(
+                                                    child: Text(
+                                                      equipment.Description,
                                                     ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        const SizedBox(
-                                                          width: 90,
-                                                          height: 21,
-                                                          child: Text(
-                                                            "Priority:",
-                                                            style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        Text(
-                                                          _filteredEquipmentList[
-                                                              index][priority],
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                      top: 8.0,
-                                                    ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        const SizedBox(
-                                                          width: 90,
-                                                          height: 21,
-                                                          child: Text(
-                                                            "Discipline:",
-                                                            style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        Text(
-                                                          _filteredEquipmentList[
-                                                                  index]
-                                                              [discipline],
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                      top: 8.0,
-                                                    ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        const SizedBox(
-                                                          width: 90,
-                                                          height: 21,
-                                                          child: Text(
-                                                            "Workshop:",
-                                                            style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        Text(
-                                                          _filteredEquipmentList[
-                                                              index][workshop],
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                      top: 8.0,
-                                                    ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        const SizedBox(
-                                                          height: 21,
-                                                          width: 90,
-                                                          child: Text(
-                                                            "Area:",
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        Text(
-                                                          _filteredEquipmentList[
-                                                              index][area],
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
+                                                  )
                                                 ],
                                               ),
-                                            ),
-                                            TextButton(
-                                              child: const Text(
-                                                  "Show equipment location"),
-                                              onPressed: () {
-                                                // Navigator.push(
-                                                //   context,
-                                                //   MaterialPageRoute(
-                                                //     builder: (context) => EquipmentView(
-                                                //       equipmentId: idEquipment,
-                                                //       equipment: equipment,
-                                                //     ),
-                                                //   ),
-                                                // );
-                                              },
-                                            )
-                                          ],
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  top: 8.0,
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    const SizedBox(
+                                                      width: 90,
+                                                      height: 21,
+                                                      child: Text(
+                                                        "Created at:",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      formattedDate(
+                                                        equipment.CreatedOn,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  top: 8.0,
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    const SizedBox(
+                                                      width: 90,
+                                                      height: 21,
+                                                      child: Text(
+                                                        "Priority:",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      equipment.Priority,
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  top: 8.0,
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    const SizedBox(
+                                                      width: 90,
+                                                      height: 21,
+                                                      child: Text(
+                                                        "Discipline:",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      equipment.Discipline,
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  top: 8.0,
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    const SizedBox(
+                                                      width: 90,
+                                                      height: 21,
+                                                      child: Text(
+                                                        "Workshop:",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      equipment.Workshop,
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  top: 8.0,
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    const SizedBox(
+                                                      height: 21,
+                                                      width: 90,
+                                                      child: Text(
+                                                        "Area:",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      equipment.Area,
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        TextButton(
+                                          child: const Text(
+                                              "Show equipment location"),
+                                          onPressed: () {
+                                            // Navigator.push(
+                                            //   context,
+                                            //   MaterialPageRoute(
+                                            //     builder: (context) => EquipmentView(
+                                            //       equipmentId: idEquipment,
+                                            //       equipment: equipment,
+                                            //     ),
+                                            //   ),
+                                            // );
+                                          },
                                         )
-                                ],
-                              ),
-                            );
-                          },
+                                      ],
+                                    )
+                            ],
+                          ),
                         );
-                },
-              ),
-            ),
-            // StreamBuilder(
-            //   stream: FirebaseService.instance.firestoreInstance
-            //       .collection(userCollectionRef)
-            //       .doc(FirebaseService.instance.authInstance.currentUser!.uid)
-            //       .snapshots(),
-            //   builder: (context, snapshot) {
-            //     if (snapshot.hasError) {
-            //       return Text('Error = ${snapshot.error}');
-            //     }
-            //     if (snapshot.hasData) {
-            //       UserModel currentUser =
-            //           UserModel.fromFirestore(snapshot.data!, null);
-            //       //
-            //       if (currentUser.role == 'admin') {
-            //         isAdmin = true;
-            //       } else {
-            //         isAdmin = false;
-            //       }
-            //       return SizedBox();
-            //     }
-            //     return const Center(
-            //       child: CircularProgressIndicator(),
-            //     );
-            //   },
-            // )
-          ],
+                      },
+                    );
+            },
+          ),
         ),
       ),
     );
