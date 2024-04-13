@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+// Widget for a segmented button with icons and labels for each segment
 class EquipmentSegmentedButton<T extends Enum> extends StatelessWidget {
-  final List<T> enumValues;
-  final List<Icon> buttonSegmentIconsList;
-  final Set<T> selected;
-  final void Function(Set<T>)? onSelectionChanged;
+  final List<T> enumValues; // List of enum values
+  final List<Icon> buttonSegmentIconsList; // List of icons for each segment
+  final Set<T> selected; // Set of selected enum values
+  final void Function(Set<T>)?
+      onSelectionChanged; // Callback function for selection change
 
   const EquipmentSegmentedButton({
     required this.enumValues,
@@ -23,7 +25,8 @@ class EquipmentSegmentedButton<T extends Enum> extends StatelessWidget {
           segments: <ButtonSegment<T>>[
             for (var entry in enumValues.asMap().entries)
               ButtonSegment(
-                value: entry.value,
+                value: entry.value, // Current enum value
+                // Label for the segment, using enum value name
                 label: Text(
                   entry.toString().split('.').last.substring(
                         0,
@@ -35,9 +38,9 @@ class EquipmentSegmentedButton<T extends Enum> extends StatelessWidget {
                 icon: buttonSegmentIconsList[entry.key],
               ),
           ],
-          selected: selected,
-          onSelectionChanged: onSelectionChanged,
-          showSelectedIcon: false,
+          selected: selected, // Selected enum values
+          onSelectionChanged: onSelectionChanged, // Selection change callback
+          showSelectedIcon: false, // Whether to show selected icon
         ),
       ),
     );

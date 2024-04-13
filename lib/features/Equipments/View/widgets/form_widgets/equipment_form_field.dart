@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
+// Widget for displaying a form field for equipment input
 class EquipmentFormField extends StatelessWidget {
-  final String hintText;
-  final Widget prefixIcon;
-  final String? Function(String?) validator;
-  final void Function(String?)? onSaved;
-  final TextInputType? keyboardType;
-  final TextInputAction? textInputAction;
-  final int? maxLines;
-  final int? maxLength;
-  final bool? enabled;
-  final TextEditingController? controller;
-  final String? initialValue;
+  final String hintText; // Hint text for the input field
+  final Widget prefixIcon; // Prefix icon for the input field
+  final String? Function(String?) validator; // Input validation function
+  final void Function(String?)? onSaved; // Callback function for saving input
+  final TextInputType? keyboardType; // Keyboard type for the input field
+  final TextInputAction? textInputAction; // TextInputAction for the input field
+  final int? maxLines; // Maximum number of lines for multiline input
+  final int? maxLength; // Maximum length of input
+  final bool? enabled; // Flag to enable/disable input field
+  final TextEditingController? controller; // Controller for controlling input
+  final String? initialValue; // Initial value for the input field
 
   const EquipmentFormField({
     required this.hintText,
@@ -32,7 +33,7 @@ class EquipmentFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      // Area input field
+      // TextFormField for input field
       child: TextFormField(
         controller: controller,
         enabled: enabled,

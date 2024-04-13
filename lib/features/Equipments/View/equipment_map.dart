@@ -78,9 +78,9 @@ class _EquipmentMapState extends State<EquipmentMap> {
                                 _currentPosition.latitude,
                                 _currentPosition.longitude,
                               ),
-                              targetPostion: const LatLng(
-                                37.5,
-                                -122,
+                              targetPostion: LatLng(
+                                widget.equipmentLatitude,
+                                widget.equipmentLongitude,
                               ),
                               travelMode: TravelMode.walking,
                             );
@@ -107,9 +107,9 @@ class _EquipmentMapState extends State<EquipmentMap> {
                                 _currentPosition.latitude,
                                 _currentPosition.longitude,
                               ),
-                              targetPostion: const LatLng(
-                                37.5,
-                                -122,
+                              targetPostion: LatLng(
+                                widget.equipmentLatitude,
+                                widget.equipmentLongitude,
                               ),
                               travelMode: TravelMode.driving,
                             );
@@ -128,6 +128,10 @@ class _EquipmentMapState extends State<EquipmentMap> {
                     backgroundColor: Colors.transparent,
                   ),
                   body: GoogleMap(
+                    mapType: MapType.hybrid,
+                    rotateGesturesEnabled: true,
+                    compassEnabled: true,
+                    mapToolbarEnabled: false,
                     scrollGesturesEnabled: true,
                     zoomControlsEnabled: true,
                     myLocationEnabled: true,
@@ -144,9 +148,9 @@ class _EquipmentMapState extends State<EquipmentMap> {
                       Marker(
                         markerId: const MarkerId("equipment postion"),
                         icon: BitmapDescriptor.defaultMarkerWithHue(300),
-                        position: const LatLng(
-                          37.5,
-                          -122,
+                        position: LatLng(
+                          widget.equipmentLongitude,
+                          widget.equipmentLatitude,
                         ),
                       ),
                       Marker(

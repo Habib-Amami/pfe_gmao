@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+// Widget for displaying a title in the equipment form
 class EquipmentFormTitle extends StatelessWidget {
-  final String title;
-  final TextStyle? textStyle;
+  final String title; // Title text
+  final TextStyle? textStyle; // Text style for the title
   const EquipmentFormTitle({
     required this.title,
     this.textStyle,
@@ -14,7 +15,9 @@ class EquipmentFormTitle extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Text(
+        // Title text
         title,
+        // Text style, use provided style or default theme style
         style: textStyle ?? Theme.of(context).textTheme.titleLarge,
         textAlign: TextAlign.start,
       ),

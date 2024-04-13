@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
+// Alert dialog widget displayed when location service is disabled
 class EquipmentLocationServiceAlert extends StatelessWidget {
   const EquipmentLocationServiceAlert({super.key});
 
@@ -13,10 +14,11 @@ class EquipmentLocationServiceAlert extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context), // Close the dialog
           child: const Text("cancel"),
         ),
         TextButton(
+          // Open location settings and close the dialog
           onPressed: () => Geolocator.openLocationSettings().then(
             (_) => Navigator.pop(context),
           ),

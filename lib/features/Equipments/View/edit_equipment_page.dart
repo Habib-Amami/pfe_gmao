@@ -1,22 +1,24 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
+
 import '../controller/firebase_api/db_service.dart';
 import '../model/discipline_list.dart';
 import '../model/equipment.dart';
 import '../model/priority_enum.dart';
 import '../model/status_enum.dart';
 import '../model/workshop_list.dart';
-import 'widgets/equipment_dropdown_menu.dart';
-import 'widgets/equipment_file_preview.dart';
-import 'widgets/equipment_file_upload_container.dart';
-import 'widgets/equipment_form_field.dart';
-import 'widgets/equipment_form_title.dart';
-import 'widgets/equipment_image_button.dart';
-import 'widgets/equipment_location_button.dart';
-import 'widgets/equipment_picture_avatar.dart';
-import 'widgets/equipment_segmented_button.dart';
+import 'widgets/form_widgets/equipment_dropdown_menu.dart';
+import 'widgets/form_widgets/equipment_file_preview.dart';
+import 'widgets/form_widgets/equipment_file_upload_container.dart';
+import 'widgets/form_widgets/equipment_form_field.dart';
+import 'widgets/form_widgets/equipment_form_title.dart';
+import 'widgets/form_widgets/equipment_image_button.dart';
+import 'widgets/form_widgets/equipment_location_button.dart';
+import 'widgets/form_widgets/equipment_picture_avatar.dart';
+import 'widgets/form_widgets/equipment_segmented_button.dart';
 
 class EditEquipmentPage extends StatefulWidget {
   final Equipment equipment;

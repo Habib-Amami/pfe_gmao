@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pfe_gmao/features/Equipments/View/alerts/equipment_location_permission_denied_alert.dart';
-import 'package:pfe_gmao/features/Equipments/View/alerts/equipment_location_service_alert.dart';
 
+import '../alerts/equipment_location_permission_denied_alert.dart';
+import '../alerts/equipment_location_service_alert.dart';
+
+// Widget for selecting equipment location
 class EquipmentLocationButton extends StatelessWidget {
-  final Function(Position) onPositionSelected;
+  final Function(Position)
+      onPositionSelected; // Callback function for selected position
 
   const EquipmentLocationButton({
     required this.onPositionSelected,
@@ -30,6 +33,7 @@ class EquipmentLocationButton extends StatelessWidget {
           ),
           onPressed: () async {
             await Permission.location.onDeniedCallback(() {
+              // Show permission denied alert
               if (context.mounted) {
                 showDialog(
                   context: context,
@@ -38,8 +42,10 @@ class EquipmentLocationButton extends StatelessWidget {
                 );
               }
             }).onGrantedCallback(() async {
+              // Check if location service is enabled
               bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
               if (serviceEnabled) {
+                // Get current position
                 Position currentPosition =
                     await Geolocator.getCurrentPosition();
                 onPositionSelected(currentPosition);
@@ -53,6 +59,7 @@ class EquipmentLocationButton extends StatelessWidget {
                 }
               }
             }).onPermanentlyDeniedCallback(() {
+              // Show permission denied alert
               if (context.mounted) {
                 showDialog(
                   context: context,
@@ -60,7 +67,7 @@ class EquipmentLocationButton extends StatelessWidget {
                       const EquipmentLocationPermissionDeniedAlert(),
                 );
               }
-            }).request();
+            }).request(); // Request location permission
           },
           label: Text(
             "Locate equipment",

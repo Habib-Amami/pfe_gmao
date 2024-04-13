@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:file_picker/file_picker.dart';
 
+// Widget for uploading files
 class FileUploadContainer extends StatelessWidget {
-  final String label;
-  final Function(List<File>?)? onFileSelected;
-  final bool allowMultiple;
+  final String label; // Label for the file upload container
+  final Function(List<File>?)?
+      onFileSelected; // Callback function when file(s) are selected
+  final bool allowMultiple; // Flag to allow multiple file selection
 
   const FileUploadContainer({
     required this.allowMultiple,
@@ -25,9 +27,11 @@ class FileUploadContainer extends StatelessWidget {
           // Handle file permissions and file picking
           await Permission.manageExternalStorage.onGrantedCallback(
             () async {
-              final files = await getPDF(allowMultiple: allowMultiple);
+              final files =
+                  await getPDF(allowMultiple: allowMultiple); // Get PDF files
               if (onFileSelected != null) {
-                onFileSelected!(files);
+                onFileSelected!(
+                    files); // Call callback function with selected files
               }
             },
           ).request();
@@ -43,6 +47,7 @@ class FileUploadContainer extends StatelessWidget {
               color: Theme.of(context).colorScheme.primaryContainer,
             ),
           ),
+          // Column for arranging upload icon and label vertically
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -59,18 +64,23 @@ class FileUploadContainer extends StatelessWidget {
     );
   }
 
+  // Function for getting PDF files
   static Future<List<File>?> getPDF({bool allowMultiple = false}) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: allowMultiple,
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
+      // Pick PDF files
+      allowMultiple: allowMultiple, // Allow multiple file selection
+      type: FileType.custom, // File type
+      allowedExtensions: ['pdf'], // Allowed file extensions
     );
 
     if (result != null) {
-      List<File> files = result.paths.map((path) => File(path!)).toList();
-      return files;
+      // If files are selected
+      List<File> files = result.paths
+          .map((path) => File(path!))
+          .toList(); // Convert file paths to File objects
+      return files; // Return the list of files
     } else {
-      return null;
+      return null; // Return null if no files are selected
     }
   }
 }

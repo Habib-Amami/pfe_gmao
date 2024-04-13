@@ -7,11 +7,13 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../alerts/equipment_camera_permission_denied_alert.dart';
 
+// Widget for selecting a picture from the camera or gallery
 // ignore: must_be_immutable
 class EquipmentPictureButton extends StatelessWidget {
-  final String buttonLable;
-  final ImageSource imageSource;
-  final Function(File?) onImageSelected;
+  final String buttonLable; // Label for the button
+  final ImageSource imageSource; // Source of the image (camera or gallery)
+  final Function(File?)
+      onImageSelected; // Callback function for when an image is selected
 
   const EquipmentPictureButton({
     required this.buttonLable,
@@ -22,7 +24,7 @@ class EquipmentPictureButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    File? imageFile;
+    File? imageFile; // Variable to hold the selected image file
     return FilledButton.icon(
       icon: Icon(
         Icons.add_a_photo_outlined,
@@ -50,12 +52,12 @@ class EquipmentPictureButton extends StatelessWidget {
             imageSource: imageSource,
           );
           if (pickedImge != null) {
-            imageFile = File(pickedImge.path);
+            imageFile = File(pickedImge.path); // Convert picked image to file
           } else {
             imageFile = null;
           }
           onImageSelected(
-            imageFile,
+            imageFile, // Call the callback function with the selected image file
           );
         }).onPermanentlyDeniedCallback(() {
           if (context.mounted) {
@@ -66,10 +68,10 @@ class EquipmentPictureButton extends StatelessWidget {
               barrierDismissible: false,
             );
           }
-        }).request();
+        }).request(); // Request camera permission
       },
       label: Text(
-        buttonLable,
+        buttonLable, // Button label
         style: TextStyle(
           color: Theme.of(context).colorScheme.onSecondaryContainer,
         ),
@@ -79,16 +81,18 @@ class EquipmentPictureButton extends StatelessWidget {
 
   // Future method to pick an image from the gallery or camera
   Future<CroppedFile?> pickImage({
-    required ImageSource imageSource,
+    required ImageSource imageSource, // Image source (camera or gallery)
   }) async {
     // Use ImagePicker to pick an image
     ImagePicker picker = ImagePicker();
+    // Pick image from source
     final XFile? pickedImage = await picker.pickImage(
       source: imageSource,
       preferredCameraDevice: CameraDevice.front,
       imageQuality: 100,
     );
     if (pickedImage != null) {
+      // If image is picked
       // Crop the selected image using the ImageCropper package
       ImageCropper cropper = ImageCropper();
       CroppedFile? croppedFile = await cropper.cropImage(
@@ -98,11 +102,11 @@ class EquipmentPictureButton extends StatelessWidget {
         maxWidth: 145,
       );
       if (croppedFile != null) {
-        return croppedFile;
+        return croppedFile; // Return the cropped image file
       } else {
-        return null;
+        return null; // Return the cropped image file
       }
     }
-    return null;
+    return null; // Return null if no image is picked
   }
 }

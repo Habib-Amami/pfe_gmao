@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
+// Widget for displaying a dropdown menu for equipment selection
 // ignore: must_be_immutable
 class EquipmentDropDownMenu extends StatelessWidget {
-  List<DropdownMenuItem<dynamic>>? items;
-  Object? value;
-  void Function(dynamic)? onChanged;
+  List<DropdownMenuItem<dynamic>>? items; // List of dropdown menu items
+  Object? value; // Selected value
+  void Function(dynamic)? onChanged; // Callback function for value changes
 
   EquipmentDropDownMenu({
     this.items,
@@ -27,6 +28,7 @@ class EquipmentDropDownMenu extends StatelessWidget {
         ),
       ),
       child: Center(
+        // DropdownButtonFormField widget
         child: DropdownButtonFormField(
           padding: const EdgeInsets.only(right: 16),
           decoration: const InputDecoration(
