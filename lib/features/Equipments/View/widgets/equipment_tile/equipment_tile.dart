@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pfe_gmao/features/Equipments/View/equipment_map.dart';
-import 'package:pfe_gmao/features/Equipments/View/widgets/alerts/equipment_location_permission_denied_alert.dart';
-import 'package:pfe_gmao/features/Equipments/View/widgets/alerts/equipment_location_service_alert.dart';
 
-import '../../../model/equipment.dart';
+import '../../../model/data_models/equipment.dart';
+import '../../equipment_map.dart';
+import '../alerts/equipment_location_permission_denied_alert.dart';
+import '../alerts/equipment_location_service_alert.dart';
 import 'equipment_tile_image.dart';
 import 'equipment_tile_property.dart';
 import 'equipment_tile_status.dart';

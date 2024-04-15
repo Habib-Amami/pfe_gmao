@@ -1,15 +1,19 @@
+// ignore_for_file: prefer_final_fields
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:pfe_gmao/features/Equipments/controller/equipment_controller.dart';
+import 'package:pfe_gmao/features/Equipments/model/equipment_model.dart';
+import 'package:pfe_gmao/firebase/cloud_firestore_references.dart';
 
-import '../controller/firebase_api/db_service.dart';
-import '../model/discipline_list.dart';
-import '../model/equipment.dart';
-import '../model/priority_enum.dart';
-import '../model/status_enum.dart';
-import '../model/workshop_list.dart';
+import '../model/data_models/discipline_list.dart';
+import '../model/data_models/equipment.dart';
+import '../model/data_models/priority_enum.dart';
+import '../model/data_models/status_enum.dart';
+import '../model/data_models/workshop_list.dart';
 import 'widgets/form_widgets/equipment_dropdown_menu.dart';
 import 'widgets/form_widgets/equipment_file_preview.dart';
 import 'widgets/form_widgets/equipment_file_upload_container.dart';
@@ -33,14 +37,24 @@ class EditEquipmentPage extends StatefulWidget {
 }
 
 class _EditEquipmentPageState extends State<EditEquipmentPage> {
+  //equipmentController instance
+  final EquipmentController _equipmentController = EquipmentController();
+
   // Form key for managing the state of the add equipment form
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
+  //a boolean flag to check if the Tagname is unique
+  bool _isTagNameUnique = false;
+
+  // Variable to store initial equipment TagName
+  late String _initialTagName;
   // Variables to store equipment details
-  late String _photoURL;
+  // late String _photoURL;
   String _tagName = "";
   String _area = "";
   String _description = "";
+  late String _userManualInitialURL;
+  late String _contractInitialURL;
 
   //controllers for the form
   TextEditingController tagNameController = TextEditingController();
@@ -59,15 +73,9 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
 
   // Variable to store the equipment user manual file
   File? _userManualFile;
-  String _userManualDowloadURL = "";
 
   // Variable to store the equipment contract file
   File? _contractFile;
-  String _contractDowloadURL = "";
-
-  // List to store the other equipment related files
-  List<File>? _otherFiles;
-  List<String> _otherFilesDowloadURLs = [];
 
   //initial value of the priority
   late Priority _defaultPriority;
@@ -93,11 +101,14 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
     } else {
       _defaultStatus = Status.Shutdown;
     }
+    _initialTagName = widget.equipment.TagName;
+    _contractInitialURL = widget.equipment.contract;
+    _userManualInitialURL = widget.equipment.userManual;
     tagNameController = TextEditingController(text: widget.equipment.TagName);
     areaController = TextEditingController(text: widget.equipment.Area);
     descriptionController =
         TextEditingController(text: widget.equipment.Description);
-    _photoURL = widget.equipment.Photo;
+    // _photoURL = widget.equipment.Photo;
     _disciplineValue = widget.equipment.Discipline;
     _workshopValue = widget.equipment.Workshop;
     latitudeController.text = widget.equipment.Latitude;
@@ -463,58 +474,6 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                           });
                         },
                       ),
-                //
-                // field for other related equipment pdf files
-                //
-                const EquipmentFormTitle(
-                  title: "Other",
-                ),
-                _otherFiles == null
-                    ? FileUploadContainer(
-                        allowMultiple: true,
-                        label:
-                            "Tap this area to upload the other related files for the equipment (pdf)",
-                        onFileSelected: (files) {
-                          if (files != null && files.isNotEmpty) {
-                            setState(() {
-                              _otherFiles = files;
-                            });
-                          } else {
-                            _otherFiles = null;
-                          }
-                        },
-                      )
-                    : Column(
-                        children: [
-                          ..._otherFiles!.map(
-                            (file) => FilePreviewContainer(
-                              file: file,
-                              onFileDeleted: () {
-                                setState(() {
-                                  _otherFiles!.remove(file);
-                                });
-                              },
-                            ),
-                          ),
-                          TextButton.icon(
-                            onPressed: () async {
-                              List<File>? addedFile =
-                                  await FileUploadContainer.getPDF(
-                                allowMultiple: false,
-                              );
-                              if (addedFile != null) {
-                                setState(() {
-                                  _otherFiles!.add(
-                                    addedFile.first,
-                                  );
-                                });
-                              }
-                            },
-                            icon: const Icon(Icons.add),
-                            label: const Text("Add"),
-                          ),
-                        ],
-                      ),
                 //Action buttons for finishing editing or deleting
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -551,65 +510,146 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                                     ),
                                     TextButton(
                                       onPressed: () async {
-                                        try {
-                                          if (_formkey.currentState!
-                                              .validate()) {
-                                            _formkey.currentState!.validate();
-                                            if (_equipmentPictureFile != null) {
-                                              _photoURL = await DatabaseService
-                                                  .uploadEquipmentPicture(
-                                                fileName: "${_tagName}_picture",
-                                                file: _equipmentPictureFile!,
+                                        if (_formkey.currentState!.validate()) {
+                                          _formkey.currentState!.save();
+                                          print(_contractInitialURL);
+                                          print(_userManualInitialURL);
+                                          if (_tagName == _initialTagName) {
+                                            try {
+                                              _equipmentController
+                                                  .updateEquipment(
+                                                initialTagName: _initialTagName,
+                                                tagName: tagNameController.text,
+                                                docId: widget.equipment.id,
+                                                description:
+                                                    descriptionController.text,
+                                                area: areaController.text,
+                                                discipline: _disciplineValue,
+                                                workshop: _workshopValue,
+                                                status: _defaultStatus
+                                                    .statusToShortString(),
+                                                priority: _defaultPriority
+                                                    .priorityToShortString(),
+                                                longitude:
+                                                    longitudeController.text,
+                                                latitude:
+                                                    latitudeController.text,
+                                                photoURL:
+                                                    widget.equipment.Photo,
+                                                userManualURL:
+                                                    widget.equipment.userManual,
+                                                contractURL:
+                                                    widget.equipment.contract,
+                                                equipmentPictureFile:
+                                                    _equipmentPictureFile,
+                                                userManualFile: _userManualFile,
+                                                contractFile: _contractFile,
                                               );
-                                            }
-
-                                            DatabaseService().updateEquipment(
-                                              tagName: tagNameController.text,
-                                              docId: widget.equipment.id,
-                                              description:
-                                                  descriptionController.text,
-                                              area: areaController.text,
-                                              discipline: _disciplineValue,
-                                              workshop: _workshopValue,
-                                              status: _defaultStatus
-                                                  .statusToShortString(),
-                                              priority: _defaultPriority
-                                                  .priorityToShortString(),
-                                              longitude:
-                                                  longitudeController.text,
-                                              latitude: latitudeController.text,
-                                              photoURL: _photoURL,
-                                              userManual: _userManualDowloadURL,
-                                              contract: _contractDowloadURL,
-                                              otherFiles:
-                                                  _otherFilesDowloadURLs,
-                                            );
-                                            if (context.mounted) {
-                                              // Show success message
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    '${tagNameController.text} updated successfully',
+                                              if (context.mounted) {
+                                                Navigator.pop(context);
+                                                // Show success message
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      '${tagNameController.text} updated successfully',
+                                                    ),
                                                   ),
-                                                ),
-                                              );
-                                              Navigator.pop(context);
+                                                );
+                                                Navigator.pop(context);
+                                              }
+                                            } on FirebaseException catch (e) {
+                                              if (context.mounted) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      'Failed to update document: ${e.message!}',
+                                                    ),
+                                                  ),
+                                                );
+                                              }
+                                            }
+                                          } else {
+                                            _isTagNameUnique =
+                                                await EquipmentModel
+                                                    .checkDocumentExistence(
+                                              collectionName:
+                                                  tagNamesCollectionRef,
+                                              documentId: _tagName,
+                                            );
+                                            if (_isTagNameUnique) {
+                                              if (context.mounted) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                      "Tag name already exist! please provide a unique tag name",
+                                                    ),
+                                                  ),
+                                                );
+                                              }
+                                            } else {
+                                              try {
+                                                _equipmentController
+                                                    .updateEquipment(
+                                                  initialTagName:
+                                                      _initialTagName,
+                                                  tagName:
+                                                      tagNameController.text,
+                                                  docId: widget.equipment.id,
+                                                  description:
+                                                      descriptionController
+                                                          .text,
+                                                  area: areaController.text,
+                                                  discipline: _disciplineValue,
+                                                  workshop: _workshopValue,
+                                                  status: _defaultStatus
+                                                      .statusToShortString(),
+                                                  priority: _defaultPriority
+                                                      .priorityToShortString(),
+                                                  longitude:
+                                                      longitudeController.text,
+                                                  latitude:
+                                                      latitudeController.text,
+                                                  photoURL:
+                                                      widget.equipment.Photo,
+                                                  userManualURL: widget
+                                                      .equipment.userManual,
+                                                  contractURL:
+                                                      widget.equipment.contract,
+                                                  equipmentPictureFile:
+                                                      _equipmentPictureFile,
+                                                  userManualFile:
+                                                      _userManualFile,
+                                                  contractFile: _contractFile,
+                                                );
+                                                if (context.mounted) {
+                                                  // Show success message
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        '${tagNameController.text} updated successfully',
+                                                      ),
+                                                    ),
+                                                  );
+                                                  Navigator.pop(context);
+                                                }
+                                              } on FirebaseException catch (e) {
+                                                if (context.mounted) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        'Failed to update document: $e',
+                                                      ),
+                                                    ),
+                                                  );
+                                                }
+                                              }
                                             }
                                           }
-                                        } catch (e) {
-                                          if (context.mounted) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                    'Failed to update document: $e'),
-                                              ),
-                                            );
-                                          }
-                                        }
-                                        if (context.mounted) {
-                                          Navigator.pop(context);
                                         }
                                       },
                                       child: const Text("Confirm"),

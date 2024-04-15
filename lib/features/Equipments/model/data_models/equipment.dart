@@ -18,7 +18,6 @@ class Equipment {
   String Latitude;
   String userManual;
   String contract;
-  List<String> otherFiles;
 
   Equipment({
     required this.id,
@@ -36,7 +35,6 @@ class Equipment {
     required this.Latitude,
     required this.userManual,
     required this.contract,
-    required this.otherFiles,
   });
 
   Equipment.fromJSON(Map<String, dynamic> json)
@@ -57,9 +55,6 @@ class Equipment {
           userManual:
               json['userManual'] != null ? json['userManual'] as String : '',
           contract: json['contract'] != null ? json['contract'] as String : '',
-          otherFiles: json['otherFiles'] != null
-              ? List<String>.from(json['otherFiles'])
-              : [],
         );
 
   Equipment copyWith({
@@ -96,7 +91,6 @@ class Equipment {
       Latitude: Latitude ?? this.Latitude,
       userManual: userManual ?? this.userManual,
       contract: contract ?? this.contract,
-      otherFiles: otherFiles ?? this.otherFiles,
     );
   }
 
@@ -117,7 +111,6 @@ class Equipment {
       'Latitude': Latitude,
       'userManual': userManual,
       'contract': contract,
-      'otherFiles': otherFiles,
     };
   }
 }

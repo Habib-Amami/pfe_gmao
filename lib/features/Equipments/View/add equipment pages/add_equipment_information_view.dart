@@ -1,16 +1,17 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../../firebase/cloud_firestore_references.dart';
-import '../../controller/firebase_api/db_service.dart';
-import '../../model/discipline_list.dart';
-import '../../model/priority_enum.dart';
-import '../../model/status_enum.dart';
-import '../../model/workshop_list.dart';
+import '../../controller/equipment_controller.dart';
+import '../../model/data_models/discipline_list.dart';
+import '../../model/data_models/priority_enum.dart';
+import '../../model/data_models/status_enum.dart';
+import '../../model/data_models/workshop_list.dart';
+import '../../model/equipment_model.dart';
 import '../widgets/form_widgets/equipment_dropdown_menu.dart';
 import '../widgets/form_widgets/equipment_file_preview.dart';
 import '../widgets/form_widgets/equipment_file_upload_container.dart';
@@ -38,6 +39,9 @@ class _AddEquipmentInformationScreenState
     super.dispose();
   }
 
+  //equipmentController instance
+  final EquipmentController _equipmentController = EquipmentController();
+
   // Form key for managing the state of the add equipment form
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
@@ -48,8 +52,8 @@ class _AddEquipmentInformationScreenState
   String _workshopValue = 'QTTF';
 
   // Variables to store equipment details
-  String _photoURL =
-      "https://firebasestorage.googleapis.com/v0/b/pfe-gmao-11445214.appspot.com/o/default%20picture.jpg?alt=media&token=c964483d-03dd-4ce2-982b-481d4fa22be2";
+  // String _photoURL =
+  //     "https://firebasestorage.googleapis.com/v0/b/pfe-gmao-11445214.appspot.com/o/default%20picture.jpg?alt=media&token=c964483d-03dd-4ce2-982b-481d4fa22be2";
   String _tagName = "";
   String _area = "";
   String _description = "";
@@ -71,15 +75,11 @@ class _AddEquipmentInformationScreenState
 
   // Variable to store the equipment user manual file
   File? _userManualFile;
-  String _userManualDowloadURL = "";
+  // String _userManualDowloadURL = "";
 
   // Variable to store the equipment contract file
   File? _contractFile;
-  String _contractDowloadURL = "";
-
-  // List to store the other equipment related files
-  List<File>? _otherFiles;
-  List<String> _otherFilesDowloadURLs = [];
+  // String _contractDowloadURL = "";
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +91,6 @@ class _AddEquipmentInformationScreenState
             _equipmentPictureFile = null;
             _userManualFile = null;
             _contractFile = null;
-            _otherFiles = null;
             longitudeController.clear();
             latitudeController.clear();
             _defaultPriority = Priority.Medium;
@@ -447,59 +446,6 @@ class _AddEquipmentInformationScreenState
                           });
                         },
                       ),
-                //
-                // field for other related equipment pdf files
-                //
-                const EquipmentFormTitle(
-                  title: "Other",
-                ),
-                _otherFiles == null
-                    ? FileUploadContainer(
-                        allowMultiple: true,
-                        label:
-                            "Tap this area to upload the other related files for the equipment (pdf)",
-                        onFileSelected: (files) {
-                          if (files != null && files.isNotEmpty) {
-                            setState(() {
-                              _otherFiles = files;
-                            });
-                          } else {
-                            _otherFiles = null;
-                          }
-                        },
-                      )
-                    : Column(
-                        children: [
-                          ..._otherFiles!.map(
-                            (file) => FilePreviewContainer(
-                              file: file,
-                              onFileDeleted: () {
-                                setState(() {
-                                  _otherFiles!.remove(file);
-                                });
-                              },
-                            ),
-                          ),
-                          TextButton.icon(
-                            onPressed: () async {
-                              List<File>? addedFile =
-                                  await FileUploadContainer.getPDF(
-                                allowMultiple: false,
-                              );
-                              if (addedFile != null) {
-                                setState(() {
-                                  _otherFiles!.add(
-                                    addedFile.first,
-                                  );
-                                });
-                              }
-                            },
-                            icon: const Icon(Icons.add),
-                            label: const Text("Add"),
-                          ),
-                        ],
-                      ),
-
                 // Button to create new equipment
                 Center(
                   child: SizedBox(
@@ -536,7 +482,7 @@ class _AddEquipmentInformationScreenState
                                         if (_formkey.currentState!.validate()) {
                                           _formkey.currentState!.save();
                                           _isTagNameUnique =
-                                              await DatabaseService
+                                              await EquipmentModel
                                                   .checkDocumentExistence(
                                             collectionName:
                                                 tagNamesCollectionRef,
@@ -554,82 +500,54 @@ class _AddEquipmentInformationScreenState
                                               );
                                             }
                                           } else {
-                                            String docId = const Uuid().v4();
-                                            // createNewEquipment();
-                                            if (_equipmentPictureFile != null) {
-                                              _photoURL = await DatabaseService
-                                                  .uploadEquipmentPicture(
-                                                fileName: "${_tagName}_picture",
-                                                file: _equipmentPictureFile!,
+                                            try {
+                                              await _equipmentController
+                                                  .addEquipment(
+                                                tagName: _tagName,
+                                                description: _description,
+                                                area: _area,
+                                                discipline: _disciplineValue,
+                                                workshop: _workshopValue,
+                                                status: _defaultStatus
+                                                    .statusToShortString(),
+                                                priority: _defaultPriority
+                                                    .priorityToShortString(),
+                                                longitude:
+                                                    longitudeController.text,
+                                                latitude:
+                                                    latitudeController.text,
+                                                equipmentPictureFile:
+                                                    _equipmentPictureFile,
+                                                userManualFile: _userManualFile,
+                                                contractFile: _contractFile,
+                                              )
+                                                  .then(
+                                                (_) {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text(
+                                                        "Equipment added successfully",
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
                                               );
+                                            } on FirebaseException catch (e) {
+                                              if (context.mounted) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      "operation fail due to ${e.message}",
+                                                    ),
+                                                  ),
+                                                );
+                                              }
                                             }
-                                            if (_userManualFile != null) {
-                                              await DatabaseService
-                                                  .uploadEquipmentPDFtoStorage(
-                                                equipmentTagName: _tagName,
-                                                files: [_userManualFile!],
-                                                baseFileName:
-                                                    "${_tagName}_user_manual_",
-                                              ).then(
-                                                (dowloadURLs) =>
-                                                    _userManualDowloadURL =
-                                                        dowloadURLs.first,
-                                              );
-                                            }
-                                            if (_contractFile != null) {
-                                              await DatabaseService
-                                                  .uploadEquipmentPDFtoStorage(
-                                                equipmentTagName: _tagName,
-                                                files: [_contractFile!],
-                                                baseFileName:
-                                                    "${_tagName}_contract_",
-                                              ).then(
-                                                (dowloadURLs) =>
-                                                    _contractDowloadURL =
-                                                        dowloadURLs.first,
-                                              );
-                                            }
-                                            if (_otherFiles != null) {
-                                              await DatabaseService
-                                                  .uploadEquipmentPDFtoStorage(
-                                                equipmentTagName: _tagName,
-                                                files: _otherFiles!,
-                                                baseFileName:
-                                                    "${_tagName}_other_file_",
-                                              ).then(
-                                                (dowloadURLs) =>
-                                                    _otherFilesDowloadURLs =
-                                                        dowloadURLs,
-                                              );
-                                            }
-                                            await DatabaseService()
-                                                .addEquipment(
-                                              tagName: _tagName,
-                                              docId: docId,
-                                              description: _description,
-                                              area: _area,
-                                              discipline: _disciplineValue,
-                                              workshop: _workshopValue,
-                                              status: _defaultStatus
-                                                  .statusToShortString(),
-                                              priority: _defaultPriority
-                                                  .priorityToShortString(),
-                                              longitude:
-                                                  longitudeController.text,
-                                              latitude: latitudeController.text,
-                                              photoURL: _photoURL,
-                                              userManual: _userManualDowloadURL,
-                                              contract: _contractDowloadURL,
-                                              otherFiles:
-                                                  _otherFilesDowloadURLs,
-                                            );
                                           }
-                                          if (context.mounted) {
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
-                                          }
-                                        } else {
-                                          Navigator.pop(context);
                                         }
                                       },
                                       child: const Text("Confirm"),

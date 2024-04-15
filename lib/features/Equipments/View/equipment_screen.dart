@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
-import '../controller/firebase_api/db_service.dart';
-import '../model/equipment.dart';
+import '../model/data_models/equipment.dart';
+import '../model/equipment_model.dart';
 import 'add equipment pages/add_equipment_page.dart';
 import 'edit_equipment_page.dart';
 import 'widgets/equipment_tile/equipment_tile.dart';
@@ -65,7 +65,7 @@ class EquipmentScreenState extends State<EquipmentScreen> {
           : null,
       body: SafeArea(
         child: StreamBuilder(
-          stream: DatabaseService().getEquipments(),
+          stream: EquipmentModel().getEquipments(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
@@ -78,7 +78,21 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                 ),
               );
             }
+            // Show error message if an error occurs
+            if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(),
+                    Text('Error: ${snapshot.error}'),
+                  ],
+                ),
+              );
+            }
             List equipments = snapshot.data?.docs ?? [];
+            var lastDocument = snapshot.data?.docs.last;
+            print(lastDocument);
             if (equipments.isEmpty) {
               return const Center(
                 child: Text("Equipments list is empty!"),
@@ -105,6 +119,20 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                         ),
                         child: Column(
                           children: [
+                            // IconButton(
+                            //   onPressed: () async {
+                            //     equipments.add(
+                            //       FirebaseFirestore.instance
+                            //           .collection(equipmentCollectionRef)
+                            //           .startAfter([lastDocument])
+                            //           .orderBy('CreatedOn', descending: true)
+                            //           .limit(5)
+                            //           .snapshots(),
+                            //     );
+                            //     setState(() {});
+                            //   },
+                            //   icon: const Icon(Icons.add),
+                            // ),
                             isAdmin
                                 ? Slidable(
                                     endActionPane: ActionPane(

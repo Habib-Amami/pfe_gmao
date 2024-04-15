@@ -38,7 +38,7 @@ const String longitude = 'Longitude';
 const String latitude = 'Latitude';
 
 //Reference to the equipments pictures folder in the firebase storage
-const String equipmnetPictureDic = "equipment_pictures";
+const String equipmnetPicturesFolder = "equipment_pictures";
 
 //Reference to the equipments files folder in the firebase storage
 const String allEquipmentsFilesFolder = "equipment_files";
