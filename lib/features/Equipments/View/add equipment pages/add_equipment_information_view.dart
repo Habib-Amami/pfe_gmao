@@ -490,11 +490,12 @@ class _AddEquipmentInformationScreenState
                                           );
                                           if (_isTagNameUnique) {
                                             if (context.mounted) {
+                                              Navigator.pop(context);
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 const SnackBar(
                                                   content: Text(
-                                                    "Tag name already exist! please provide a unique tag name",
+                                                    "Tag name already exist ! please provide a unique tag name",
                                                   ),
                                                 ),
                                               );

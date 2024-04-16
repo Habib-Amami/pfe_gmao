@@ -67,6 +67,24 @@ class EquipmentScreenState extends State<EquipmentScreen> {
         child: StreamBuilder(
           stream: EquipmentModel().getEquipments(),
           builder: (context, snapshot) {
+            // Handle interruption of connection
+            if (snapshot.connectionState == ConnectionState.none) {
+              return const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 50.0,
+                    ),
+                    SizedBox(height: 10.0),
+                    Text("Lost connection"),
+                  ],
+                ),
+              );
+            }
+            // Handle loading state
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                 child: Column(
@@ -84,7 +102,7 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const CircularProgressIndicator(),
+                    // const CircularProgressIndicator(),
                     Text('Error: ${snapshot.error}'),
                   ],
                 ),

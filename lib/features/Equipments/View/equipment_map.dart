@@ -149,8 +149,8 @@ class _EquipmentMapState extends State<EquipmentMap> {
                         markerId: const MarkerId("equipment postion"),
                         icon: BitmapDescriptor.defaultMarkerWithHue(300),
                         position: LatLng(
-                          widget.equipmentLongitude,
                           widget.equipmentLatitude,
+                          widget.equipmentLongitude,
                         ),
                       ),
                       Marker(
