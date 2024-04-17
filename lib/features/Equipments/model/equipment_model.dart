@@ -190,42 +190,6 @@ class EquipmentModel {
     await batch.commit();
   }
 
-  // update method
-  // Future<void> updateEquipmentPicture({
-  //   required String idEquipment,
-  //   required String imageUrl,
-  // }) async {
-  //   await _equipmentsRef.doc(idEquipment).update({'Photo': imageUrl});
-  // }
-
-  // delete method
-  void deleteEquipment({
-    required String idEquipment,
-    required String tagName,
-    required String photoURL,
-  }) {
-    FirebaseFirestore.instance
-        .collection(tagNamesCollectionRef)
-        .doc(tagName)
-        .delete();
-    if (photoURL != defaultEquipmentPicture) {
-      Reference equipmentPictureRef = FirebaseStorage.instance
-          .ref()
-          .child(equipmnetPicturesFolder)
-          .child("${tagName}_equipment_picture");
-      equipmentPictureRef.delete();
-    }
-    _equipmentsRef.doc(idEquipment).delete();
-  }
-
-  // // update the equipment photo
-  // Future<void> updatePhotoURL(
-  //   String idEquipment,
-  //   Equipment equipment,
-  // ) async {
-  //   await _equipmentsRef.doc(idEquipment).update(equipment.toJson());
-  // }
-
   //Future methode to check if a document exists in a collection in cloud firestore
   static Future<bool> checkDocumentExistence({
     required String collectionName,
@@ -243,6 +207,72 @@ class EquipmentModel {
       return true;
     } else {
       return false;
+    }
+  }
+
+  Future<void> deleteEquipment({
+    required String docId,
+    required String tagName,
+    required String photoURL,
+    required String userManualURL,
+    required String contractURL,
+  }) async {
+    CollectionReference equipmentCollection =
+        FirebaseFirestore.instance.collection(equipmentCollectionRef);
+    CollectionReference tagNamesCollection =
+        FirebaseFirestore.instance.collection(tagNamesCollectionRef);
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    // Delete the document from the equipment collection
+    batch.delete(equipmentCollection.doc(docId));
+
+    // Delete the document from the tag names collection
+    batch.delete(tagNamesCollection.doc(tagName));
+
+    // Commit the batch write
+    await batch.commit();
+
+    // Get references to Firebase Storage
+    Reference rootReference = FirebaseStorage.instance.ref();
+
+    // Delete the equipment picture from storage
+    if (photoURL != defaultEquipmentPicture) {
+      // Reference to the directory for equipment pictures
+      Reference profilePicturesDir = rootReference.child(
+        equipmnetPicturesFolder,
+      );
+      // Reference to the specific file to upload
+      Reference equipmentPictureRef = profilePicturesDir.child(
+        "${tagName}_picture",
+      );
+      await equipmentPictureRef.delete();
+    }
+    // Reference to the folder for equipment files
+    Reference equipmentFiles = rootReference.child(allEquipmentsFilesFolder);
+
+    // Reference to the specific equipment's folder
+    Reference directoryReference = equipmentFiles.child(tagName);
+
+    if (userManualURL != "" && contractURL != "") {
+      directoryReference.delete();
+    }
+
+    // Delete the user manual file from storage
+    if (userManualURL != "") {
+      // Reference to the userManual in Firebase Storage
+      Reference userManualRef = directoryReference.child(
+        "${tagName}_user_manual",
+      );
+      await userManualRef.delete();
+    }
+
+    // Delete the contract file from storage
+    if (contractURL != "") {
+      // Reference to the userManual in Firebase Storage
+      Reference contractRef = directoryReference.child(
+        "${tagName}_contract",
+      );
+      await contractRef.delete();
     }
   }
 }

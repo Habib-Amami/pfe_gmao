@@ -1,19 +1,18 @@
-// ignore_for_file: prefer_final_fields
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:pfe_gmao/features/Equipments/controller/equipment_controller.dart';
-import 'package:pfe_gmao/features/Equipments/model/equipment_model.dart';
-import 'package:pfe_gmao/firebase/cloud_firestore_references.dart';
 
+import '../../../firebase/cloud_firestore_references.dart';
+import '../controller/equipment_controller.dart';
 import '../model/data_models/discipline_list.dart';
 import '../model/data_models/equipment.dart';
 import '../model/data_models/priority_enum.dart';
 import '../model/data_models/status_enum.dart';
 import '../model/data_models/workshop_list.dart';
+import '../model/equipment_model.dart';
 import 'widgets/form_widgets/equipment_dropdown_menu.dart';
 import 'widgets/form_widgets/equipment_file_preview.dart';
 import 'widgets/form_widgets/equipment_file_upload_container.dart';
@@ -512,8 +511,8 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                                       onPressed: () async {
                                         if (_formkey.currentState!.validate()) {
                                           _formkey.currentState!.save();
-                                          print(_contractInitialURL);
-                                          print(_userManualInitialURL);
+                                          // print(_contractInitialURL);
+                                          // print(_userManualInitialURL);
                                           if (_tagName == _initialTagName) {
                                             try {
                                               _equipmentController
@@ -696,33 +695,15 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                                       ),
                                       TextButton(
                                         onPressed: () {
-                                          // DatabaseService().deleteEquipment(
-                                          //   idEquipment:
-                                          //       equipmentData['id'],
-                                          //   tagName:
-                                          //       equipmentData['TagName'],
-                                          //   photoURL:
-                                          //       equipmentData['Photo'],
-                                          // );
-                                          // // Show success message
-                                          // ScaffoldMessenger.of(context)
-                                          //     .showSnackBar(
-                                          //   SnackBar(
-                                          //     content: Text(equipmentData[
-                                          //             tagName] +
-                                          //         ' deleted successfully'),
-                                          //   ),
-                                          // );
-
-                                          // // close the alert dialog
-                                          // Navigator.pop(context);
-
-                                          // // go back to home
-                                          // Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //         builder: ((context) =>
-                                          //             const Home())));
+                                          EquipmentModel().deleteEquipment(
+                                            docId: widget.equipment.id,
+                                            tagName: _initialTagName,
+                                            photoURL: widget.equipment.Photo,
+                                            userManualURL:
+                                                widget.equipment.userManual,
+                                            contractURL:
+                                                widget.equipment.contract,
+                                          );
                                         },
                                         child: const Text("Confirm"),
                                       )
