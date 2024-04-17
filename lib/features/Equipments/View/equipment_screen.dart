@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
@@ -19,6 +20,10 @@ class EquipmentScreen extends StatefulWidget {
 class EquipmentScreenState extends State<EquipmentScreen> {
   bool isAdmin = false;
 
+  // Variables for the search operation
+  TextEditingController searchedTagName = TextEditingController();
+
+  // Getting the user role
   Future<String?> getUserRole() async {
     // Get the user document from Firestore
     DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
@@ -48,6 +53,32 @@ class EquipmentScreenState extends State<EquipmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Card(
+          child: TextField(
+            controller: searchedTagName,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: searchedTagName.text.isNotEmpty
+                  ? IconButton(
+                      onPressed: () {
+                        setState(() {
+                          searchedTagName.clear();
+                        });
+                      },
+                      icon: const Icon(Icons.close))
+                  : null,
+              hintText: "Search",
+            ),
+            onChanged: (value) {
+              setState(() {
+                searchedTagName.text = value;
+              });
+            },
+          ),
+        ),
+      ),
       resizeToAvoidBottomInset: true,
       floatingActionButton: isAdmin
           ? FloatingActionButton.extended(
@@ -111,18 +142,14 @@ class EquipmentScreenState extends State<EquipmentScreen> {
             List equipments = snapshot.data?.docs ?? [];
             var lastDocument = snapshot.data?.docs.last;
             print(lastDocument);
-            if (equipments.isEmpty) {
-              return const Center(
-                child: Text("Equipments list is empty!"),
-              );
-            }
+
             return equipments.isEmpty
                 ? const Padding(
                     padding: EdgeInsets.all(32.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text('No equipment match your search'),
+                        Text('No equipment to display'),
                       ],
                     ),
                   )
@@ -130,63 +157,129 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                     itemCount: equipments.length,
                     itemBuilder: (context, index) {
                       Equipment currentEquipment = equipments[index].data();
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 10,
-                        ),
-                        child: Column(
-                          children: [
-                            // IconButton(
-                            //   onPressed: () async {
-                            //     equipments.add(
-                            //       FirebaseFirestore.instance
-                            //           .collection(equipmentCollectionRef)
-                            //           .startAfter([lastDocument])
-                            //           .orderBy('CreatedOn', descending: true)
-                            //           .limit(5)
-                            //           .snapshots(),
-                            //     );
-                            //     setState(() {});
-                            //   },
-                            //   icon: const Icon(Icons.add),
-                            // ),
-                            isAdmin
-                                ? Slidable(
-                                    endActionPane: ActionPane(
-                                      motion: const StretchMotion(),
-                                      children: [
-                                        SlidableAction(
-                                          icon: Icons.edit_outlined,
-                                          label: "Edit",
-                                          backgroundColor: Theme.of(context)
-                                              .colorScheme
-                                              .primaryContainer,
-                                          onPressed: (context) {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) {
-                                                  return EditEquipmentPage(
-                                                    equipment: currentEquipment,
-                                                  );
-                                                },
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                    child: EquipmentTile(
+                      if (searchedTagName.text.isEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 10,
+                          ),
+                          child: Column(
+                            children: [
+                              // IconButton(
+                              //   onPressed: () async {
+                              //     equipments.add(
+                              //       FirebaseFirestore.instance
+                              //           .collection(equipmentCollectionRef)
+                              //           .startAfter([lastDocument])
+                              //           .orderBy('CreatedOn', descending: true)
+                              //           .limit(5)
+                              //           .snapshots(),
+                              //     );
+                              //     setState(() {});
+                              //   },
+                              //   icon: const Icon(Icons.add),
+                              // ),
+                              isAdmin
+                                  ? Slidable(
+                                      endActionPane: ActionPane(
+                                        motion: const StretchMotion(),
+                                        children: [
+                                          SlidableAction(
+                                            icon: Icons.edit_outlined,
+                                            label: "Edit",
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .primaryContainer,
+                                            onPressed: (context) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return EditEquipmentPage(
+                                                      equipment:
+                                                          currentEquipment,
+                                                    );
+                                                  },
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                      child: EquipmentTile(
+                                        equipment: currentEquipment,
+                                      ),
+                                    )
+                                  : EquipmentTile(
                                       equipment: currentEquipment,
                                     ),
-                                  )
-                                : EquipmentTile(
-                                    equipment: currentEquipment,
-                                  ),
-                          ],
-                        ),
-                      );
+                            ],
+                          ),
+                        );
+                      }
+                      if (currentEquipment.TagName.toString()
+                          .toLowerCase()
+                          .contains(searchedTagName.text.toLowerCase())) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 10,
+                          ),
+                          child: Column(
+                            children: [
+                              // IconButton(
+                              //   onPressed: () async {
+                              //     equipments.add(
+                              //       FirebaseFirestore.instance
+                              //           .collection(equipmentCollectionRef)
+                              //           .startAfter([lastDocument])
+                              //           .orderBy('CreatedOn', descending: true)
+                              //           .limit(5)
+                              //           .snapshots(),
+                              //     );
+                              //     setState(() {});
+                              //   },
+                              //   icon: const Icon(Icons.add),
+                              // ),
+                              isAdmin
+                                  ? Slidable(
+                                      endActionPane: ActionPane(
+                                        motion: const StretchMotion(),
+                                        children: [
+                                          SlidableAction(
+                                            icon: Icons.edit_outlined,
+                                            label: "Edit",
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .primaryContainer,
+                                            onPressed: (context) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return EditEquipmentPage(
+                                                      equipment:
+                                                          currentEquipment,
+                                                    );
+                                                  },
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                      child: EquipmentTile(
+                                        equipment: currentEquipment,
+                                      ),
+                                    )
+                                  : EquipmentTile(
+                                      equipment: currentEquipment,
+                                    ),
+                            ],
+                          ),
+                        );
+                      }
+                      return Container();
                     },
                   );
           },
