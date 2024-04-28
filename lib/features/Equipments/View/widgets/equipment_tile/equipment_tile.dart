@@ -153,7 +153,11 @@ class EquipmentTile extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const InterventionFileMenu(),
+                builder: (context) => InterventionFileMenu(
+                  equipmentDiscipline: equipment.Discipline,
+                  equipmentStatus: equipment.Status,
+                  equipmentTagName: equipment.TagName,
+                ),
               ),
             );
           },
