@@ -51,7 +51,7 @@ class InterventionFileModel {
 
     //getting all the spare parts from the given spare parts list
     for (var i = 0; i < spareParts.length; i++) {
-      sparePartsNames.add(tools[i].name);
+      sparePartsNames.add(spareParts[i].name);
     }
     //maintenance type "Curative"
     if (maintenanceType == interventionTypes[0]) {

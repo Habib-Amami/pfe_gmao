@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:pfe_gmao/features/intervention_files/model/data_models/preventive_intervention_file.dart';
-import 'package:pfe_gmao/features/intervention_files/model/intervention_file_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../model/constants/breakdown_types.dart';
 import '../model/constants/criticality_levels_list.dart';
 import '../model/constants/intervention_types_list.dart';
 import '../model/constants/time_periods_list.dart';
+import '../model/data_models/preventive_intervention_file.dart';
 import '../model/data_models/spare_part.dart';
 import '../model/data_models/tool.dart';
+import '../model/intervention_file_model.dart';
 import 'widgets/empty_selection_container.dart';
 import 'widgets/intervention_file_drop_down_menu.dart';
 import 'widgets/intervention_file_form_title.dart';
@@ -236,680 +236,698 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
         disciplineIconData = Icons.error_outline;
     }
 
-    return SingleChildScrollView(
-      child: Form(
-        key: _formkey,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const InterventionFileFormTitle(
-                title: "Tag name",
-              ),
-              // Display a form field for displaying the equipment tag name
-              InterventionFileFormField(
-                prefixIcon: const Icon(Icons.local_offer_outlined),
-                initialValue: widget.equipmentTagName,
-                enabled: false,
-              ),
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const InterventionFileFormTitle(
-                        title: "Status",
-                      ),
-                      // Form field for displaying equipment status
-                      SizedBox(
-                        width: MediaQuery.sizeOf(context).width / 2 - 24,
-                        child: InterventionFileFormField(
-                          enabled: false,
-                          prefixIcon: Icon(statusIconData),
-                          initialValue: widget.equipmentStatus,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const InterventionFileFormTitle(
-                        title: "Discipline",
-                      ),
-                      // Form field for displaying equipment discipline
-                      SizedBox(
-                        width: MediaQuery.sizeOf(context).width / 2 - 24,
-                        child: InterventionFileFormField(
-                          enabled: false,
-                          prefixIcon: Icon(disciplineIconData),
-                          initialValue: widget.equipmentDiscipline,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const InterventionFileFormTitle(
-                title: "Name Intervention File",
-              ),
-              // Form field for entering the intervention file name
-              InterventionFileFormField(
-                hintText: "Enter the intervention file name",
-                keyboardType: TextInputType.text,
-                prefixIcon: const Icon(
-                  Icons.file_copy_rounded,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Add an Intervention File",
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        ),
+        centerTitle: true,
+        automaticallyImplyLeading: true,
+      ),
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formkey,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const InterventionFileFormTitle(
+                  title: "Tag name",
                 ),
-                textInputAction: TextInputAction.next,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "please provide name for the file";
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _fileName = value!;
-                },
-              ),
-              const InterventionFileFormTitle(
-                title: "Maintenance Type",
-              ),
-              // Dropdown menu for selecting the maintenance type
-              InterventionFileDropDownMenu(
-                valuesList: interventionTypes,
-                iconsList: const [
-                  Icons.healing,
-                  Icons.medical_services,
-                ],
-                initialValue: _initialIntervnetionType,
-                onChanged: (value) {
-                  setState(() {
-                    _initialIntervnetionType = value as String;
-                  });
-                },
-              ),
-              // Conditionally display additional fields based on the selected maintenance type
-              _initialIntervnetionType == interventionTypes[1]
-                  //"Preventive" intervention type
-                  ? Column(
+                // Display a form field for displaying the equipment tag name
+                InterventionFileFormField(
+                  prefixIcon: const Icon(Icons.local_offer_outlined),
+                  initialValue: widget.equipmentTagName,
+                  enabled: false,
+                ),
+                Row(
+                  children: [
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const InterventionFileFormTitle(
-                          title: "Forecast",
+                          title: "Status",
                         ),
-                        // Dropdown menu for selecting the forecast time period
-                        InterventionFileDropDownMenu(
-                          valuesList: timePeriods,
-                          iconsList: const [
-                            Icons.calendar_today_rounded,
-                            Icons.calendar_view_week_rounded,
-                            Icons.calendar_view_week_rounded,
-                            Icons.calendar_view_month_rounded,
-                            Icons.calendar_view_month_rounded,
-                            Icons.calendar_month_rounded,
-                            Icons.more_vert
-                          ],
-                          initialValue: _initialTimePeriod,
-                          onChanged: (value) {
-                            setState(() {
-                              _initialTimePeriod = value as String;
-                            });
-                          },
-                        ),
-                        // Conditionally display custom duration input field
-                        //if "Custom Period" time period is selected
-                        _initialTimePeriod == timePeriods.last
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Text prompting user to pick custom duration
-                                  const Padding(
-                                    padding: EdgeInsets.only(bottom: 8.0),
-                                    child: Text("Pick your custom duration :"),
-                                  ),
-                                  // Row containing buttons for increasing/decreasing custom duration
-                                  Row(
-                                    children: [
-                                      //Icon button for decreasing the field count
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 16.0),
-                                        child: IconButton.outlined(
-                                          onPressed: () {
-                                            int custionDuration = int.parse(
-                                                _customDurationController.text);
-                                            custionDuration--;
-                                            setState(() {
-                                              _customDurationController.text =
-                                                  custionDuration.toString();
-                                            });
-                                          },
-                                          icon:
-                                              const Icon(Icons.remove_rounded),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 16,
-                                      ),
-                                      // Form field for displaying custom duration
-                                      Expanded(
-                                        flex: 4,
-                                        child: InterventionFileFormField(
-                                          prefixIcon: const Icon(
-                                            Icons.hourglass_empty_rounded,
-                                          ),
-                                          enabled: true,
-                                          keyboardType: TextInputType.number,
-                                          controller: _customDurationController,
-                                          suffexIcon: const Padding(
-                                            padding: EdgeInsets.only(top: 16.0),
-                                            child: Text(
-                                              "days",
-                                            ),
-                                          ),
-                                          inputFormatters: [
-                                            FilteringTextInputFormatter
-                                                .digitsOnly
-                                          ],
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return "please provide a custom duration or use a preset";
-                                            }
-                                            if (int.parse(value) <= 0) {
-                                              return "please provide a positive days count";
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 16,
-                                      ),
-
-                                      //Icon button for increasing the field count
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 16.0),
-                                        child: IconButton.outlined(
-                                          onPressed: () {
-                                            int custionDuration = int.parse(
-                                                _customDurationController.text);
-                                            custionDuration++;
-                                            setState(() {
-                                              _customDurationController.text =
-                                                  custionDuration.toString();
-                                            });
-                                          },
-                                          icon: const Icon(Icons.add_rounded),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            : const SizedBox(),
-                      ],
-                    )
-                  //"Curative" intervention type
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const InterventionFileFormTitle(
-                          title: "Criticality",
-                        ),
-                        // Dropdown menu for selecting the criticality level
-                        InterventionFileDropDownMenu(
-                          iconsList: const [
-                            Ionicons.warning_outline,
-                            Ionicons.alert_circle_outline,
-                            Ionicons.warning_sharp,
-                          ],
-                          valuesList: criticalityLevels,
-                          initialValue: _initialCritciality,
-                          onChanged: (value) {
-                            setState(() {
-                              _initialCritciality = value as String;
-                            });
-                          },
-                        ),
-                        const InterventionFileFormTitle(
-                          title: "Breakdown type",
-                        ),
-                        // Dropdown menu for selecting the breakdown type
-                        InterventionFileDropDownMenu(
-                          iconsList: const [
-                            Icons.play_arrow,
-                            Icons.build,
-                            Icons.settings,
-                            Icons.error,
-                          ],
-                          valuesList: breakdownTypes,
-                          initialValue: _initialBreakDownType,
-                          onChanged: (value) {
-                            setState(() {
-                              _initialBreakDownType = value as String;
-                            });
-                          },
-                        ),
-                        const InterventionFileFormTitle(
-                          title: "Breakdown Description",
-                        ),
-                        // Form field for entering the breakdown description
-                        InterventionFileFormField(
-                          maxLines: 3,
-                          hintText: "Describe the breakdown",
-                          prefixIcon: const Padding(
-                            padding: EdgeInsets.only(bottom: 48.0),
-                            child: Icon(
-                              Icons.description_outlined,
-                            ),
+                        // Form field for displaying equipment status
+                        SizedBox(
+                          width: MediaQuery.sizeOf(context).width / 2 - 24,
+                          child: InterventionFileFormField(
+                            enabled: false,
+                            prefixIcon: Icon(statusIconData),
+                            initialValue: widget.equipmentStatus,
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "please provide a breakdown description";
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            _breakDownDescription = value!;
-                          },
-                        )
+                        ),
                       ],
                     ),
-              const InterventionFileFormTitle(
-                title: "Starting Day",
-              ),
-              // Row containing two widgets: text field and icon button
-              Row(
-                children: [
-                  // Expanded widget to ensure the text field takes up most of the row
-                  Expanded(
-                    flex: 4,
-                    child: InterventionFileFormField(
-                      controller: _startingDateController,
-                      enabled: false,
-                      hintText: "Pick a date from the calender",
-                      prefixIcon: const Icon(Icons.timelapse_rounded),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "please provide a starting day";
-                        }
-                        return null;
-                      },
+                    const SizedBox(
+                      width: 16,
                     ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const InterventionFileFormTitle(
+                          title: "Discipline",
+                        ),
+                        // Form field for displaying equipment discipline
+                        SizedBox(
+                          width: MediaQuery.sizeOf(context).width / 2 - 24,
+                          child: InterventionFileFormField(
+                            enabled: false,
+                            prefixIcon: Icon(disciplineIconData),
+                            initialValue: widget.equipmentDiscipline,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const InterventionFileFormTitle(
+                  title: "Name Intervention File",
+                ),
+                // Form field for entering the intervention file name
+                InterventionFileFormField(
+                  hintText: "Enter the intervention file name",
+                  keyboardType: TextInputType.text,
+                  prefixIcon: const Icon(
+                    Icons.file_copy_rounded,
                   ),
-                  // Expanded widget to ensure the icon button takes up the remaining space
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 16,
-                        bottom: 16.0,
-                      ),
-                      child: Column(
+                  textInputAction: TextInputAction.next,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "please provide name for the file";
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _fileName = value!;
+                  },
+                ),
+                const InterventionFileFormTitle(
+                  title: "Maintenance Type",
+                ),
+                // Dropdown menu for selecting the maintenance type
+                InterventionFileDropDownMenu(
+                  valuesList: interventionTypes,
+                  iconsList: const [
+                    Icons.healing,
+                    Icons.medical_services,
+                  ],
+                  initialValue: _initialIntervnetionType,
+                  onChanged: (value) {
+                    setState(() {
+                      _initialIntervnetionType = value as String;
+                    });
+                  },
+                ),
+                // Conditionally display additional fields based on the selected maintenance type
+                _initialIntervnetionType == interventionTypes[1]
+                    //"Preventive" intervention type
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          IconButton.filledTonal(
-                            tooltip: "press to select a day from the calender",
-                            onPressed: () async {
-                              // Show date picker dialog
-                              startingDate = await showDatePicker(
-                                context: context,
-                                barrierDismissible: false,
-                                currentDate: DateTime.now(),
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime.now(),
-                                lastDate: DateTime(
-                                  DateTime.now().year, //year
-                                  12, // month
-                                  31, // day
-                                ),
-                                helpText:
-                                    "Pick a the starting day for the intervrntion",
-                                errorFormatText:
-                                    "Follow the mm/dd/yyyy format please",
-                              );
-                              // Update text field value if a date is selected
-                              if (startingDate != null) {
-                                setState(() {
-                                  _startingDateController.text = DateFormat(
-                                    "dd/MM/yyyy",
-                                  ).format(
-                                    startingDate!,
-                                  );
-                                });
-                              }
-                            },
-                            // Icon displayed on the button
-                            icon: const Icon(
-                              Icons.edit_calendar_rounded,
-                            ),
+                          const InterventionFileFormTitle(
+                            title: "Forecast",
                           ),
-                          Text(
-                            "Pick a day",
-                            style: Theme.of(context).textTheme.labelSmall,
+                          // Dropdown menu for selecting the forecast time period
+                          InterventionFileDropDownMenu(
+                            valuesList: timePeriods,
+                            iconsList: const [
+                              Icons.calendar_today_rounded,
+                              Icons.calendar_view_week_rounded,
+                              Icons.calendar_view_week_rounded,
+                              Icons.calendar_view_month_rounded,
+                              Icons.calendar_view_month_rounded,
+                              Icons.calendar_month_rounded,
+                              Icons.more_vert
+                            ],
+                            initialValue: _initialTimePeriod,
+                            onChanged: (value) {
+                              setState(() {
+                                _initialTimePeriod = value as String;
+                              });
+                            },
+                          ),
+                          // Conditionally display custom duration input field
+                          //if "Custom Period" time period is selected
+                          _initialTimePeriod == timePeriods.last
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Text prompting user to pick custom duration
+                                    const Padding(
+                                      padding: EdgeInsets.only(bottom: 8.0),
+                                      child:
+                                          Text("Pick your custom duration :"),
+                                    ),
+                                    // Row containing buttons for increasing/decreasing custom duration
+                                    Row(
+                                      children: [
+                                        //Icon button for decreasing the field count
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 16.0),
+                                          child: IconButton.outlined(
+                                            onPressed: () {
+                                              int custionDuration = int.parse(
+                                                  _customDurationController
+                                                      .text);
+                                              custionDuration--;
+                                              setState(() {
+                                                _customDurationController.text =
+                                                    custionDuration.toString();
+                                              });
+                                            },
+                                            icon: const Icon(
+                                                Icons.remove_rounded),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 16,
+                                        ),
+                                        // Form field for displaying custom duration
+                                        Expanded(
+                                          flex: 4,
+                                          child: InterventionFileFormField(
+                                            prefixIcon: const Icon(
+                                              Icons.hourglass_empty_rounded,
+                                            ),
+                                            enabled: true,
+                                            keyboardType: TextInputType.number,
+                                            controller:
+                                                _customDurationController,
+                                            suffexIcon: const Padding(
+                                              padding:
+                                                  EdgeInsets.only(top: 16.0),
+                                              child: Text(
+                                                "days",
+                                              ),
+                                            ),
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly
+                                            ],
+                                            validator: (value) {
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return "please provide a custom duration or use a preset";
+                                              }
+                                              if (int.parse(value) <= 0) {
+                                                return "please provide a positive days count";
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 16,
+                                        ),
+
+                                        //Icon button for increasing the field count
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 16.0),
+                                          child: IconButton.outlined(
+                                            onPressed: () {
+                                              int custionDuration = int.parse(
+                                                  _customDurationController
+                                                      .text);
+                                              custionDuration++;
+                                              setState(() {
+                                                _customDurationController.text =
+                                                    custionDuration.toString();
+                                              });
+                                            },
+                                            icon: const Icon(Icons.add_rounded),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              : const SizedBox(),
+                        ],
+                      )
+                    //"Curative" intervention type
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const InterventionFileFormTitle(
+                            title: "Criticality",
+                          ),
+                          // Dropdown menu for selecting the criticality level
+                          InterventionFileDropDownMenu(
+                            iconsList: const [
+                              Ionicons.warning_outline,
+                              Ionicons.alert_circle_outline,
+                              Ionicons.warning_sharp,
+                            ],
+                            valuesList: criticalityLevels,
+                            initialValue: _initialCritciality,
+                            onChanged: (value) {
+                              setState(() {
+                                _initialCritciality = value as String;
+                              });
+                            },
+                          ),
+                          const InterventionFileFormTitle(
+                            title: "Breakdown type",
+                          ),
+                          // Dropdown menu for selecting the breakdown type
+                          InterventionFileDropDownMenu(
+                            iconsList: const [
+                              Icons.play_arrow,
+                              Icons.build,
+                              Icons.settings,
+                              Icons.error,
+                            ],
+                            valuesList: breakdownTypes,
+                            initialValue: _initialBreakDownType,
+                            onChanged: (value) {
+                              setState(() {
+                                _initialBreakDownType = value as String;
+                              });
+                            },
+                          ),
+                          const InterventionFileFormTitle(
+                            title: "Breakdown Description",
+                          ),
+                          // Form field for entering the breakdown description
+                          InterventionFileFormField(
+                            maxLines: 3,
+                            hintText: "Describe the breakdown",
+                            prefixIcon: const Padding(
+                              padding: EdgeInsets.only(bottom: 48.0),
+                              child: Icon(
+                                Icons.description_outlined,
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "please provide a breakdown description";
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _breakDownDescription = value!;
+                            },
                           )
                         ],
                       ),
-                    ),
-                  )
-                ],
-              ),
-              const InterventionFileFormTitle(
-                title: "Intervention task",
-              ),
-              // Form field for entering the intervention task
-              InterventionFileFormField(
-                prefixIcon: const Icon(Icons.task),
-                hintText: "Enter an intervention task",
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "please provide an intervention task";
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _interventionTask = value!;
-                },
-              ),
-              const InterventionFileFormTitle(
-                title: "Maintenance technicians",
-              ),
-              // Card widget containing a CheckboxListTile for selecting mechanical technician
-              TechnicianCard(
-                title: "Mechanical Technician",
-                subtitle:
-                    "A mechanical technician will handle the intervention.",
-                checkboxValue: _isMechanicalTechnicianSelected,
-                onChanged: (value) {
-                  setState(() {
-                    _isMechanicalTechnicianSelected =
-                        !_isMechanicalTechnicianSelected;
-                  });
-                },
-              ),
-              // Card widget containing a CheckboxListTile for selecting electrical technician
-              TechnicianCard(
-                title: "Electrical Technician",
-                subtitle:
-                    "An electrical technician will execute the intervention.",
-                checkboxValue: _isElectricalTechnicianSelected,
-                onChanged: (value) {
-                  setState(() {
-                    _isElectricalTechnicianSelected =
-                        !_isElectricalTechnicianSelected;
-                  });
-                },
-              ),
-              // Card widget containing a CheckboxListTile for selecting Instrument Technician technician
-              TechnicianCard(
-                title: "Instrument Technician",
-                subtitle: "An instrument technician execute the intervention.",
-                checkboxValue: _isInstrumentTechnicianSelected,
-                onChanged: (value) {
-                  setState(() {
-                    _isInstrumentTechnicianSelected =
-                        !_isInstrumentTechnicianSelected;
-                  });
-                },
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              const InterventionFileFormTitle(
-                title: "Spare Parts",
-              ),
-              // Form field for searching spare parts by name
-              InterventionFileFormField(
-                prefixIcon: const Icon(Icons.search),
-                hintText: "search for a spare part by name",
-                // Callback function invoked when the input value changes
-                onChanged: (value) => filterSpareParts(value),
-              ),
-              // Widget containing column titles for spare parts list
-              const ListViewHeader(
-                firstColumnName: "Spare part name",
-                secondColumnName: "Quantity",
-              ),
-              // List view displaying spare parts with selection capability
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 200,
-                  child: ListView.builder(
-                    itemCount: filteredSparePartsList.length,
-                    itemExtent: 95,
-                    itemBuilder: (context, index) {
-                      return SparePartCard(
-                        sparePart: filteredSparePartsList[index],
-                        onTap: () {
-                          setState(() {
-                            // Toggle selection state
-                            filteredSparePartsList[index].isSelected =
-                                !filteredSparePartsList[index].isSelected;
-                            // Add or remove selected spare part from the list
-                            if (filteredSparePartsList[index].isSelected) {
-                              selectedSparePartsList
-                                  .add(filteredSparePartsList[index]);
-                            } else {
-                              selectedSparePartsList
-                                  .remove(filteredSparePartsList[index]);
-                            }
-                          });
-                        },
-                      );
-                    },
-                  ),
+                const InterventionFileFormTitle(
+                  title: "Starting Day",
                 ),
-              ),
-              const InterventionFileFormTitle(
-                title: "Selected Spare Parts",
-              ),
-              // Check if the selected spare parts list is empty
-              selectedSparePartsList.isEmpty
-                  // Display a message if no spare parts are selected
-                  ? const EmptySelectionContainer(
-                      message: "no spare parts has been selected yet !",
-                    )
-                  // Display the list of selected spare parts
-                  : SizedBox(
-                      width: double.infinity,
-                      height: 135,
-                      child: ListView.builder(
-                        itemCount: selectedSparePartsList.length,
-                        itemBuilder: (context, index) => Card(
-                          child: ListTile(
-                              title: Text(
-                                selectedSparePartsList[index].name,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
-                                    ),
-                              ),
-                              trailing: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    // Set isSelected to false and remove from the list
-                                    selectedSparePartsList[index].isSelected =
-                                        false;
-                                    selectedSparePartsList
-                                        .remove(selectedSparePartsList[index]);
-                                  });
-                                },
-                                icon: const Icon(Icons.remove),
-                              )),
-                        ),
+                // Row containing two widgets: text field and icon button
+                Row(
+                  children: [
+                    // Expanded widget to ensure the text field takes up most of the row
+                    Expanded(
+                      flex: 4,
+                      child: InterventionFileFormField(
+                        controller: _startingDateController,
+                        enabled: false,
+                        hintText: "Pick a date from the calender",
+                        prefixIcon: const Icon(Icons.timelapse_rounded),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "please provide a starting day";
+                          }
+                          return null;
+                        },
                       ),
                     ),
-              const InterventionFileFormTitle(
-                title: "Tools",
-              ),
-              // Form field for searching tools by name
-              InterventionFileFormField(
-                prefixIcon: const Icon(Icons.search),
-                hintText: "search for a tool by name",
-                onChanged: (value) => filterTools(value),
-              ),
-              // Widget containing column titles for spare parts list
-              const ListViewHeader(
-                firstColumnName: "Tool name",
-                secondColumnName: "Quantity",
-              ),
-              // List view displaying tools with selection capability
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 200,
-                  child: ListView.builder(
-                    itemCount: filteredToolsList.length,
-                    itemExtent: 95,
-                    itemBuilder: (context, index) {
-                      return ToolCard(
-                        tool: filteredToolsList[index],
-                        onTap: () {
-                          setState(() {
-                            // Toggle selection state
-                            filteredToolsList[index].isSelected =
-                                !filteredToolsList[index].isSelected;
-                            // Add or remove selected tool from the list
-                            if (filteredToolsList[index].isSelected) {
-                              selectedToolsList.add(filteredToolsList[index]);
-                            } else {
-                              selectedToolsList
-                                  .remove(filteredToolsList[index]);
-                            }
-                          });
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ),
-              const InterventionFileFormTitle(
-                title: "Selected Tools",
-              ),
-              // Check if the selected tools list is empty
-              selectedToolsList.isEmpty
-                  // Display a message if no tools are selected
-                  ? const EmptySelectionContainer(
-                      message: "no tools has been selected yet !",
-                    )
-                  // Display the list of selected tools
-                  : SizedBox(
-                      width: double.infinity,
-                      height: 140,
-                      child: ListView.builder(
-                        itemExtent: 64,
-                        itemCount: selectedToolsList.length,
-                        itemBuilder: (context, index) => Card(
-                          child: ListTile(
-                              title: Text(
-                                selectedToolsList[index].name,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
-                                    ),
-                              ),
-                              trailing: IconButton(
-                                onPressed: () {
+                    // Expanded widget to ensure the icon button takes up the remaining space
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 16,
+                          bottom: 16.0,
+                        ),
+                        child: Column(
+                          children: [
+                            IconButton.filledTonal(
+                              tooltip:
+                                  "press to select a day from the calender",
+                              onPressed: () async {
+                                // Show date picker dialog
+                                startingDate = await showDatePicker(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  currentDate: DateTime.now(),
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime.now(),
+                                  lastDate: DateTime(
+                                    DateTime.now().year, //year
+                                    12, // month
+                                    31, // day
+                                  ),
+                                  helpText:
+                                      "Pick a the starting day for the intervrntion",
+                                  errorFormatText:
+                                      "Follow the mm/dd/yyyy format please",
+                                );
+                                // Update text field value if a date is selected
+                                if (startingDate != null) {
                                   setState(() {
-                                    selectedToolsList[index].isSelected = false;
-                                    selectedToolsList
-                                        .remove(selectedToolsList[index]);
+                                    _startingDateController.text = DateFormat(
+                                      "dd/MM/yyyy",
+                                    ).format(
+                                      startingDate!,
+                                    );
                                   });
-                                },
-                                icon: const Icon(Icons.remove),
-                              )),
+                                }
+                              },
+                              // Icon displayed on the button
+                              icon: const Icon(
+                                Icons.edit_calendar_rounded,
+                              ),
+                            ),
+                            Text(
+                              "Pick a day",
+                              style: Theme.of(context).textTheme.labelSmall,
+                            )
+                          ],
                         ),
                       ),
-                    ),
-              // Row widget to display confirm and cancel buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  // Button for registering
-                  SizedBox(
-                    width: 105,
-                    child: FilledButton(
-                      onPressed: () async {
-                        if (_formkey.currentState!.validate()) {
-                          //check if the tool or the spare parts selection list are empty
-                          //if empty (at least one) show a snack bar
-                          if (selectedSparePartsList.isEmpty ||
-                              selectedToolsList.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content:
-                                    Text("please select spare parts and tools"),
-                              ),
-                            );
-                          } //if not empty (both)
-                          _formkey.currentState!.save();
-                          //Map the forcat to it value in day
-                          int forcast =
-                              PreventiveInterventionFile.mapTimePeriodToDays(
-                            selectedTimePeriod: _initialTimePeriod,
-                            customPeriodValue:
-                                int.parse(_customDurationController.text),
-                          );
-                          //creating a document ID for the intervention file
-                          String fileID = const Uuid().v4();
-                          //
-                          await InterventionFileModel().addInterventionFileDB(
-                            equipmentID: widget.equipmentID,
-                            equipmentTagName: widget.equipmentTagName,
-                            equipmentStatus: widget.equipmentStatus,
-                            equipmentDiscipline: widget.equipmentDiscipline,
-                            fileID: fileID,
-                            fileName: _fileName,
-                            maintenanceType: _initialIntervnetionType,
-                            startingDay: _startingDateController.text,
-                            interventionTask: _interventionTask,
-                            mechanicalTechnician:
-                                _isMechanicalTechnicianSelected,
-                            electricalTechnician:
-                                _isElectricalTechnicianSelected,
-                            instrumentTechnician:
-                                _isInstrumentTechnicianSelected,
-                            spareParts: selectedSparePartsList,
-                            tools: selectedToolsList,
-                            fileStatus: "In Progress",
-                            forecast: forcast,
-                            criticity: _initialCritciality,
-                            breakDownType: _initialBreakDownType,
-                            breakDownDescription: _breakDownDescription,
-                          );
-                        }
+                    )
+                  ],
+                ),
+                const InterventionFileFormTitle(
+                  title: "Intervention task",
+                ),
+                // Form field for entering the intervention task
+                InterventionFileFormField(
+                  prefixIcon: const Icon(Icons.task),
+                  hintText: "Enter an intervention task",
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "please provide an intervention task";
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _interventionTask = value!;
+                  },
+                ),
+                const InterventionFileFormTitle(
+                  title: "Maintenance technicians",
+                ),
+                // Card widget containing a CheckboxListTile for selecting mechanical technician
+                TechnicianCard(
+                  title: "Mechanical Technician",
+                  subtitle:
+                      "A mechanical technician will handle the intervention.",
+                  checkboxValue: _isMechanicalTechnicianSelected,
+                  onChanged: (value) {
+                    setState(() {
+                      _isMechanicalTechnicianSelected =
+                          !_isMechanicalTechnicianSelected;
+                    });
+                  },
+                ),
+                // Card widget containing a CheckboxListTile for selecting electrical technician
+                TechnicianCard(
+                  title: "Electrical Technician",
+                  subtitle:
+                      "An electrical technician will execute the intervention.",
+                  checkboxValue: _isElectricalTechnicianSelected,
+                  onChanged: (value) {
+                    setState(() {
+                      _isElectricalTechnicianSelected =
+                          !_isElectricalTechnicianSelected;
+                    });
+                  },
+                ),
+                // Card widget containing a CheckboxListTile for selecting Instrument Technician technician
+                TechnicianCard(
+                  title: "Instrument Technician",
+                  subtitle:
+                      "An instrument technician execute the intervention.",
+                  checkboxValue: _isInstrumentTechnicianSelected,
+                  onChanged: (value) {
+                    setState(() {
+                      _isInstrumentTechnicianSelected =
+                          !_isInstrumentTechnicianSelected;
+                    });
+                  },
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                const InterventionFileFormTitle(
+                  title: "Spare Parts",
+                ),
+                // Form field for searching spare parts by name
+                InterventionFileFormField(
+                  prefixIcon: const Icon(Icons.search),
+                  hintText: "search for a spare part by name",
+                  // Callback function invoked when the input value changes
+                  onChanged: (value) => filterSpareParts(value),
+                ),
+                // Widget containing column titles for spare parts list
+                const ListViewHeader(
+                  firstColumnName: "Spare part name",
+                  secondColumnName: "Quantity",
+                ),
+                // List view displaying spare parts with selection capability
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 200,
+                    child: ListView.builder(
+                      itemCount: filteredSparePartsList.length,
+                      itemExtent: 95,
+                      itemBuilder: (context, index) {
+                        return SparePartCard(
+                          sparePart: filteredSparePartsList[index],
+                          onTap: () {
+                            setState(() {
+                              // Toggle selection state
+                              filteredSparePartsList[index].isSelected =
+                                  !filteredSparePartsList[index].isSelected;
+                              // Add or remove selected spare part from the list
+                              if (filteredSparePartsList[index].isSelected) {
+                                selectedSparePartsList
+                                    .add(filteredSparePartsList[index]);
+                              } else {
+                                selectedSparePartsList
+                                    .remove(filteredSparePartsList[index]);
+                              }
+                            });
+                          },
+                        );
                       },
-                      child: const Text("Register"),
                     ),
                   ),
-                  // Button for canceling
-                  SizedBox(
-                    width: 105,
-                    child: FilledButton(
-                      onPressed: () {},
-                      child: const Text("Cancel"),
+                ),
+                const InterventionFileFormTitle(
+                  title: "Selected Spare Parts",
+                ),
+                // Check if the selected spare parts list is empty
+                selectedSparePartsList.isEmpty
+                    // Display a message if no spare parts are selected
+                    ? const EmptySelectionContainer(
+                        message: "no spare parts has been selected yet !",
+                      )
+                    // Display the list of selected spare parts
+                    : SizedBox(
+                        width: double.infinity,
+                        height: 135,
+                        child: ListView.builder(
+                          itemCount: selectedSparePartsList.length,
+                          itemBuilder: (context, index) => Card(
+                            child: ListTile(
+                                title: Text(
+                                  selectedSparePartsList[index].name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                      ),
+                                ),
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      // Set isSelected to false and remove from the list
+                                      selectedSparePartsList[index].isSelected =
+                                          false;
+                                      selectedSparePartsList.remove(
+                                          selectedSparePartsList[index]);
+                                    });
+                                  },
+                                  icon: const Icon(Icons.remove),
+                                )),
+                          ),
+                        ),
+                      ),
+                const InterventionFileFormTitle(
+                  title: "Tools",
+                ),
+                // Form field for searching tools by name
+                InterventionFileFormField(
+                  prefixIcon: const Icon(Icons.search),
+                  hintText: "search for a tool by name",
+                  onChanged: (value) => filterTools(value),
+                ),
+                // Widget containing column titles for spare parts list
+                const ListViewHeader(
+                  firstColumnName: "Tool name",
+                  secondColumnName: "Quantity",
+                ),
+                // List view displaying tools with selection capability
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 200,
+                    child: ListView.builder(
+                      itemCount: filteredToolsList.length,
+                      itemExtent: 95,
+                      itemBuilder: (context, index) {
+                        return ToolCard(
+                          tool: filteredToolsList[index],
+                          onTap: () {
+                            setState(() {
+                              // Toggle selection state
+                              filteredToolsList[index].isSelected =
+                                  !filteredToolsList[index].isSelected;
+                              // Add or remove selected tool from the list
+                              if (filteredToolsList[index].isSelected) {
+                                selectedToolsList.add(filteredToolsList[index]);
+                              } else {
+                                selectedToolsList
+                                    .remove(filteredToolsList[index]);
+                              }
+                            });
+                          },
+                        );
+                      },
                     ),
-                  )
-                ],
-              ),
-            ],
+                  ),
+                ),
+                const InterventionFileFormTitle(
+                  title: "Selected Tools",
+                ),
+                // Check if the selected tools list is empty
+                selectedToolsList.isEmpty
+                    // Display a message if no tools are selected
+                    ? const EmptySelectionContainer(
+                        message: "no tools has been selected yet !",
+                      )
+                    // Display the list of selected tools
+                    : SizedBox(
+                        width: double.infinity,
+                        height: 140,
+                        child: ListView.builder(
+                          itemExtent: 64,
+                          itemCount: selectedToolsList.length,
+                          itemBuilder: (context, index) => Card(
+                            child: ListTile(
+                                title: Text(
+                                  selectedToolsList[index].name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                      ),
+                                ),
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      selectedToolsList[index].isSelected =
+                                          false;
+                                      selectedToolsList
+                                          .remove(selectedToolsList[index]);
+                                    });
+                                  },
+                                  icon: const Icon(Icons.remove),
+                                )),
+                          ),
+                        ),
+                      ),
+                // Row widget to display confirm and cancel buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    // Button for registering
+                    SizedBox(
+                      width: 105,
+                      child: FilledButton(
+                        onPressed: () async {
+                          if (_formkey.currentState!.validate()) {
+                            //check if the tool or the spare parts selection list are empty
+                            //if empty (at least one) show a snack bar
+                            if (selectedSparePartsList.isEmpty ||
+                                selectedToolsList.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                      "please select spare parts and tools"),
+                                ),
+                              );
+                            } //if not empty (both)
+                            _formkey.currentState!.save();
+                            //Map the forcat to it value in day
+                            int forcast =
+                                PreventiveInterventionFile.mapTimePeriodToDays(
+                              selectedTimePeriod: _initialTimePeriod,
+                              customPeriodValue:
+                                  int.parse(_customDurationController.text),
+                            );
+                            //creating a document ID for the intervention file
+                            String fileID = const Uuid().v4();
+                            //
+                            await InterventionFileModel().addInterventionFileDB(
+                              equipmentID: widget.equipmentID,
+                              equipmentTagName: widget.equipmentTagName,
+                              equipmentStatus: widget.equipmentStatus,
+                              equipmentDiscipline: widget.equipmentDiscipline,
+                              fileID: fileID,
+                              fileName: _fileName,
+                              maintenanceType: _initialIntervnetionType,
+                              startingDay: _startingDateController.text,
+                              interventionTask: _interventionTask,
+                              mechanicalTechnician:
+                                  _isMechanicalTechnicianSelected,
+                              electricalTechnician:
+                                  _isElectricalTechnicianSelected,
+                              instrumentTechnician:
+                                  _isInstrumentTechnicianSelected,
+                              spareParts: selectedSparePartsList,
+                              tools: selectedToolsList,
+                              fileStatus: "In Progress",
+                              forecast: forcast,
+                              criticity: _initialCritciality,
+                              breakDownType: _initialBreakDownType,
+                              breakDownDescription: _breakDownDescription,
+                            );
+                          }
+                        },
+                        child: const Text("Register"),
+                      ),
+                    ),
+                    // Button for canceling
+                    SizedBox(
+                      width: 105,
+                      child: FilledButton(
+                        onPressed: () {},
+                        child: const Text("Cancel"),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

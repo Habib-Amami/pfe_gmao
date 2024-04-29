@@ -25,10 +25,10 @@ class _InterventionFileMenuState extends State<InterventionFileMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Equipment intervention files"),
-        automaticallyImplyLeading: true,
-      ),
+      // appBar: AppBar(
+      //   // title: const Text("Equipment intervention files"),
+      //   automaticallyImplyLeading: true,
+      // ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: currentPageIndex,
         onDestinationSelected: (int index) {
@@ -62,7 +62,9 @@ class _InterventionFileMenuState extends State<InterventionFileMenu> {
           equipmentDiscipline: widget.equipmentDiscipline,
           equipmentID: widget.equipmentID,
         ),
-        const InterventionFilesList(),
+        InterventionFilesList(
+          equipmentID: widget.equipmentID,
+        ),
       ][currentPageIndex],
     );
   }
