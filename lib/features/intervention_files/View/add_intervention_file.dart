@@ -1,28 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:pfe_gmao/features/intervention_files/View/widgets/empty_selection_container.dart';
-import 'package:pfe_gmao/features/intervention_files/View/widgets/list_header.dart';
-import 'package:pfe_gmao/features/intervention_files/View/widgets/spare_part_card.dart';
-import 'package:pfe_gmao/features/intervention_files/View/widgets/technician_card.dart';
-import 'package:pfe_gmao/features/intervention_files/View/widgets/tool_card.dart';
+import 'package:pfe_gmao/features/intervention_files/model/data_models/preventive_intervention_file.dart';
+import 'package:pfe_gmao/features/intervention_files/model/intervention_file_model.dart';
+import 'package:uuid/uuid.dart';
 
-import '../model/data_models/breakdown_types.dart';
-import '../model/data_models/criticality_levels_list.dart';
-import '../model/data_models/intervention_types_list.dart';
-import '../model/data_models/time_periods_list.dart';
-import '../model/spare_part.dart';
-import '../model/tool.dart';
+import '../model/constants/breakdown_types.dart';
+import '../model/constants/criticality_levels_list.dart';
+import '../model/constants/intervention_types_list.dart';
+import '../model/constants/time_periods_list.dart';
+import '../model/data_models/spare_part.dart';
+import '../model/data_models/tool.dart';
+import 'widgets/empty_selection_container.dart';
 import 'widgets/intervention_file_drop_down_menu.dart';
 import 'widgets/intervention_file_form_title.dart';
 import 'widgets/intervntion_file_form_files.dart';
+import 'widgets/list_header.dart';
+import 'widgets/spare_part_card.dart';
+import 'widgets/technician_card.dart';
+import 'widgets/tool_card.dart';
 
 class AddInterventionFile extends StatefulWidget {
+  final String equipmentID;
   final String equipmentTagName;
   final String equipmentStatus;
   final String equipmentDiscipline;
   const AddInterventionFile({
+    required this.equipmentID,
     required this.equipmentTagName,
     required this.equipmentStatus,
     required this.equipmentDiscipline,
@@ -37,50 +43,59 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
   // Form key for managing the state of the intervention file form
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
-  //variable for the initial value for drop down menu for the intervention type
-  /// initial value is "Preventive"
+  // Variable for the initial value for the intervention type dropdown menu
+  /// Default value is "Preventive"
   String _initialIntervnetionType = interventionTypes[1];
 
-  //variable for the initialvalue for drop down menu for the intervention period
-  /// initial value is "Daily"
+  // Variable for the initial value for the intervention period dropdown menu
+  /// Default value is "Daily"
   String _initialTimePeriod = timePeriods[0];
 
-  //variable for the initialvalue for drop down menu for the intervention Criticality
-  ///initial value is "Minor"
+  // Variable for the initial value for the intervention criticality dropdown menu
+  /// Default value is "Minor"
   String _initialCritciality = criticalityLevels[0];
 
   //variable for the initialvalue for drop down menu for the intervention breakdown type
-  ///initial value is "Minor"
+  ///initial value is "At the start"
   String _initialBreakDownType = breakdownTypes[0];
 
   //variable for the starting date
   DateTime? startingDate;
 
-  //controller for the starting date field
+  // Controller for the starting date field
   final TextEditingController _startingDateController = TextEditingController();
 
-  //controller for the starting date field
+  // Controller for the custom duration field
   final TextEditingController _customDurationController =
       TextEditingController();
 
-  //bool for the Mechanical Technician check box
+  // Boolean for the Mechanical Technician checkbox
   bool _isMechanicalTechnicianSelected = false;
 
-  //bool for the electrical Technician check box
+  // Boolean for the Electrical Technician checkbox
   bool _isElectricalTechnicianSelected = false;
 
-  //list of the spare parts selected by the user
-  List<SparePart> selectedSparePartsList = [];
-  //list of all the spare parts fetched from db
-  List<SparePart> sparePartsList = [];
-  //list for the spare parts for filting (by name)
-  List<SparePart> filteredSparePartsList = [];
+  // Boolean for the Instrument Technician checkbox
+  bool _isInstrumentTechnicianSelected = false;
 
-  // This function is called whenever the user filter tools
+  //variables for storing form values
+  String _fileName = ""; // Stores the file name
+  String _interventionTask = ""; // Stores the intervention task description
+  String _breakDownDescription = ""; // Stores the breakdown description
+
+  //
+  // List of the spare parts selected by the user
+  List<SparePart> selectedSparePartsList = [];
+  // List of all the spare parts fetched from the database
+  List<SparePart> sparePartsList = [];
+  // List for the spare parts for filtering (by name)
+  List<SparePart> filteredSparePartsList = [];
+  // Function to filter spare parts based on the entered keyword
   void filterSpareParts(String enteredKeyword) {
     List<SparePart> results = [];
     if (enteredKeyword.isEmpty) {
-      // if the search field is empty or only contains white-space, we'll display all Tools
+      // if the search field is empty or only contains white-space,
+      //we'll display all Tools
       results = sparePartsList;
     } else {
       results = sparePartsList
@@ -95,15 +110,16 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
       filteredSparePartsList = results;
     });
   }
+  //
 
-  //list of the tools selected by the user
+  //
+  // List of the tools selected by the user
   List<Tool> selectedToolsList = [];
-  //list of all the tools fetched from db
+  // List of all the tools fetched from the database
   List<Tool> toolsList = [];
-  //lust for the tools for filting (by name)
+  // List for the tools for filtering (by name)
   List<Tool> filteredToolsList = [];
-
-  // This function is called whenever the user filter tools
+  // Function to filter tools based on the entered keyword
   void filterTools(String enteredKeyword) {
     List<Tool> results = [];
     if (enteredKeyword.isEmpty) {
@@ -122,7 +138,9 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
       filteredToolsList = results;
     });
   }
+  //
 
+  // Function to fetch spare parts data from the database
   Future<List<SparePart>> getSpareParts() async {
     final CollectionReference<Map<String, dynamic>> collectionReference =
         FirebaseFirestore.instance.collection('Spare_Parts');
@@ -141,6 +159,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
     return sparePartsList;
   }
 
+  // Function to fetch tools data from the database
   Future<List<Tool>> getTools() async {
     final CollectionReference<Map<String, dynamic>> collectionReference =
         FirebaseFirestore.instance.collection('Tools');
@@ -159,6 +178,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
     return toolsList;
   }
 
+  // Function to fetch both spare parts and tools data from the database
   void fetchData() async {
     toolsList = await getTools();
     sparePartsList = await getSpareParts();
@@ -291,6 +311,9 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                   }
                   return null;
                 },
+                onSaved: (value) {
+                  _fileName = value!;
+                },
               ),
               const InterventionFileFormTitle(
                 title: "Maintenance Type",
@@ -388,17 +411,18 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                               "days",
                                             ),
                                           ),
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter
+                                                .digitsOnly
+                                          ],
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty) {
-                                              return "please provide a custopn duration or use a preset";
+                                              return "please provide a custom duration or use a preset";
                                             }
                                             if (int.parse(value) <= 0) {
                                               return "please provide a positive days count";
                                             }
-                                            // if (value.) {
-
-                                            // }
                                             return null;
                                           },
                                         ),
@@ -491,6 +515,9 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                             }
                             return null;
                           },
+                          onSaved: (value) {
+                            _breakDownDescription = value!;
+                          },
                         )
                       ],
                     ),
@@ -508,6 +535,12 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                       enabled: false,
                       hintText: "Pick a date from the calender",
                       prefixIcon: const Icon(Icons.timelapse_rounded),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "please provide a starting day";
+                        }
+                        return null;
+                      },
                     ),
                   ),
                   // Expanded widget to ensure the icon button takes up the remaining space
@@ -578,6 +611,9 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                   }
                   return null;
                 },
+                onSaved: (value) {
+                  _interventionTask = value!;
+                },
               ),
               const InterventionFileFormTitle(
                 title: "Maintenance technicians",
@@ -605,6 +641,18 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                   setState(() {
                     _isElectricalTechnicianSelected =
                         !_isElectricalTechnicianSelected;
+                  });
+                },
+              ),
+              // Card widget containing a CheckboxListTile for selecting Instrument Technician technician
+              TechnicianCard(
+                title: "Instrument Technician",
+                subtitle: "An instrument technician execute the intervention.",
+                checkboxValue: _isInstrumentTechnicianSelected,
+                onChanged: (value) {
+                  setState(() {
+                    _isInstrumentTechnicianSelected =
+                        !_isInstrumentTechnicianSelected;
                   });
                 },
               ),
@@ -723,7 +771,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                   width: double.infinity,
                   height: 200,
                   child: ListView.builder(
-                    itemCount: filteredToolsList.length + 1,
+                    itemCount: filteredToolsList.length,
                     itemExtent: 95,
                     itemBuilder: (context, index) {
                       return ToolCard(
@@ -798,7 +846,56 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                   SizedBox(
                     width: 105,
                     child: FilledButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        if (_formkey.currentState!.validate()) {
+                          //check if the tool or the spare parts selection list are empty
+                          //if empty (at least one) show a snack bar
+                          if (selectedSparePartsList.isEmpty ||
+                              selectedToolsList.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content:
+                                    Text("please select spare parts and tools"),
+                              ),
+                            );
+                          } //if not empty (both)
+                          _formkey.currentState!.save();
+                          //Map the forcat to it value in day
+                          int forcast =
+                              PreventiveInterventionFile.mapTimePeriodToDays(
+                            selectedTimePeriod: _initialTimePeriod,
+                            customPeriodValue:
+                                int.parse(_customDurationController.text),
+                          );
+                          //creating a document ID for the intervention file
+                          String fileID = const Uuid().v4();
+                          //
+                          await InterventionFileModel().addInterventionFileDB(
+                            equipmentID: widget.equipmentID,
+                            equipmentTagName: widget.equipmentTagName,
+                            equipmentStatus: widget.equipmentStatus,
+                            equipmentDiscipline: widget.equipmentDiscipline,
+                            fileID: fileID,
+                            fileName: _fileName,
+                            maintenanceType: _initialIntervnetionType,
+                            startingDay: _startingDateController.text,
+                            interventionTask: _interventionTask,
+                            mechanicalTechnician:
+                                _isMechanicalTechnicianSelected,
+                            electricalTechnician:
+                                _isElectricalTechnicianSelected,
+                            instrumentTechnician:
+                                _isInstrumentTechnicianSelected,
+                            spareParts: selectedSparePartsList,
+                            tools: selectedToolsList,
+                            fileStatus: "In Progress",
+                            forecast: forcast,
+                            criticity: _initialCritciality,
+                            breakDownType: _initialBreakDownType,
+                            breakDownDescription: _breakDownDescription,
+                          );
+                        }
+                      },
                       child: const Text("Register"),
                     ),
                   ),

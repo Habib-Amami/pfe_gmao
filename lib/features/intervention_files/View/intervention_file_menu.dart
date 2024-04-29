@@ -3,6 +3,8 @@ import 'package:pfe_gmao/features/intervention_files/View/intervention_files_lis
 import 'package:pfe_gmao/features/intervention_files/View/add_intervention_file.dart';
 
 class InterventionFileMenu extends StatefulWidget {
+  final String equipmentID;
+
   final String equipmentStatus;
   final String equipmentTagName;
   final String equipmentDiscipline;
@@ -11,6 +13,7 @@ class InterventionFileMenu extends StatefulWidget {
     required this.equipmentStatus,
     required this.equipmentTagName,
     required this.equipmentDiscipline,
+    required this.equipmentID,
   });
 
   @override
@@ -57,6 +60,7 @@ class _InterventionFileMenuState extends State<InterventionFileMenu> {
           equipmentStatus: widget.equipmentStatus,
           equipmentTagName: widget.equipmentTagName,
           equipmentDiscipline: widget.equipmentDiscipline,
+          equipmentID: widget.equipmentID,
         ),
         const InterventionFilesList(),
       ][currentPageIndex],

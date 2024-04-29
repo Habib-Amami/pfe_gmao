@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // Widget for displaying a form field for intervention input
 class InterventionFileFormField extends StatelessWidget {
@@ -20,6 +21,7 @@ class InterventionFileFormField extends StatelessWidget {
   final TextEditingController? controller; // Controller for controlling input
   final String? initialValue; // Initial value for the input field
   final int? maxLines;
+  final List<TextInputFormatter>? inputFormatters; //controlle the input format
 
   const InterventionFileFormField({
     this.validator,
@@ -39,6 +41,7 @@ class InterventionFileFormField extends StatelessWidget {
     this.onChanged,
     this.onFieldSubmitted,
     this.hintStyle,
+    this.inputFormatters,
   });
 
   @override
@@ -101,6 +104,7 @@ class InterventionFileFormField extends StatelessWidget {
         maxLines: maxLines,
         onChanged: onChanged,
         onFieldSubmitted: onFieldSubmitted,
+        inputFormatters: inputFormatters,
       ),
     );
   }

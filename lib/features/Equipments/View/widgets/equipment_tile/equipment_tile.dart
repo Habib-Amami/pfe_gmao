@@ -157,6 +157,7 @@ class EquipmentTile extends StatelessWidget {
                   equipmentDiscipline: equipment.Discipline,
                   equipmentStatus: equipment.Status,
                   equipmentTagName: equipment.TagName,
+                  equipmentID: equipment.id,
                 ),
               ),
             );
