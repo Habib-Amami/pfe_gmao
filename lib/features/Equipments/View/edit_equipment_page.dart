@@ -704,6 +704,16 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                                             contractURL:
                                                 widget.equipment.contract,
                                           );
+                                          Navigator.pop(context);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                '${tagNameController.text} deleted successfully',
+                                              ),
+                                            ),
+                                          );
+                                          Navigator.pop(context);
                                         },
                                         child: const Text("Confirm"),
                                       )
