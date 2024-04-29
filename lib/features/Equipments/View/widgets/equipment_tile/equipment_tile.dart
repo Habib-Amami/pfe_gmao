@@ -3,8 +3,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../../intervention_files/View/intervention_file_menu.dart';
 import '../../../model/data_models/equipment.dart';
-import '../../equipment_map.dart';
+import '../../equipment_map_view.dart';
 import '../alerts/equipment_location_permission_denied_alert.dart';
 import '../alerts/equipment_location_service_alert.dart';
 import 'equipment_tile_image.dart';
@@ -147,6 +148,23 @@ class EquipmentTile extends StatelessWidget {
             ).request();
           },
         ),
+        TextButton.icon(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => InterventionFileMenu(
+                  equipmentDiscipline: equipment.Discipline,
+                  equipmentStatus: equipment.Status,
+                  equipmentTagName: equipment.TagName,
+                  equipmentID: equipment.id,
+                ),
+              ),
+            );
+          },
+          icon: const Icon(Icons.file_open_rounded),
+          label: const Text("Open intervention files"),
+        )
       ],
     );
   }

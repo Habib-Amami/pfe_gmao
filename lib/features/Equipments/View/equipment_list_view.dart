@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../model/data_models/equipment.dart';
 import '../model/equipment_model.dart';
-import 'add equipment pages/add_equipment_page.dart';
-import 'edit_equipment_page.dart';
+import 'add_equipment_view.dart';
+import 'edit_equipment_view.dart';
 import 'widgets/equipment_tile/equipment_tile.dart';
 
 class EquipmentScreen extends StatefulWidget {
@@ -67,7 +66,8 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                           searchedTagName.clear();
                         });
                       },
-                      icon: const Icon(Icons.close))
+                      icon: const Icon(Icons.close),
+                    )
                   : null,
               hintText: "Search",
             ),
@@ -140,8 +140,6 @@ class EquipmentScreenState extends State<EquipmentScreen> {
               );
             }
             List equipments = snapshot.data?.docs ?? [];
-            var lastDocument = snapshot.data?.docs.last;
-            print(lastDocument);
 
             return equipments.isEmpty
                 ? const Padding(
@@ -165,20 +163,6 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                           ),
                           child: Column(
                             children: [
-                              // IconButton(
-                              //   onPressed: () async {
-                              //     equipments.add(
-                              //       FirebaseFirestore.instance
-                              //           .collection(equipmentCollectionRef)
-                              //           .startAfter([lastDocument])
-                              //           .orderBy('CreatedOn', descending: true)
-                              //           .limit(5)
-                              //           .snapshots(),
-                              //     );
-                              //     setState(() {});
-                              //   },
-                              //   icon: const Icon(Icons.add),
-                              // ),
                               isAdmin
                                   ? Slidable(
                                       endActionPane: ActionPane(
@@ -227,20 +211,6 @@ class EquipmentScreenState extends State<EquipmentScreen> {
                           ),
                           child: Column(
                             children: [
-                              // IconButton(
-                              //   onPressed: () async {
-                              //     equipments.add(
-                              //       FirebaseFirestore.instance
-                              //           .collection(equipmentCollectionRef)
-                              //           .startAfter([lastDocument])
-                              //           .orderBy('CreatedOn', descending: true)
-                              //           .limit(5)
-                              //           .snapshots(),
-                              //     );
-                              //     setState(() {});
-                              //   },
-                              //   icon: const Icon(Icons.add),
-                              // ),
                               isAdmin
                                   ? Slidable(
                                       endActionPane: ActionPane(
