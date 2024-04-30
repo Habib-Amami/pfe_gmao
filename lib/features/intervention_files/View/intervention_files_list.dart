@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../model/data_models/preventive_intervention_file.dart';
+import 'widgets/intervention_file_status.dart';
 
 class InterventionFilesList extends StatefulWidget {
   final String equipmentID;
@@ -108,141 +109,172 @@ class _InterventionFilesListState extends State<InterventionFilesList> {
                   child: ListView.builder(
                     itemCount: files.length,
                     itemBuilder: (context, index) {
-                      return Card(
-                        child: ExpansionTile(
-                          title: Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Text(
-                              "File Name :   ${files[index].fileName}",
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          subtitle: Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Text(
-                              "Status :   ${files[index].fileStatus}",
-                            ),
-                          ),
-                          expandedAlignment: Alignment.centerLeft,
-                          expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                          childrenPadding:
-                              const EdgeInsets.symmetric(horizontal: 16),
-                          children: [
-                            Padding(
+                      if (files.isEmpty) {
+                        return const Text("No files were found!");
+                      } else {
+                        return Card(
+                          child: ExpansionTile(
+                            title: Padding(
                               padding: const EdgeInsets.only(bottom: 8.0),
                               child: Text(
-                                "Discipline :   ${files[index].equipmentDiscipline}",
+                                "File Name :   ${files[index].fileName}",
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            Padding(
+                            subtitle: Padding(
                               padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Text(
-                                "Task :   ${files[index].interventionTask}",
-                                overflow: TextOverflow.ellipsis,
+                              child: InterventionFileStatus(
+                                status: files[index].fileStatus,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Text(
-                                "Starting Day :   ${files[index].startingDay}",
-                                overflow: TextOverflow.ellipsis,
+                            expandedAlignment: Alignment.centerLeft,
+                            expandedCrossAxisAlignment:
+                                CrossAxisAlignment.start,
+                            childrenPadding:
+                                const EdgeInsets.symmetric(horizontal: 16),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Text(
+                                  "Discipline :   ${files[index].equipmentDiscipline}",
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Text(
-                                "Forecast :   ${files[index].forecast} days",
-                                overflow: TextOverflow.ellipsis,
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Text(
+                                  "Task :   ${files[index].interventionTask}",
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Text(
-                                "Tools :   ${files[index].tools}",
-                                overflow: TextOverflow.ellipsis,
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Text(
+                                  "Starting Day :   ${files[index].startingDay}",
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Text(
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Text(
+                                  "Forecast :   ${files[index].forecast} days",
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Text(
+                                  "Tools :   ${files[index].tools}",
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              Text(
                                 "Spare Parts :   ${files[index].spareParts}",
                                 overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(bottom: 8.0),
-                              child: Text(
-                                "Technician :",
-                                overflow: TextOverflow.ellipsis,
+
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 8.0),
+                                child: Row(
+                                  children: [
+                                    const Text(
+                                      "Technicians :",
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 8, top: 18),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          files[index].mechanicalTechnician
+                                              ? const Text(
+                                                  "Mechanical technician")
+                                              : Container(),
+                                          files[index].electricalTechnician
+                                              ? const Text(
+                                                  'Electrical technician')
+                                              : Container(),
+                                          files[index].instrumentTechnician
+                                              ? const Text(
+                                                  'Instrument technician')
+                                              : Container(),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Table(
-                                border: TableBorder
-                                    .all(), // Add border to the table
-                                children: [
-                                  TableRow(
-                                    children: [
-                                      const TableCell(
-                                        child: Center(
-                                          child: Text("Mechanical Technician"),
-                                        ),
-                                      ),
-                                      TableCell(
-                                        child: Center(
-                                          child: Text(
-                                            files[index].mechanicalTechnician
-                                                ? 'Yes'
-                                                : 'No',
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  TableRow(
-                                    children: [
-                                      const TableCell(
-                                        child: Center(
-                                          child: Text("Electrical Technician"),
-                                        ),
-                                      ),
-                                      TableCell(
-                                        child: Center(
-                                          child: Text(
-                                            files[index].electricalTechnician
-                                                ? 'Yes'
-                                                : 'No',
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  TableRow(
-                                    children: [
-                                      const TableCell(
-                                        child: Center(
-                                          child: Text("Instrument Technician"),
-                                        ),
-                                      ),
-                                      TableCell(
-                                        child: Center(
-                                          child: Text(
-                                            files[index].instrumentTechnician
-                                                ? 'Yes'
-                                                : 'No',
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
+                              // Padding(
+                              //   padding: const EdgeInsets.only(bottom: 8.0),
+                              //   child: Table(
+                              //     border: TableBorder
+                              //         .all(), // Add border to the table
+                              //     children: [
+                              //       TableRow(
+                              //         children: [
+                              //           const TableCell(
+                              //             child: Center(
+                              //               child: Text("Mechanical Technician"),
+                              //             ),
+                              //           ),
+                              //           TableCell(
+                              //             child: Center(
+                              //               child: Text(
+                              //                 files[index].mechanicalTechnician
+                              //                     ? 'Yes'
+                              //                     : 'No',
+                              //               ),
+                              //             ),
+                              //           ),
+                              //         ],
+                              //       ),
+                              //       TableRow(
+                              //         children: [
+                              //           const TableCell(
+                              //             child: Center(
+                              //               child: Text("Electrical Technician"),
+                              //             ),
+                              //           ),
+                              //           TableCell(
+                              //             child: Center(
+                              //               child: Text(
+                              //                 files[index].electricalTechnician
+                              //                     ? 'Yes'
+                              //                     : 'No',
+                              //               ),
+                              //             ),
+                              //           ),
+                              //         ],
+                              //       ),
+                              //       TableRow(
+                              //         children: [
+                              //           const TableCell(
+                              //             child: Center(
+                              //               child: Text("Instrument Technician"),
+                              //             ),
+                              //           ),
+                              //           TableCell(
+                              //             child: Center(
+                              //               child: Text(
+                              //                 files[index].instrumentTechnician
+                              //                     ? 'Yes'
+                              //                     : 'No',
+                              //               ),
+                              //             ),
+                              //           ),
+                              //         ],
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
+                            ],
+                          ),
+                        );
+                      }
                     },
                   ),
                 );
