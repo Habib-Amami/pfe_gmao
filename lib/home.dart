@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:pfe_gmao/menu_screens/intervention_file.dart';
 
 import 'features/Equipments/View/equipment_list_view.dart';
 import 'menu_screens/calender_screen.dart';
@@ -20,13 +21,35 @@ class _HomeState extends State<Home> {
     EquipmentScreen(),
     CalenderScreen(),
     WorkOrderScreen(),
-    NotificationScreen(),
-    Setting(),
+    InterventionFileScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Mobile ORB'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const NotificationScreen()));
+            },
+            icon: const Icon(Ionicons.notifications),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Setting()));
+            },
+            icon: const Icon(
+              Icons.settings_rounded,
+            ),
+          ),
+        ],
+      ),
       bottomNavigationBar: NavigationBar(
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         onDestinationSelected: (int index) {
@@ -73,20 +96,10 @@ class _HomeState extends State<Home> {
           NavigationDestination(
             selectedIcon: Icon(Ionicons.notifications_outline),
             icon: Icon(
-              Ionicons.notifications_sharp,
+              Ionicons.file_tray_full,
             ),
-            label: "Notifications",
-            tooltip: "Notifications",
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(
-              Icons.settings_outlined,
-            ),
-            icon: Icon(
-              Icons.settings_rounded,
-            ),
-            label: "Settings",
-            tooltip: "Settings page",
+            label: "Inter. File",
+            tooltip: "Intervention File",
           ),
         ],
       ),
