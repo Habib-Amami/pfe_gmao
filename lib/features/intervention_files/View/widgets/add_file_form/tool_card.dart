@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../model/data_models/tool.dart';
+import '../../../model/data_models/tool.dart';
 
 // Define a custom widget called ToolCard
 //this widget will display a card for each Tool from the database

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:pfe_gmao/menu_screens/intervention_file.dart';
 
 import 'features/Equipments/View/equipment_list_view.dart';
 import 'menu_screens/calender_screen.dart';
+import 'menu_screens/intervention_file.dart';
 import 'menu_screens/notification_screen.dart';
 import 'menu_screens/settings.dart';
 import 'menu_screens/work_order_screen.dart';
@@ -19,30 +19,36 @@ class _HomeState extends State<Home> {
   bool isDarkMode = false;
   final List<Widget> menuScreens = const [
     EquipmentScreen(),
+    InterventionFileScreen(),
     CalenderScreen(),
     WorkOrderScreen(),
-    InterventionFileScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mobile ORB'),
+        title: const Text('Mobile ORM'),
         actions: [
           IconButton(
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const NotificationScreen()));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NotificationScreen(),
+                ),
+              );
             },
             icon: const Icon(Ionicons.notifications),
           ),
           IconButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const Setting()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Setting(),
+                ),
+              );
             },
             icon: const Icon(
               Icons.settings_rounded,
@@ -75,6 +81,14 @@ class _HomeState extends State<Home> {
             tooltip: "Equipment List",
           ),
           NavigationDestination(
+            selectedIcon: Icon(Ionicons.notifications_outline),
+            icon: Icon(
+              Ionicons.file_tray_full,
+            ),
+            label: "Inter.Files",
+            tooltip: "Intervention File",
+          ),
+          NavigationDestination(
             selectedIcon: Icon(
               Icons.tire_repair_outlined,
             ),
@@ -85,21 +99,14 @@ class _HomeState extends State<Home> {
             tooltip: "Tasks Calender",
           ),
           NavigationDestination(
-              selectedIcon: Icon(
-                Icons.webhook_outlined,
-              ),
-              icon: Icon(
-                Icons.webhook_rounded,
-              ),
-              label: "work order",
-              tooltip: "work flow order"),
-          NavigationDestination(
-            selectedIcon: Icon(Ionicons.notifications_outline),
-            icon: Icon(
-              Ionicons.file_tray_full,
+            selectedIcon: Icon(
+              Icons.webhook_outlined,
             ),
-            label: "Inter. File",
-            tooltip: "Intervention File",
+            icon: Icon(
+              Icons.webhook_rounded,
+            ),
+            label: "work order",
+            tooltip: "work flow order",
           ),
         ],
       ),

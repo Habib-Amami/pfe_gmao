@@ -1,11 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pfe_gmao/features/intervention_files/View/Equipment_Intervention_Files/files_list_tabs/equipment_curative_files_tab.dart';
 
-import '../../../firebase/cloud_firestore_references.dart';
-import '../model/data_models/preventive_intervention_file.dart';
-import 'widgets/intervention_file_status.dart';
+import 'files_list_tabs/equipment_preventive_files_tab.dart';
 
-class InterventionFilesList extends StatefulWidget {
+class InterventionFilesList extends StatelessWidget {
   final String equipmentID;
 
   const InterventionFilesList({
@@ -13,11 +11,6 @@ class InterventionFilesList extends StatefulWidget {
     required this.equipmentID,
   });
 
-  @override
-  State<InterventionFilesList> createState() => _InterventionFilesListState();
-}
-
-class _InterventionFilesListState extends State<InterventionFilesList> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -47,242 +40,12 @@ class _InterventionFilesListState extends State<InterventionFilesList> {
         ),
         body: TabBarView(
           children: [
-            StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection(equipmentCollectionRef)
-                  .doc(widget.equipmentID)
-                  .collection("preventive_intervention_files")
-                  .snapshots(),
-              builder: (context, snapshot) {
-                // Handle interruption of connection
-                if (snapshot.connectionState == ConnectionState.none) {
-                  return const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.error_outline,
-                          color: Colors.red,
-                          size: 50.0,
-                        ),
-                        SizedBox(height: 10.0),
-                        Text("Lost connection"),
-                      ],
-                    ),
-                  );
-                }
-                // Handle loading state
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircularProgressIndicator(),
-                        Text("Loading files ...")
-                      ],
-                    ),
-                  );
-                }
-                // Show error message if an error occurs
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // const CircularProgressIndicator(),
-                        Center(
-                          child: Text('Error: ${snapshot.error}'),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                List<PreventiveInterventionFile> files = snapshot.data!.docs
-                    .map(
-                      (document) => PreventiveInterventionFile.fromJson(
-                        document.data(),
-                      ),
-                    )
-                    .toList();
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: ListView.builder(
-                    itemCount: files.length,
-                    itemBuilder: (context, index) {
-                      if (files.isEmpty) {
-                        return const Text("No files were found!");
-                      } else {
-                        return Card(
-                          child: ExpansionTile(
-                            title: Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Text(
-                                "File Name :   ${files[index].fileName}",
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            subtitle: Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: InterventionFileStatus(
-                                status: files[index].fileStatus,
-                              ),
-                            ),
-                            expandedAlignment: Alignment.centerLeft,
-                            expandedCrossAxisAlignment:
-                                CrossAxisAlignment.start,
-                            childrenPadding:
-                                const EdgeInsets.symmetric(horizontal: 16),
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Text(
-                                  "Discipline :   ${files[index].equipmentDiscipline}",
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Text(
-                                  "Task :   ${files[index].interventionTask}",
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Text(
-                                  "Starting Day :   ${files[index].startingDay}",
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Text(
-                                  "Forecast :   ${files[index].forecast} days",
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Text(
-                                  "Tools :   ${files[index].tools}",
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Text(
-                                "Spare Parts :   ${files[index].spareParts}",
-                                overflow: TextOverflow.ellipsis,
-                              ),
-
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 8.0),
-                                child: Row(
-                                  children: [
-                                    const Text(
-                                      "Technicians :",
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8, top: 18),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          files[index].mechanicalTechnician
-                                              ? const Text(
-                                                  "Mechanical technician")
-                                              : Container(),
-                                          files[index].electricalTechnician
-                                              ? const Text(
-                                                  'Electrical technician')
-                                              : Container(),
-                                          files[index].instrumentTechnician
-                                              ? const Text(
-                                                  'Instrument technician')
-                                              : Container(),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              // Padding(
-                              //   padding: const EdgeInsets.only(bottom: 8.0),
-                              //   child: Table(
-                              //     border: TableBorder
-                              //         .all(), // Add border to the table
-                              //     children: [
-                              //       TableRow(
-                              //         children: [
-                              //           const TableCell(
-                              //             child: Center(
-                              //               child: Text("Mechanical Technician"),
-                              //             ),
-                              //           ),
-                              //           TableCell(
-                              //             child: Center(
-                              //               child: Text(
-                              //                 files[index].mechanicalTechnician
-                              //                     ? 'Yes'
-                              //                     : 'No',
-                              //               ),
-                              //             ),
-                              //           ),
-                              //         ],
-                              //       ),
-                              //       TableRow(
-                              //         children: [
-                              //           const TableCell(
-                              //             child: Center(
-                              //               child: Text("Electrical Technician"),
-                              //             ),
-                              //           ),
-                              //           TableCell(
-                              //             child: Center(
-                              //               child: Text(
-                              //                 files[index].electricalTechnician
-                              //                     ? 'Yes'
-                              //                     : 'No',
-                              //               ),
-                              //             ),
-                              //           ),
-                              //         ],
-                              //       ),
-                              //       TableRow(
-                              //         children: [
-                              //           const TableCell(
-                              //             child: Center(
-                              //               child: Text("Instrument Technician"),
-                              //             ),
-                              //           ),
-                              //           TableCell(
-                              //             child: Center(
-                              //               child: Text(
-                              //                 files[index].instrumentTechnician
-                              //                     ? 'Yes'
-                              //                     : 'No',
-                              //               ),
-                              //             ),
-                              //           ),
-                              //         ],
-                              //       ),
-                              //     ],
-                              //   ),
-                              // ),
-                            ],
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                );
-              },
+            EquipmentPreventiveFilesTab(
+              equipmentID: equipmentID,
             ),
-            Center(
-              child: Text("It's rainy here"),
-            ),
+            EquipmentCurativeFilesTab(
+              equipmentID: equipmentID,
+            )
           ],
         ),
       ),

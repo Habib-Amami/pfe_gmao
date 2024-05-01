@@ -3,7 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../../../intervention_files/View/intervention_file_menu.dart';
+import '../../../../intervention_files/View/Equipment_Intervention_Files/intervention_file_menu.dart';
 import '../../../model/data_models/equipment.dart';
 import '../../equipment_map_view.dart';
 import '../alerts/equipment_location_permission_denied_alert.dart';

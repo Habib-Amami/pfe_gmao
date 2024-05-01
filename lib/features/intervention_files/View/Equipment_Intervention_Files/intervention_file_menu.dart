@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pfe_gmao/features/intervention_files/View/intervention_files_list.dart';
-import 'package:pfe_gmao/features/intervention_files/View/add_intervention_file.dart';
+import 'intervention_files_list.dart';
+import 'add_intervention_file.dart';
 
 class InterventionFileMenu extends StatefulWidget {
   final String equipmentID;

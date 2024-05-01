@@ -5,22 +5,22 @@ import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:uuid/uuid.dart';
 
-import '../model/constants/breakdown_types.dart';
-import '../model/constants/criticality_levels_list.dart';
-import '../model/constants/intervention_types_list.dart';
-import '../model/constants/time_periods_list.dart';
-import '../model/data_models/preventive_intervention_file.dart';
-import '../model/data_models/spare_part.dart';
-import '../model/data_models/tool.dart';
-import '../model/intervention_file_model.dart';
-import 'widgets/empty_selection_container.dart';
-import 'widgets/intervention_file_drop_down_menu.dart';
-import 'widgets/intervention_file_form_title.dart';
-import 'widgets/intervntion_file_form_files.dart';
-import 'widgets/list_header.dart';
-import 'widgets/spare_part_card.dart';
-import 'widgets/technician_card.dart';
-import 'widgets/tool_card.dart';
+import '../../model/constants/breakdown_types.dart';
+import '../../model/constants/criticality_levels_list.dart';
+import '../../model/constants/intervention_types_list.dart';
+import '../../model/constants/time_periods_list.dart';
+import '../../model/data_models/preventive_intervention_file.dart';
+import '../../model/data_models/spare_part.dart';
+import '../../model/data_models/tool.dart';
+import '../../model/intervention_file_model.dart';
+import '../widgets/add_file_form/empty_selection_container.dart';
+import '../widgets/add_file_form/intervention_file_drop_down_menu.dart';
+import '../widgets/add_file_form/intervention_file_form_title.dart';
+import '../widgets/add_file_form/intervntion_file_form_files.dart';
+import '../widgets/add_file_form/list_header.dart';
+import '../widgets/add_file_form/spare_part_card.dart';
+import '../widgets/add_file_form/technician_card.dart';
+import '../widgets/add_file_form/tool_card.dart';
 
 class AddInterventionFile extends StatefulWidget {
   final String equipmentID;

@@ -49,6 +49,7 @@ class CurativeInterventionFile {
       'equipmentDiscipline': equipmentDiscipline,
       'fileID': fileID,
       'fileName': fileName,
+      'maintenanceType': maintenanceType,
       'criticity': criticity,
       'breakDownType': breakDownType,
       'breakDownDescription': breakDownDescription,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../model/data_models/spare_part.dart';
+import '../../../model/data_models/spare_part.dart';
 
 // Define a custom widget called SparePartCard
 //this widget will display a card for each SparePart from the database
