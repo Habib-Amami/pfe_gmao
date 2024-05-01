@@ -856,75 +856,115 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                         ),
                       ),
                 // Row widget to display confirm and cancel buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    // Button for registering
-                    SizedBox(
-                      width: 105,
-                      child: FilledButton(
-                        onPressed: () async {
-                          if (_formkey.currentState!.validate()) {
-                            //check if the tool or the spare parts selection list are empty
-                            //if empty (at least one) show a snack bar
-                            if (selectedSparePartsList.isEmpty ||
-                                selectedToolsList.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      "please select spare parts and tools"),
-                                ),
-                              );
-                            } //if not empty (both)
-                            _formkey.currentState!.save();
-                            //Map the forcat to it value in day
-                            int forcast =
-                                PreventiveInterventionFile.mapTimePeriodToDays(
-                              selectedTimePeriod: _initialTimePeriod,
-                              customPeriodValue:
-                                  int.parse(_customDurationController.text),
-                            );
-                            //creating a document ID for the intervention file
-                            String fileID = const Uuid().v4();
-                            //
-                            await InterventionFileModel().addInterventionFileDB(
-                              equipmentID: widget.equipmentID,
-                              equipmentTagName: widget.equipmentTagName,
-                              equipmentStatus: widget.equipmentStatus,
-                              equipmentDiscipline: widget.equipmentDiscipline,
-                              fileID: fileID,
-                              fileName: _fileName,
-                              maintenanceType: _initialIntervnetionType,
-                              startingDay: _startingDateController.text,
-                              interventionTask: _interventionTask,
-                              mechanicalTechnician:
-                                  _isMechanicalTechnicianSelected,
-                              electricalTechnician:
-                                  _isElectricalTechnicianSelected,
-                              instrumentTechnician:
-                                  _isInstrumentTechnicianSelected,
-                              spareParts: selectedSparePartsList,
-                              tools: selectedToolsList,
-                              fileStatus: "In Progress",
-                              forecast: forcast,
-                              criticity: _initialCritciality,
-                              breakDownType: _initialBreakDownType,
-                              breakDownDescription: _breakDownDescription,
-                            );
-                          }
+                Center(
+                  child: FilledButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text("Confirmation"),
+                            content: const Text(
+                              "Do you want to add this intervention file ?",
+                            ),
+                            actions: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text(
+                                      "Cancel",
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      if (_formkey.currentState!.validate()) {
+                                        //check if the tool or the spare parts selection list are empty
+                                        //if empty (at least one) show a snack bar
+                                        if (selectedSparePartsList.isEmpty ||
+                                            selectedToolsList.isEmpty) {
+                                          //close the confirmation alert
+                                          Navigator.pop(context);
+                                          //show snack bar with a message
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                "please select spare parts and tools",
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          //if not empty (both)
+                                          _formkey.currentState!.save();
+                                          //Map the forcat to it value in day
+                                          int forcast =
+                                              PreventiveInterventionFile
+                                                  .mapTimePeriodToDays(
+                                            selectedTimePeriod:
+                                                _initialTimePeriod,
+                                            customPeriodValue: int.parse(
+                                                _customDurationController.text),
+                                          );
+                                          //creating a document ID for the intervention file
+                                          String fileID = const Uuid().v4();
+                                          //add file to db
+                                          await InterventionFileModel()
+                                              .addInterventionFileDB(
+                                            equipmentID: widget.equipmentID,
+                                            equipmentTagName:
+                                                widget.equipmentTagName,
+                                            equipmentStatus:
+                                                widget.equipmentStatus,
+                                            equipmentDiscipline:
+                                                widget.equipmentDiscipline,
+                                            fileID: fileID,
+                                            fileName: _fileName,
+                                            maintenanceType:
+                                                _initialIntervnetionType,
+                                            startingDay:
+                                                _startingDateController.text,
+                                            interventionTask: _interventionTask,
+                                            mechanicalTechnician:
+                                                _isMechanicalTechnicianSelected,
+                                            electricalTechnician:
+                                                _isElectricalTechnicianSelected,
+                                            instrumentTechnician:
+                                                _isInstrumentTechnicianSelected,
+                                            spareParts: selectedSparePartsList,
+                                            tools: selectedToolsList,
+                                            fileStatus: "In Progress",
+                                            forecast: forcast,
+                                            criticity: _initialCritciality,
+                                            breakDownType:
+                                                _initialBreakDownType,
+                                            breakDownDescription:
+                                                _breakDownDescription,
+                                          );
+                                        }
+                                      } else {
+                                        //close the confirmation alert when for is not valid
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                    child: const Text("Confirm"),
+                                  )
+                                ],
+                              ),
+                            ],
+                          );
                         },
-                        child: const Text("Register"),
-                      ),
-                    ),
-                    // Button for canceling
-                    SizedBox(
-                      width: 105,
-                      child: FilledButton(
-                        onPressed: () {},
-                        child: const Text("Cancel"),
-                      ),
-                    )
-                  ],
+                      );
+                    },
+                    child: const Text("Add Intervention File"),
+                  ),
                 ),
               ],
             ),
