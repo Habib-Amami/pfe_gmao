@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
 import 'features/Equipments/View/equipment_list_view.dart';
+import 'features/intervention_files/View/Global_Intervention_Files/global_intervention_files_list.dart';
 import 'menu_screens/calender_screen.dart';
-import 'menu_screens/intervention_file.dart';
 import 'menu_screens/notification_screen.dart';
 import 'menu_screens/settings.dart';
 import 'menu_screens/work_order_screen.dart';
@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
   bool isDarkMode = false;
   final List<Widget> menuScreens = const [
     EquipmentScreen(),
-    InterventionFileScreen(),
+    GlobalInterventionFilesList(),
     CalenderScreen(),
     WorkOrderScreen(),
   ];
@@ -81,7 +81,9 @@ class _HomeState extends State<Home> {
             tooltip: "Equipment List",
           ),
           NavigationDestination(
-            selectedIcon: Icon(Ionicons.notifications_outline),
+            selectedIcon: Icon(
+              Ionicons.file_tray_stacked,
+            ),
             icon: Icon(
               Ionicons.file_tray_full,
             ),

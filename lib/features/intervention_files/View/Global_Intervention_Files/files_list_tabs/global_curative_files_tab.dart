@@ -2,24 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../../../../firebase/cloud_firestore_references.dart';
-import '../../../model/data_models/preventive_intervention_file.dart';
-import '../../widgets/preventive_intervention_file_card.dart';
+import '../../../model/data_models/curative_intervention_file.dart';
 
-class EquipmentPreventiveFilesTab extends StatelessWidget {
-  final String equipmentID;
-  const EquipmentPreventiveFilesTab({
-    super.key,
-    required this.equipmentID,
-  });
+class GlobalCurativeFilesTab extends StatelessWidget {
+  const GlobalCurativeFilesTab({super.key});
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
-          .collection(equipmentCollectionRef)
-          .doc(equipmentID)
-          .collection("preventive_intervention_files")
+          .collection("collective_curative_intervention_files")
           .snapshots(),
       builder: (context, snapshot) {
         // Handle interruption of connection
@@ -65,9 +57,9 @@ class EquipmentPreventiveFilesTab extends StatelessWidget {
             ),
           );
         }
-        List<PreventiveInterventionFile> files = snapshot.data!.docs
+        List<CurativeInterventionFile> files = snapshot.data!.docs
             .map(
-              (document) => PreventiveInterventionFile.fromJson(
+              (document) => CurativeInterventionFile.fromJson(
                 document.data(),
               ),
             )
@@ -83,7 +75,7 @@ class EquipmentPreventiveFilesTab extends StatelessWidget {
                   repeat: false,
                 ),
                 Text(
-                  "No Preventive interventions files found",
+                  "No Curative interventions files found",
                   style: Theme.of(context).textTheme.bodySmall,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -98,7 +90,7 @@ class EquipmentPreventiveFilesTab extends StatelessWidget {
                   repeat: false,
                 ),
                 Text(
-                  "No Preventive interventions files found",
+                  "No Curative interventions files found",
                   style: Theme.of(context).textTheme.bodySmall,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -111,21 +103,8 @@ class EquipmentPreventiveFilesTab extends StatelessWidget {
           child: ListView.builder(
             itemCount: files.length,
             itemBuilder: (context, index) {
-              return PreventiveInterventionFileCard(
-                fileName: files[index].fileName,
-                fileStatus: files[index].fileStatus,
-                equipmentDiscipline: files[index].equipmentDiscipline,
-                interventionTask: files[index].interventionTask,
-                startingDay: files[index].startingDay,
-                forecast: files[index].forecast,
-                spareParts: files[index].spareParts,
-                tools: files[index].tools,
-                isMechanicalTechnicianSelected:
-                    files[index].mechanicalTechnician,
-                isElectricalTechnicianSelected:
-                    files[index].electricalTechnician,
-                isInstrumentTechnicianSelected:
-                    files[index].instrumentTechnician,
+              return ListTile(
+                title: Text(files[index].fileName),
               );
             },
           ),

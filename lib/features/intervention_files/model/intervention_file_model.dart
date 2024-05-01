@@ -86,7 +86,9 @@ class InterventionFileModel {
       );
       //adding data to globle intervention files collection
       batch.set(
-        fireStore.collection("intervention_files").doc(fileID),
+        fireStore
+            .collection("collective_curative_intervention_files")
+            .doc(fileID),
         interventionFile.toJson(),
       );
       // Commit the batch
@@ -122,7 +124,9 @@ class InterventionFileModel {
       );
       //adding data to globle intervention files collection
       batch.set(
-        fireStore.collection("intervention_files").doc(fileID),
+        fireStore
+            .collection("collective_preventive_intervention_files")
+            .doc(fileID),
         interventionFile.toJson(),
       );
       // Commit the batch
