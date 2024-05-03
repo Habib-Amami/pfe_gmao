@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -918,6 +919,9 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                           //add file to db
                                           await InterventionFileModel()
                                               .addInterventionFileDB(
+                                            creatorID: FirebaseAuth
+                                                .instance.currentUser!.uid,
+                                            createdAt: Timestamp.now(),
                                             equipmentID: widget.equipmentID,
                                             equipmentTagName:
                                                 widget.equipmentTagName,
@@ -947,7 +951,17 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                                 _initialBreakDownType,
                                             breakDownDescription:
                                                 _breakDownDescription,
-                                          );
+                                          )
+                                              .then((_) {
+                                            Navigator.pop(context);
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    "intervention file added successfully"),
+                                              ),
+                                            );
+                                          });
                                         }
                                       } else {
                                         //close the confirmation alert when for is not valid

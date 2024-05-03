@@ -10,6 +10,8 @@ import 'data_models/tool.dart';
 class InterventionFileModel {
   //add function
   Future<void> addInterventionFileDB({
+    required String creatorID,
+    required Timestamp createdAt,
     required String equipmentID,
     required String equipmentTagName,
     required String equipmentStatus,
@@ -56,6 +58,8 @@ class InterventionFileModel {
     //maintenance type "Curative"
     if (maintenanceType == interventionTypes[0]) {
       CurativeInterventionFile interventionFile = CurativeInterventionFile(
+        creatorID: creatorID,
+        createdAt: createdAt,
         equipmentID: equipmentID,
         equipmentTagName: equipmentTagName,
         equipmentStatus: equipmentStatus,
@@ -87,7 +91,9 @@ class InterventionFileModel {
       //adding data to globle intervention files collection
       batch.set(
         fireStore
-            .collection("collective_curative_intervention_files")
+            .collection(
+              "collective_${equipmentDiscipline}_curative_intervention_files",
+            )
             .doc(fileID),
         interventionFile.toJson(),
       );
@@ -96,6 +102,8 @@ class InterventionFileModel {
     } else {
       //maintenance type "Preventive"
       PreventiveInterventionFile interventionFile = PreventiveInterventionFile(
+        creatorID: creatorID,
+        createdAt: createdAt,
         equipmentID: equipmentID,
         equipmentTagName: equipmentTagName,
         equipmentStatus: equipmentStatus,
@@ -125,7 +133,9 @@ class InterventionFileModel {
       //adding data to globle intervention files collection
       batch.set(
         fireStore
-            .collection("collective_preventive_intervention_files")
+            .collection(
+              "collective_${equipmentDiscipline}_preventive_intervention_files",
+            )
             .doc(fileID),
         interventionFile.toJson(),
       );

@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class CurativeInterventionFile {
+  final String creatorID;
+  final Timestamp createdAt;
   final String equipmentID;
   final String equipmentTagName;
   final String equipmentStatus;
@@ -19,6 +23,8 @@ class CurativeInterventionFile {
   final String fileStatus;
 
   CurativeInterventionFile({
+    required this.creatorID,
+    required this.createdAt,
     required this.equipmentID,
     required this.equipmentTagName,
     required this.equipmentStatus,
@@ -43,6 +49,8 @@ class CurativeInterventionFile {
   // toJson method to convert object to JSON
   Map<String, dynamic> toJson() {
     return {
+      'creatorID': creatorID,
+      'createdAt': createdAt,
       'equipmentID': equipmentID,
       'equipmentTagName': equipmentTagName,
       'equipmentStatus': equipmentStatus,
@@ -67,6 +75,8 @@ class CurativeInterventionFile {
   // fromJson method to create object from JSON
   factory CurativeInterventionFile.fromJson(Map<String, dynamic> json) {
     return CurativeInterventionFile(
+      creatorID: json['creatorID'],
+      createdAt: json['createdAt'] as Timestamp,
       equipmentID: json['equipmentID'],
       equipmentTagName: json['equipmentTagName'],
       equipmentStatus: json['equipmentStatus'],

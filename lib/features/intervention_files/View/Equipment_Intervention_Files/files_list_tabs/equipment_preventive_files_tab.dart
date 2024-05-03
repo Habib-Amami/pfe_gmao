@@ -79,7 +79,7 @@ class EquipmentPreventiveFilesTab extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Lottie.asset(
-                  "assets/animations/no_IF_ligth.json",
+                  "assets/animations/no_file_found_light.json",
                   repeat: false,
                 ),
                 Text(
@@ -94,7 +94,7 @@ class EquipmentPreventiveFilesTab extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Lottie.asset(
-                  "assets/animations/no_IF_dark.json",
+                  "assets/animations/no_file_found_dark.json",
                   repeat: false,
                 ),
                 Text(
