@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'files_list_tabs/global_curative_files_tab.dart';
-import 'files_list_tabs/global_preventive_files_tab.dart';
+import '../../model/constants/intervention_types_list.dart';
+import 'nested_intervention_files_tab.dart';
 
 class GlobalInterventionFilesList extends StatefulWidget {
   const GlobalInterventionFilesList({super.key});
@@ -12,20 +12,28 @@ class GlobalInterventionFilesList extends StatefulWidget {
 }
 
 class _GlobalInterventionFilesListState
-    extends State<GlobalInterventionFilesList> {
+    extends State<GlobalInterventionFilesList> with TickerProviderStateMixin {
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Intervention Files List",
-            style: TextStyle(color: Theme.of(context).colorScheme.primary),
-          ),
-          centerTitle: true,
-          automaticallyImplyLeading: true,
-          bottom: const TabBar(tabs: [
+    return Column(
+      children: <Widget>[
+        TabBar(
+          controller: _tabController,
+          tabs: const [
             Tab(
               icon: Icon(
                 Icons.medical_services,
@@ -38,15 +46,51 @@ class _GlobalInterventionFilesListState
               ),
               text: "Curative",
             ),
-          ]),
-        ),
-        body: const TabBarView(
-          children: [
-            GlobalPreventiveFilesTab(),
-            GlobalCurativeFilesTab(),
           ],
         ),
-      ),
+        Expanded(
+          child: TabBarView(
+            controller: _tabController,
+            children: [
+              NestedCurativeTab(
+                interventionType: interventionTypes[1], //"Preventive"
+              ),
+              NestedCurativeTab(
+                interventionType: interventionTypes[0], // "Curative"
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
+
+
+// TabBar(
+//             tabs: [
+//               Tab(
+//                 icon: Icon(
+//                   Icons.medical_services,
+//                 ),
+//                 text: "Preventive",
+//               ),
+//               Tab(
+//                 icon: Icon(
+//                   Icons.healing,
+//                 ),
+//                 text: "Curative",
+//               ),
+//             ],
+//           ),
+//         ),
+//         body: TabBarView(
+//           children: [
+//             NestedCurativeTab(
+//               interventionType: interventionTypes[1], //"Preventive"
+//             ),
+//             NestedCurativeTab(
+//               interventionType: interventionTypes[0], // "Curative"
+//             ),
+//           ],
+//         ),

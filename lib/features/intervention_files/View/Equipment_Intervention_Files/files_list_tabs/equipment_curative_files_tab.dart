@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pfe_gmao/features/intervention_files/model/constants/intervention_types_list.dart';
 
 import '../../../../../firebase/cloud_firestore_references.dart';
 import '../../../model/data_models/curative_intervention_file.dart';
@@ -19,7 +20,7 @@ class EquipmentCurativeFilesTab extends StatelessWidget {
       stream: FirebaseFirestore.instance
           .collection(equipmentCollectionRef)
           .doc(equipmentID)
-          .collection("curative_intervention_files")
+          .collection("${interventionTypes[0]}_intervention_files")
           .snapshots(),
       builder: (context, snapshot) {
         // Handle interruption of connection

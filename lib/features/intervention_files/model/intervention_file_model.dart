@@ -84,7 +84,7 @@ class InterventionFileModel {
         fireStore
             .collection(equipmentCollectionRef)
             .doc(equipmentID)
-            .collection("curative_intervention_files")
+            .collection("${interventionTypes[0]}_intervention_files")
             .doc(fileID),
         interventionFile.toJson(),
       );
@@ -92,7 +92,7 @@ class InterventionFileModel {
       batch.set(
         fireStore
             .collection(
-              "collective_${equipmentDiscipline}_curative_intervention_files",
+              "collective_${equipmentDiscipline}_${interventionTypes[0]}_intervention_files",
             )
             .doc(fileID),
         interventionFile.toJson(),
@@ -121,12 +121,12 @@ class InterventionFileModel {
         tools: toolsNames,
         fileStatus: fileStatus,
       );
-      //adding data to the equipment curative intervention files
+      //adding data to the equipment preventive intervention files
       batch.set(
         fireStore
             .collection(equipmentCollectionRef)
             .doc(equipmentID)
-            .collection("preventive_intervention_files")
+            .collection("${interventionTypes[1]}_intervention_files")
             .doc(fileID),
         interventionFile.toJson(),
       );
@@ -134,7 +134,7 @@ class InterventionFileModel {
       batch.set(
         fireStore
             .collection(
-              "collective_${equipmentDiscipline}_preventive_intervention_files",
+              "collective_${equipmentDiscipline}_${interventionTypes[1]}_intervention_files",
             )
             .doc(fileID),
         interventionFile.toJson(),
