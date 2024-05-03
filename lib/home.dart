@@ -1,8 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'features/Equipments/View/equipment_list_view.dart';
 import 'features/intervention_files/View/Global_Intervention_Files/global_intervention_files_list.dart';
+import 'firebase/cloud_firestore_references.dart';
 import 'menu_screens/calender_screen.dart';
 import 'menu_screens/notification_screen.dart';
 import 'menu_screens/settings.dart';
@@ -23,6 +28,31 @@ class _HomeState extends State<Home> {
     CalenderScreen(),
     WorkOrderScreen(),
   ];
+
+  void getFCMtoken() async {
+    await Permission.notification.onGrantedCallback(
+      () async {
+        String? FCMtoken = await FirebaseMessaging.instance.getToken();
+        if (FCMtoken != null) {
+          FirebaseFirestore.instance
+              .collection(userCollectionRef)
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .update(
+            {
+              "FCMtoken": FCMtoken,
+            },
+          );
+          print(FCMtoken);
+        }
+      },
+    ).request();
+  }
+
+  @override
+  void initState() {
+    getFCMtoken();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

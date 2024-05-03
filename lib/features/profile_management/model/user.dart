@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Enum to represent user roles
@@ -17,22 +19,23 @@ extension RolesToString on Roles {
 
 // Model class representing a user
 class UserModel {
-  String userName;
-  String email;
-  String phoneNumber;
-  String photoURL;
-  Roles role;
-  String serialNumber;
+  final String userName;
+  final String email;
+  final String phoneNumber;
+  final String photoURL;
+  final Roles role;
+  final String serialNumber;
+  final String FCMtoken;
 
   // Constructor for creating a UserModel instance
-  UserModel({
-    required this.userName,
-    required this.email,
-    required this.phoneNumber,
-    required this.photoURL,
-    required this.role,
-    required this.serialNumber,
-  });
+  UserModel(
+      {required this.userName,
+      required this.email,
+      required this.phoneNumber,
+      required this.photoURL,
+      required this.role,
+      required this.serialNumber,
+      required this.FCMtoken});
 
   // Factory method to create a UserModel instance from Firestore data
   factory UserModel.fromFirestore(
@@ -47,6 +50,7 @@ class UserModel {
       role: _parseRole(data?['role']),
       phoneNumber: data?['phoneNumber'] as String,
       serialNumber: data?['serialNumber'] as String,
+      FCMtoken: data?["FCMtoken"] as String,
     );
   }
 
@@ -91,6 +95,7 @@ class UserModel {
       'photoURL': photoURL,
       'role': role.toShortString(),
       'serialNumber': serialNumber,
+      'FCMtoken': FCMtoken,
     };
   }
 }
