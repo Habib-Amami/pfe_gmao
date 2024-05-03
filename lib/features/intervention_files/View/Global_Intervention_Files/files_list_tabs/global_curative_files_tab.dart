@@ -105,6 +105,7 @@ class GlobalCurativeFilesTab extends StatelessWidget {
             itemBuilder: (context, index) {
               return ListTile(
                 title: Text(files[index].fileName),
+                subtitle: Text(files[index].fileStatus),
               );
             },
           ),
