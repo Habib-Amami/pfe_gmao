@@ -20,7 +20,7 @@ class ProfileController {
   // Update the user's username.
   Future<void> updateUserName({required String newUserName}) async {
     try {
-      await _profileModel.updateUserName(newUserName: newUserName);
+      await _profileModel.updateUserNameDB(newUserName: newUserName);
     } catch (e) {
       rethrow;
     }
@@ -29,7 +29,7 @@ class ProfileController {
   // Update the user's phone number
   Future<void> updatePhoneNumber({required String newPhoneNumber}) async {
     try {
-      await _profileModel.updatePhoneNumber(newPhoneNumber: newPhoneNumber);
+      await _profileModel.updatePhoneNumberDB(newPhoneNumber: newPhoneNumber);
     } catch (e) {
       rethrow;
     }
@@ -39,7 +39,7 @@ class ProfileController {
   Future<void> updateEmail({
     required String newEmail,
   }) async {
-    await _profileModel.updateEmail(
+    await _profileModel.updateEmailDB(
       newEmail: newEmail,
     );
   }
@@ -47,7 +47,7 @@ class ProfileController {
   // Update the user's password
   Future<void> updatePassword({required String newPassword}) async {
     try {
-      await _profileModel.updatePassword(
+      await _profileModel.updatePasswordDB(
         newPassword: newPassword,
       );
     } catch (e) {
@@ -61,14 +61,14 @@ class ProfileController {
     required String profilePictureRef,
     required File profilePicture,
   }) async {
-    return await _profileModel.uploadProfilePicture(
+    return await _profileModel.uploadProfilePictureDB(
       profilePictureRef: profilePictureRef,
       profilePicture: profilePicture,
     );
   }
 
   Future<void> updatePhotoURL({required String newPhotoURL}) async {
-    await _profileModel.updatePhotoURL(
+    await _profileModel.updatePhotoURLDB(
       newPhotoURL: newPhotoURL,
     );
   }

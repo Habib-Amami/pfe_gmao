@@ -144,16 +144,29 @@ class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
               child: FilledButton(
                 onPressed: () async {
                   if (imageFile != null) {
-                    // Upload and update the new profile picture URL
-                    String profileImageURL =
-                        await _profileController.uploadProfilePicture(
-                      profilePictureRef:
-                          "${widget.serialNumber}_profile_picture",
-                      profilePicture: imageFile!,
-                    );
-                    await _profileController.updatePhotoURL(
-                      newPhotoURL: profileImageURL,
-                    );
+                    try {
+                      // Upload and update the new profile picture URL
+                      String profileImageURL =
+                          await _profileController.uploadProfilePicture(
+                        profilePictureRef:
+                            "${widget.serialNumber}_profile_picture",
+                        profilePicture: imageFile!,
+                      );
+                      await _profileController.updatePhotoURL(
+                        newPhotoURL: profileImageURL,
+                      );
+                    } catch (e) {
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                "Profile picture update failed. Please try again later."),
+                          ),
+                        );
+                      }
+                    }
+
                     if (context.mounted) {
                       Navigator.pop(context);
                     }

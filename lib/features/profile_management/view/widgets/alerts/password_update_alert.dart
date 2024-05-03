@@ -149,7 +149,7 @@ class _AlertState extends State<PasswordUpdateAlert> {
                   await _profileController.updatePassword(
                     newPassword: _updatedPassword,
                   );
-                } on FirebaseAuthMultiFactorException catch (e) {
+                } on FirebaseAuthException catch (e) {
                   if (context.mounted) {
                     // Display an error message as a snackbar for multi-factor authentication
                     ScaffoldMessenger.of(context).showSnackBar(

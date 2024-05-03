@@ -28,7 +28,7 @@ class ProfileModel {
     );
   }
 
-  Future<void> updateUserName({required String newUserName}) async {
+  Future<void> updateUserNameDB({required String newUserName}) async {
     await _usersCollection.update({usernameFieldRef: newUserName});
     await FirebaseService.instance.authInstance.currentUser!.updateDisplayName(
       newUserName,
@@ -37,7 +37,9 @@ class ProfileModel {
         .update({updateAtFieldRef: FieldValue.serverTimestamp()});
   }
 
-  Future<void> updateEmail({required String newEmail}) async {
+  Future<void> updateEmailDB({
+    required String newEmail,
+  }) async {
     await FirebaseService.instance.authInstance.currentUser!
         .verifyBeforeUpdateEmail(
           newEmail,
@@ -51,13 +53,17 @@ class ProfileModel {
         .update({updateAtFieldRef: FieldValue.serverTimestamp()});
   }
 
-  Future<void> updatePassword({required String newPassword}) async {
+  Future<void> updatePasswordDB({
+    required String newPassword,
+  }) async {
     await FirebaseService.instance.authInstance.currentUser!.updatePassword(
       newPassword,
     );
   }
 
-  Future<void> updatePhoneNumber({required String newPhoneNumber}) async {
+  Future<void> updatePhoneNumberDB({
+    required String newPhoneNumber,
+  }) async {
     await _usersCollection.update(
       {
         phoneNumberFieldRef: newPhoneNumber,
@@ -69,7 +75,7 @@ class ProfileModel {
 
   // Method to upload the selected profile picture to Firebase Storage and
   //get it doawload URL
-  Future<String> uploadProfilePicture({
+  Future<String> uploadProfilePictureDB({
     required String profilePictureRef,
     required File profilePicture,
   }) async {
@@ -88,7 +94,7 @@ class ProfileModel {
     return await imageToUploadRef.getDownloadURL();
   }
 
-  Future<void> updatePhotoURL({required String newPhotoURL}) async {
+  Future<void> updatePhotoURLDB({required String newPhotoURL}) async {
     await _usersCollection.update(
       {
         photoURLFieldRef: newPhotoURL,
