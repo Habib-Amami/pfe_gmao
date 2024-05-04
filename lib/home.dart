@@ -1,17 +1,15 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'features/Equipments/View/equipment_list_view.dart';
 import 'features/intervention_files/View/Global_Intervention_Files/global_intervention_files_list.dart';
 import 'firebase/cloud_firestore_references.dart';
 import 'menu_screens/calender_screen.dart';
-import 'menu_screens/notification_screen.dart';
+import 'features/notifications/view/notification_screen.dart';
 import 'menu_screens/settings.dart';
 import 'menu_screens/work_order_screen.dart';
 
@@ -32,37 +30,20 @@ class _HomeState extends State<Home> {
   ];
 
   void getFCMtoken() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    () async {
       String? FCMtoken = await FirebaseMessaging.instance.getToken();
-
       if (FCMtoken != null) {
-        String userId = FirebaseAuth.instance.currentUser!.uid;
-
-        // Update the FCM token in Firestore
-        await FirebaseFirestore.instance
+        FirebaseFirestore.instance
             .collection(userCollectionRef)
-            .doc(userId)
-            .update({
-          "FCMtoken": FCMtoken,
-        });
-
-        if (kDebugMode) {
-          print("Token updated for user $userId: $FCMtoken");
-        }
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update(
+          {
+            "FCMtoken": FCMtoken,
+          },
+        );
+        print('my_token: $FCMtoken');
       }
-    }
+    };
   }
 
   @override
