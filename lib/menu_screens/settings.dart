@@ -34,29 +34,22 @@ class _SettingsState extends State<Setting> {
         else {
           UserModel currentUser = UserModel.fromFirestore(snapshot.data!, null);
           return Scaffold(
-            appBar: AppBar(
-              title: const Text("Settings"),
-              titleTextStyle: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // const Text(
-                    //   "Settings",
-                    //   style: TextStyle(
-                    //     fontSize: 36,
-                    //     fontWeight: FontWeight.bold,
-                    //   ),
-                    // ),
-                    // const SizedBox(
-                    //   height: 40,
-                    // ),
+                    const Text(
+                      "Settings",
+                      style: TextStyle(
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
                     const Text(
                       "Account",
                       style: TextStyle(
