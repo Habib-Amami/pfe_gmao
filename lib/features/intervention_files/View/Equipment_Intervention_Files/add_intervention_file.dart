@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:uuid/uuid.dart';
@@ -856,6 +860,50 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                           ),
                         ),
                       ),
+                ElevatedButton(
+                  onPressed: () async {
+                    // Define FCM endpoint
+                    final url =
+                        Uri.parse('https://fcm.googleapis.com/fcm/send');
+
+                    // Define FCM message
+                    final payload = {
+                      'notification': {
+                        'title': 'test notification',
+                        'body': 'test body',
+                      },
+                      'to':
+                          'eC-TEIQxSKK91PHcLSs3LN:APA91bHrgpLPrBjHO2Md2zZx_dJaSkBeg-aPPb9idxz1MfubLHaoYal-jnQOe1U1dQ3D2Y2T98NXrqO9uDxXtQfb0w0He78ZQXvqBT1Ds8yyw990flWwx-SPGh0Vvo5WIhnrFq6wiNDC', // FCM token of the device
+                    };
+
+                    // Encode FCM message to JSON
+                    final jsonPayload = json.encode(payload);
+
+                    // Make POST request to FCM endpoint
+                    final http.Response response = await http.post(
+                      url,
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'authorization':
+                            'key=AAAA9fFEmCY:APA91bEy-GjdAEtorrreIqwoyauRzSs3lxAQadTcloqMxyaXzhTSs8Tik7ZB_B0E1vyv-SY3D8TJ7iOIv5J9-4UssDefCblAHGnhjLA6I6iIl5o2-cnN26vp8sH_6ts68S4Zw_YijO2l', // Server key from Firebase Console
+                      },
+                      body: jsonPayload,
+                    );
+                    // Check response status
+                    if (response.statusCode == 200) {
+                      if (kDebugMode) {
+                        print('FCM notification sent successfully');
+                      }
+                    } else {
+                      if (kDebugMode) {
+                        print(
+                            'Failed to send FCM notification. Status code: ${response.statusCode}');
+                        print('Response body: ${response.body}');
+                      }
+                    }
+                  },
+                  child: Text("not"),
+                ),
                 // Row widget to display confirm and cancel buttons
                 Center(
                   child: FilledButton(

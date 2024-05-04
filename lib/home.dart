@@ -1,9 +1,11 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'features/Equipments/View/equipment_list_view.dart';
 import 'features/intervention_files/View/Global_Intervention_Files/global_intervention_files_list.dart';
@@ -30,22 +32,37 @@ class _HomeState extends State<Home> {
   ];
 
   void getFCMtoken() async {
-    await Permission.notification.onGrantedCallback(
-      () async {
-        String? FCMtoken = await FirebaseMessaging.instance.getToken();
-        if (FCMtoken != null) {
-          FirebaseFirestore.instance
-              .collection(userCollectionRef)
-              .doc(FirebaseAuth.instance.currentUser!.uid)
-              .update(
-            {
-              "FCMtoken": FCMtoken,
-            },
-          );
-          print(FCMtoken);
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      String? FCMtoken = await FirebaseMessaging.instance.getToken();
+
+      if (FCMtoken != null) {
+        String userId = FirebaseAuth.instance.currentUser!.uid;
+
+        // Update the FCM token in Firestore
+        await FirebaseFirestore.instance
+            .collection(userCollectionRef)
+            .doc(userId)
+            .update({
+          "FCMtoken": FCMtoken,
+        });
+
+        if (kDebugMode) {
+          print("Token updated for user $userId: $FCMtoken");
         }
-      },
-    ).request();
+      }
+    }
   }
 
   @override
