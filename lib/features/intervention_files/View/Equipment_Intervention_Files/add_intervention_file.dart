@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:pfe_gmao/features/intervention_files/controller/intervention_file_controller.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../../firebase/cloud_firestore_references.dart';
 import '../../../notifications/model/notification_model.dart';
 import '../../model/constants/breakdown_types.dart';
 import '../../model/constants/criticality_levels_list.dart';
@@ -15,7 +15,6 @@ import '../../model/constants/time_periods_list.dart';
 import '../../model/data_models/preventive_intervention_file.dart';
 import '../../model/data_models/spare_part.dart';
 import '../../model/data_models/tool.dart';
-import '../../model/intervention_file_model.dart';
 import '../widgets/add_file_form/empty_selection_container.dart';
 import '../widgets/add_file_form/intervention_file_drop_down_menu.dart';
 import '../widgets/add_file_form/intervention_file_form_title.dart';
@@ -43,6 +42,10 @@ class AddInterventionFile extends StatefulWidget {
 }
 
 class _AddInterventionFileState extends State<AddInterventionFile> {
+  //Creating an instance of the intervention file controller
+  final InterventionFileController _interventionFileController =
+      InterventionFileController();
+
   // Form key for managing the state of the intervention file form
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
@@ -918,108 +921,111 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                           );
                                           //creating a document ID for the intervention file
                                           String fileID = const Uuid().v4();
-                                          //add file to db
-                                          await InterventionFileModel()
-                                              .addInterventionFileDB(
-                                            creatorID: FirebaseAuth
-                                                .instance.currentUser!.uid,
-                                            createdAt: Timestamp.now(),
-                                            equipmentID: widget.equipmentID,
-                                            equipmentTagName:
-                                                widget.equipmentTagName,
-                                            equipmentStatus:
-                                                widget.equipmentStatus,
-                                            equipmentDiscipline:
-                                                widget.equipmentDiscipline,
-                                            fileID: fileID,
-                                            fileName: _fileName,
-                                            maintenanceType:
-                                                _initialIntervnetionType,
-                                            startingDay:
-                                                _startingDateController.text,
-                                            interventionTask: _interventionTask,
-                                            mechanicalTechnician:
-                                                _isMechanicalTechnicianSelected,
-                                            electricalTechnician:
-                                                _isElectricalTechnicianSelected,
-                                            instrumentTechnician:
-                                                _isInstrumentTechnicianSelected,
-                                            spareParts: selectedSparePartsList,
-                                            tools: selectedToolsList,
-                                            fileStatus: "In Progress",
-                                            forecast: forcast,
-                                            criticity: _initialCritciality,
-                                            breakDownType:
-                                                _initialBreakDownType,
-                                            breakDownDescription:
-                                                _breakDownDescription,
-                                          );
-                                          //getting the list of admins that will be notified
-                                          List<String> adminsTokens =
-                                              await NotificationsModel()
-                                                  .getAdminsTokens(
-                                            equipmentDiscipline:
-                                                widget.equipmentDiscipline,
-                                          );
-                                          //creating a notification title
-                                          String notifTitle =
-                                              "Requesting Validation";
-                                          String notifBody =
-                                              "an new intervention file for ${widget.equipmentTagName} was created";
-                                          //getting the current user ID
-                                          String userId = FirebaseAuth
-                                              .instance.currentUser!.uid;
-                                          //getting the stored token
-                                          String? currentUserToken;
-                                          await FirebaseFirestore.instance
-                                              .collection(userCollectionRef)
-                                              .doc(userId)
-                                              .get()
-                                              .then(
-                                            (DocumentSnapshot doc) {
-                                              Map<String, dynamic> data =
-                                                  doc.data()
-                                                      as Map<String, dynamic>;
-                                              currentUserToken =
-                                                  data["FCMtoken"];
-                                            },
-                                          );
-                                          //sending psu notification to admins of that didcipline
-                                          NotificationsModel()
-                                              .sendIFValidationRequestNotification(
-                                            adminsTokens: adminsTokens,
-                                            equipmentDiscipline:
-                                                widget.equipmentDiscipline,
-                                            notificationTitle: notifTitle,
-                                            notificationBody: notifBody,
-                                          );
-                                          //adding a notification document to
-                                          //admins of that dscipline
-                                          //notifications subcollection
-                                          NotificationsModel()
-                                              .addInterventionFileValidationNotification(
-                                            notificationTitle: notifTitle,
-                                            notificationBody: notifBody,
-                                            interventionFileCreatorToken:
-                                                currentUserToken!,
-                                            interventionFileID: fileID,
-                                            interventionType:
-                                                _initialIntervnetionType,
-                                            equipmentTagName:
-                                                widget.equipmentTagName,
-                                            equipmentDiscipline:
-                                                widget.equipmentDiscipline,
-                                          );
-                                          if (context.mounted) {
-                                            Navigator.pop(context);
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                content: Text(
-                                                  "intervention file added successfully",
-                                                ),
-                                              ),
+                                          try {
+                                            //add file to db
+                                            await _interventionFileController
+                                                .addInterventionFile(
+                                              creatorID: FirebaseAuth
+                                                  .instance.currentUser!.uid,
+                                              createdAt: Timestamp.now(),
+                                              equipmentID: widget.equipmentID,
+                                              equipmentTagName:
+                                                  widget.equipmentTagName,
+                                              equipmentStatus:
+                                                  widget.equipmentStatus,
+                                              equipmentDiscipline:
+                                                  widget.equipmentDiscipline,
+                                              fileID: fileID,
+                                              fileName: _fileName,
+                                              maintenanceType:
+                                                  _initialIntervnetionType,
+                                              startingDay:
+                                                  _startingDateController.text,
+                                              interventionTask:
+                                                  _interventionTask,
+                                              mechanicalTechnician:
+                                                  _isMechanicalTechnicianSelected,
+                                              electricalTechnician:
+                                                  _isElectricalTechnicianSelected,
+                                              instrumentTechnician:
+                                                  _isInstrumentTechnicianSelected,
+                                              spareParts:
+                                                  selectedSparePartsList,
+                                              tools: selectedToolsList,
+                                              fileStatus: "In Progress",
+                                              forecast: forcast,
+                                              criticity: _initialCritciality,
+                                              breakDownType:
+                                                  _initialBreakDownType,
+                                              breakDownDescription:
+                                                  _breakDownDescription,
                                             );
+                                            //getting the list of admins that will be notified
+                                            List<String> adminsTokens =
+                                                await NotificationsModel()
+                                                    .getAdminsTokens(
+                                              equipmentDiscipline:
+                                                  widget.equipmentDiscipline,
+                                            );
+                                            //creating a notification title
+                                            String notifTitle =
+                                                "Requesting Validation";
+                                            String notifBody =
+                                                "an new intervention file for ${widget.equipmentTagName} was created";
+                                            //getting the stored token
+                                            String? currentUserToken =
+                                                await NotificationsModel()
+                                                    .getCurrentUserToken();
+                                            //sending psu notification to admins of that didcipline
+                                            NotificationsModel()
+                                                .sendIFValidationRequestNotification(
+                                              adminsTokens: adminsTokens,
+                                              equipmentDiscipline:
+                                                  widget.equipmentDiscipline,
+                                              notificationTitle: notifTitle,
+                                              notificationBody: notifBody,
+                                            );
+                                            //adding a notification document to
+                                            //admins of that dscipline
+                                            //notifications subcollection
+                                            NotificationsModel()
+                                                .addInterventionFileValidationNotification(
+                                              notificationTitle: notifTitle,
+                                              notificationBody: notifBody,
+                                              interventionFileCreatorToken:
+                                                  currentUserToken!,
+                                              interventionFileID: fileID,
+                                              interventionType:
+                                                  _initialIntervnetionType,
+                                              equipmentTagName:
+                                                  widget.equipmentTagName,
+                                              equipmentDiscipline:
+                                                  widget.equipmentDiscipline,
+                                            );
+                                            if (context.mounted) {
+                                              Navigator.pop(context);
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                    "intervention file added successfully",
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                          } catch (e) {
+                                            //erro while adding intervntion file
+                                            //close the confirmation alert
+                                            if (context.mounted) {
+                                              Navigator.pop(context);
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                      "Error while adding intervention file , please try later"),
+                                                ),
+                                              );
+                                            }
                                           }
                                         }
                                       } else {

@@ -89,6 +89,24 @@ class NotificationsModel {
     }
   }
 
+  Future<String?> getCurrentUserToken() async {
+    //getting the current user ID
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+    //getting the stored token
+    String? currentUserToken;
+    await FirebaseFirestore.instance
+        .collection(userCollectionRef)
+        .doc(userId)
+        .get()
+        .then(
+      (DocumentSnapshot doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        currentUserToken = data["FCMtoken"];
+      },
+    );
+    return currentUserToken;
+  }
+
   Future<List<String>> getAdminsTokens({
     required String equipmentDiscipline,
   }) async {
@@ -188,6 +206,8 @@ class NotificationsModel {
         .where('role', isEqualTo: Roles.Administrator.toShortString())
         .where('discipline', isEqualTo: equipmentDiscipline)
         .get();
+    //creating a batch to write in mutiple documents
+    WriteBatch batch = FirebaseFirestore.instance.batch();
     // Iterate over the query snapshot to get each user's document ID
     for (QueryDocumentSnapshot userDoc in usersSnapshot.docs) {
       //user doc id
@@ -196,12 +216,15 @@ class NotificationsModel {
       //generate a new notification document id
       String notificationDocId = const Uuid().v4();
       // Add a subcollection called 'notifications' and write the desired data to it
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('notifications')
-          .doc(notificationDocId)
-          .set(notification.toJson());
+      batch.set(
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .collection('notifications')
+              .doc(notificationDocId),
+          notification.toJson());
     }
+    //commiting the batch
+    await batch.commit();
   }
 }
