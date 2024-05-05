@@ -875,6 +875,8 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                       },
                       'to':
                           'dLteWwn1T8-yud5MCIG3wa:APA91bFJTAu5zXmz9pLb3zII8sy9w-ooQ-y62fU02G5B-ILT9iLVA9a_MZm5S3LHk20HDvxgO4D71K3_-2PQ7ALwmmWJJyG4KbYBQSz0nCuMbQXzNGI4g_n3zl8xikuFz14PSYa8x3of', // FCM token of the device
+
+                      // FCM token of the device
                     };
 
                     // Encode FCM message to JSON

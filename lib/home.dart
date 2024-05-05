@@ -2,8 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:ionicons/ionicons.dart';
+<<<<<<< HEAD
 import 'package:permission_handler/permission_handler.dart';
+=======
+import 'package:pfe_gmao/main.dart';
+>>>>>>> 89264a6c0823045336303db753d08a44a6a62e5b
 
 import 'features/Equipments/View/equipment_list_view.dart';
 import 'features/intervention_files/View/Global_Intervention_Files/global_intervention_files_list.dart';
@@ -29,6 +34,7 @@ class _HomeState extends State<Home> {
     WorkOrderScreen(),
   ];
 
+<<<<<<< HEAD
   void getFCMtoken() async {
     () async {
       String? FCMtoken = await FirebaseMessaging.instance.getToken();
@@ -46,10 +52,33 @@ class _HomeState extends State<Home> {
     };
   }
 
+=======
+>>>>>>> 89264a6c0823045336303db753d08a44a6a62e5b
   @override
   void initState() {
-    getFCMtoken();
     super.initState();
+    getFCMtoken();
+    // setupInteractedMessage();
+    FirebaseMessaging.onMessage.listen(
+      (RemoteMessage message) {
+        RemoteNotification? notification = message.notification;
+        AndroidNotification? android = message.notification?.android;
+        if (notification != null && android != null) {
+          flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                icon: '@mipmap/ic_launcher',
+              ),
+            ),
+          );
+        }
+      },
+    );
   }
 
   @override
@@ -143,4 +172,66 @@ class _HomeState extends State<Home> {
       body: menuScreens[currentPageIndex],
     );
   }
+
+  //gets the FCM token and stores in the user collection
+  void getFCMtoken() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      String? FCMtoken = await FirebaseMessaging.instance.getToken();
+
+      if (FCMtoken != null) {
+        String userId = FirebaseAuth.instance.currentUser!.uid;
+
+        // Update the FCM token in Firestore
+        await FirebaseFirestore.instance
+            .collection(userCollectionRef)
+            .doc(userId)
+            .update({
+          "FCMtoken": FCMtoken,
+        });
+
+        if (kDebugMode) {
+          print("Token updated for user $userId: $FCMtoken");
+        }
+      }
+    }
+  }
+
+  // void setupInteractedMessage() async {
+  //   // Get any messages which caused the application to open from
+  //   // a terminated state.
+  //   RemoteMessage? initialMessage =
+  //       await FirebaseMessaging.instance.getInitialMessage();
+
+  //   // the app was opened from terminated state via a notification
+  //   // navigate to a notifications screen
+  //   if (initialMessage != null) {
+  //     _handleMessage(initialMessage);
+  //   }
+
+  //   // Also handle any interaction when the app is in the background via a
+  //   // Stream listener to navigate to the notifications screen
+  //   FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+  // }
+
+  // //this methode will display the notification
+  // void _handleMessage(RemoteMessage message) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => const NotificationScreen(),
+  //     ),
+  //   );
+  // }
 }
