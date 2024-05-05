@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:ionicons/ionicons.dart';
-<<<<<<< HEAD
+
 import 'package:permission_handler/permission_handler.dart';
-=======
+
 import 'package:pfe_gmao/main.dart';
->>>>>>> 89264a6c0823045336303db753d08a44a6a62e5b
 
 import 'features/Equipments/View/equipment_list_view.dart';
 import 'features/intervention_files/View/Global_Intervention_Files/global_intervention_files_list.dart';
@@ -34,26 +34,6 @@ class _HomeState extends State<Home> {
     WorkOrderScreen(),
   ];
 
-<<<<<<< HEAD
-  void getFCMtoken() async {
-    () async {
-      String? FCMtoken = await FirebaseMessaging.instance.getToken();
-      if (FCMtoken != null) {
-        FirebaseFirestore.instance
-            .collection(userCollectionRef)
-            .doc(FirebaseAuth.instance.currentUser!.uid)
-            .update(
-          {
-            "FCMtoken": FCMtoken,
-          },
-        );
-        print('my_token: $FCMtoken');
-      }
-    };
-  }
-
-=======
->>>>>>> 89264a6c0823045336303db753d08a44a6a62e5b
   @override
   void initState() {
     super.initState();
