@@ -32,6 +32,7 @@ class _SettingsState extends State<Setting> {
         else {
           UserModel currentUser = UserModel.fromFirestore(snapshot.data!, null);
           return Scaffold(
+            appBar: AppBar(),
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(20),
