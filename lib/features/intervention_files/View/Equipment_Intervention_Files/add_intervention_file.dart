@@ -1,15 +1,13 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../firebase/cloud_firestore_references.dart';
+import '../../../notifications/model/notification_model.dart';
 import '../../model/constants/breakdown_types.dart';
 import '../../model/constants/criticality_levels_list.dart';
 import '../../model/constants/intervention_types_list.dart';
@@ -860,53 +858,6 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                           ),
                         ),
                       ),
-                ElevatedButton(
-                  onPressed: () async {
-                    // Define FCM endpoint
-
-                    final url =
-                        Uri.parse('https://fcm.googleapis.com/fcm/send');
-
-                    // Define FCM message
-                    final payload = {
-                      'notification': {
-                        'title': 'test notification',
-                        'body': 'test body',
-                      },
-                      'to':
-                          'dLteWwn1T8-yud5MCIG3wa:APA91bFJTAu5zXmz9pLb3zII8sy9w-ooQ-y62fU02G5B-ILT9iLVA9a_MZm5S3LHk20HDvxgO4D71K3_-2PQ7ALwmmWJJyG4KbYBQSz0nCuMbQXzNGI4g_n3zl8xikuFz14PSYa8x3of', // FCM token of the device
-
-                      // FCM token of the device
-                    };
-
-                    // Encode FCM message to JSON
-                    final jsonPayload = json.encode(payload);
-
-                    // Make POST request to FCM endpoint
-                    final http.Response response = await http.post(
-                      url,
-                      headers: {
-                        'Content-Type': 'application/json',
-                        'authorization':
-                            'key=AAAA9fFEmCY:APA91bEy-GjdAEtorrreIqwoyauRzSs3lxAQadTcloqMxyaXzhTSs8Tik7ZB_B0E1vyv-SY3D8TJ7iOIv5J9-4UssDefCblAHGnhjLA6I6iIl5o2-cnN26vp8sH_6ts68S4Zw_YijO2l', // Server key from Firebase Console
-                      },
-                      body: jsonPayload,
-                    );
-                    // Check response status
-                    if (response.statusCode == 200) {
-                      if (kDebugMode) {
-                        print('FCM notification sent successfully');
-                      }
-                    } else {
-                      if (kDebugMode) {
-                        print(
-                            'Failed to send FCM notification. Status code: ${response.statusCode}');
-                        print('Response body: ${response.body}');
-                      }
-                    }
-                  },
-                  child: Text("not"),
-                ),
                 // Row widget to display confirm and cancel buttons
                 Center(
                   child: FilledButton(
@@ -1002,17 +953,74 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                                 _initialBreakDownType,
                                             breakDownDescription:
                                                 _breakDownDescription,
-                                          )
-                                              .then((_) {
+                                          );
+                                          //getting the list of admins that will be notified
+                                          List<String> adminsTokens =
+                                              await NotificationsModel()
+                                                  .getAdminsTokens(
+                                            equipmentDiscipline:
+                                                widget.equipmentDiscipline,
+                                          );
+                                          //creating a notification title
+                                          String notifTitle =
+                                              "Requesting Validation";
+                                          String notifBody =
+                                              "an new intervention file for ${widget.equipmentTagName} was created";
+                                          //getting the current user ID
+                                          String userId = FirebaseAuth
+                                              .instance.currentUser!.uid;
+                                          //getting the stored token
+                                          String? currentUserToken;
+                                          await FirebaseFirestore.instance
+                                              .collection(userCollectionRef)
+                                              .doc(userId)
+                                              .get()
+                                              .then(
+                                            (DocumentSnapshot doc) {
+                                              Map<String, dynamic> data =
+                                                  doc.data()
+                                                      as Map<String, dynamic>;
+                                              currentUserToken =
+                                                  data["FCMtoken"];
+                                            },
+                                          );
+                                          //sending psu notification to admins of that didcipline
+                                          NotificationsModel()
+                                              .sendIFValidationRequestNotification(
+                                            adminsTokens: adminsTokens,
+                                            equipmentDiscipline:
+                                                widget.equipmentDiscipline,
+                                            notificationTitle: notifTitle,
+                                            notificationBody: notifBody,
+                                          );
+                                          //adding a notification document to
+                                          //admins of that dscipline
+                                          //notifications subcollection
+                                          NotificationsModel()
+                                              .addInterventionFileValidationNotification(
+                                            notificationTitle: notifTitle,
+                                            notificationBody: notifBody,
+                                            interventionFileCreatorToken:
+                                                currentUserToken!,
+                                            interventionFileID: fileID,
+                                            interventionType:
+                                                _initialIntervnetionType,
+                                            equipmentTagName:
+                                                widget.equipmentTagName,
+                                            equipmentDiscipline:
+                                                widget.equipmentDiscipline,
+                                          );
+                                          if (context.mounted) {
                                             Navigator.pop(context);
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
                                               const SnackBar(
                                                 content: Text(
-                                                    "intervention file added successfully"),
+                                                  "intervention file added successfully",
+                                                ),
                                               ),
                                             );
-                                          });
+                                          }
                                         }
                                       } else {
                                         //close the confirmation alert when for is not valid

@@ -1,38 +1,207 @@
-import 'package:pfe_gmao/features/intervention_files/model/data_models/curative_intervention_file.dart';
-import 'package:pfe_gmao/features/intervention_files/model/data_models/preventive_intervention_file.dart';
+import 'dart:convert';
 
-class NotificationModel {
-  final String title;
-  final String body;
-  final String ifCreatorToken;
-  final PreventiveInterventionFile preventiveInterventionFile;
-  final CurativeInterventionFile curativeInterventionFile;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:http/http.dart' as http;
+import 'package:uuid/uuid.dart';
 
-  NotificationModel({
-    required this.title,
-    required this.body,
-    required this.ifCreatorToken,
-    required this.preventiveInterventionFile,
-    required this.curativeInterventionFile,
-  });
+import '../../../firebase/cloud_firestore_references.dart';
+import '../../profile_management/model/user.dart';
+import 'data_models/intervention_file_validation_notification.dart';
 
-  Map<String, dynamic> toJson() {
-    return {
-      'title': title,
-      'body': body,
-      'ifCreatorToken': ifCreatorToken,
-      'prevenitveInterventionFile': preventiveInterventionFile,
-      'curativeInterventionFile': curativeInterventionFile,
-    };
+class NotificationsModel {
+  //FCM server key
+  static const String serverKey =
+      'AAAA9fFEmCY:APA91bEy-GjdAEtorrreIqwoyauRzSs3lxAQadTcloqMxyaXzhTSs8Tik7ZB_B0E1vyv-SY3D8TJ7iOIv5J9-4UssDefCblAHGnhjLA6I6iIl5o2-cnN26vp8sH_6ts68S4Zw_YijO2l';
+
+  //notification channel for android to override the default FCM channel
+  static const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    'high_importance_channel', // id
+    'High Importance Notifications', // title
+    description:
+        'This channel is used for important notifications.', // description
+    importance: Importance.high,
+    playSound: true,
+  );
+
+  //initialization Settings for the android local notifications
+  static const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  //local nitifcation settings
+  static const InitializationSettings initializationSettings =
+      InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  // firebase background message handler
+  static Future<void> firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
+    await Firebase.initializeApp();
+    if (kDebugMode) {
+      print('A Background message just showed up :  ${message.messageId}');
+    }
   }
 
-  factory NotificationModel.fromJson(Map<String, dynamic> json) {
-    return NotificationModel(
-      title: json['title'],
-      body: json['title'],
-      ifCreatorToken: json['ifCreatorToken'],
-      preventiveInterventionFile: json['prevenitveInterventionFile'],
-      curativeInterventionFile: json['curativeInterventionFile'],
+  // Function to send a notification to a specific device
+  void sendNotificationToDevice({
+    required String deviceToken,
+    required String notificationTitle,
+    required String notificationBody,
+  }) async {
+    // Define FCM endpoint
+    final url = Uri.parse('https://fcm.googleapis.com/fcm/send');
+    // Define FCM message
+    final payload = {
+      'notification': {
+        'title': notificationTitle,
+        'body': notificationBody,
+      },
+      // FCM token of the device
+      'to': deviceToken,
+    };
+    // Encode FCM message to JSON
+    final jsonPayload = json.encode(payload);
+    // Make POST request to FCM endpoint
+    final http.Response response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'key=$serverKey', // Server key from Firebase Console
+      },
+      body: jsonPayload,
     );
+    // Check response status
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        print('FCM notification sent successfully');
+      }
+    } else {
+      if (kDebugMode) {
+        print(
+            'Failed to send FCM notification. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    }
+  }
+
+  Future<List<String>> getAdminsTokens({
+    required String equipmentDiscipline,
+  }) async {
+    List<String> adminsToken = [];
+    // Retrieve FCM tokens of all administrators with the specified discipline
+    await FirebaseFirestore.instance
+        .collection(userCollectionRef)
+        .where(
+          'role',
+          isEqualTo: Roles.Administrator.toShortString(),
+        )
+        .where(
+          'discipline',
+          isEqualTo: equipmentDiscipline,
+        )
+        .get()
+        .then((querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        String fcmToken = doc['FCMtoken'];
+        adminsToken.add(fcmToken);
+        if (kDebugMode) {
+          print(adminsToken);
+        }
+      }
+    });
+    return adminsToken;
+  }
+
+  // Function to send a notification to all administrators with a specific discipline
+  void sendIFValidationRequestNotification({
+    //list of admins tokens
+    required List<String> adminsTokens,
+    // Discipline for which the notification is sent
+    required String notificationTitle,
+    required String equipmentDiscipline,
+    required String notificationBody,
+  }) async {
+    // Retrieve the current user's data
+    String currentUserID = FirebaseAuth.instance.currentUser!.uid;
+    DocumentSnapshot currentUserDoc = await FirebaseFirestore.instance
+        .collection(userCollectionRef)
+        .doc(currentUserID)
+        .get();
+    Map<String, dynamic>? userData =
+        currentUserDoc.data() as Map<String, dynamic>?;
+
+    //retrieve the role from user collection
+    String userRole = userData!['role'].toString();
+
+    // If the current user is an administrator, remove their token from the list
+    if (userRole == Roles.Administrator.toShortString()) {
+      String? currentUserToken = await FirebaseMessaging.instance.getToken();
+      if (currentUserToken != null) {
+        adminsTokens.remove(currentUserToken);
+      }
+    }
+    //check if the admins tokens exists
+    if (adminsTokens.isNotEmpty) {
+      // Send the notification to each administrator's device
+      for (String token in adminsTokens) {
+        sendNotificationToDevice(
+          deviceToken: token,
+          notificationTitle: notificationTitle,
+          notificationBody: notificationBody,
+        );
+        if (kDebugMode) {
+          print(adminsTokens);
+        }
+      }
+    }
+  }
+
+  //add a notification the the admins documents
+  void addInterventionFileValidationNotification({
+    required String notificationTitle,
+    required String notificationBody,
+    required String interventionFileCreatorToken,
+    required String interventionFileID,
+    required String interventionType,
+    required String equipmentTagName,
+    required String equipmentDiscipline,
+  }) async {
+    //creating an instance of validation notification
+    InterventionFileValidationNotification notification =
+        InterventionFileValidationNotification(
+      notificationTitle: notificationTitle,
+      notificationBody: notificationBody,
+      interventionFileCreatorToken: interventionFileCreatorToken,
+      interventionFileID: interventionFileID,
+      interventionType: interventionType,
+      equipmentTagName: equipmentTagName,
+      equipmentDiscipline: equipmentDiscipline,
+    );
+    // Query admins specific discipline
+    QuerySnapshot usersSnapshot = await FirebaseFirestore.instance
+        .collection(userCollectionRef)
+        .where('role', isEqualTo: Roles.Administrator.toShortString())
+        .where('discipline', isEqualTo: equipmentDiscipline)
+        .get();
+    // Iterate over the query snapshot to get each user's document ID
+    for (QueryDocumentSnapshot userDoc in usersSnapshot.docs) {
+      //user doc id
+      String userId = userDoc.id;
+
+      //generate a new notification document id
+      String notificationDocId = const Uuid().v4();
+      // Add a subcollection called 'notifications' and write the desired data to it
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('notifications')
+          .doc(notificationDocId)
+          .set(notification.toJson());
+    }
   }
 }

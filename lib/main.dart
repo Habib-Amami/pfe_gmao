@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pfe_gmao/features/notifications/model/notification_model.dart';
 
 import 'features/authentication/login/view/login_view.dart';
 import 'firebase/firebase_options.dart';
@@ -17,31 +18,9 @@ import 'firebase/firebase_services.dart';
 import 'home.dart';
 import 'theme/theme.dart';
 
-const AndroidNotificationChannel channel = AndroidNotificationChannel(
-  'high_importance_channel', // id
-  'High Importance Notifications', // title
-  description:
-      'This channel is used for important notifications.', // description
-  importance: Importance.high,
-  playSound: true,
-);
-
-// flutter local notification
+// flutter local notification global initialization
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
-
-const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
-
-const InitializationSettings initializationSettings = InitializationSettings(
-  android: initializationSettingsAndroid,
-);
-
-// firebase background message handler
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  print('A Background message just showed up :  ${message.messageId}');
-}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,16 +31,21 @@ void main() async {
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true,
   );
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  //top level function for handeling background notifications
+  FirebaseMessaging.onBackgroundMessage(
+      NotificationsModel.firebaseMessagingBackgroundHandler);
 
   await flutterLocalNotificationsPlugin.initialize(
-    initializationSettings,
+    NotificationsModel.initializationSettings,
   );
+
   // Firebase local notification plugin
+  // Android specific notifications channel
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
+      ?.createNotificationChannel(NotificationsModel.channel);
 
 //Firebase messaging
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
