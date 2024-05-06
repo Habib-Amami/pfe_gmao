@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pfe_gmao/features/intervention_files/View/widgets/curative_file_widget.dart';
 
-import '../../notifications/view/widget/preventive_file_widget.dart';
+import 'widgets/preventive_file_widget.dart';
 
 class InterventionFileValitionView extends StatefulWidget {
   final String interventionFileID;
@@ -64,7 +65,7 @@ class _InterventionFileValitionView
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircularProgressIndicator(),
-                    Text("Loading Intervntion File ...")
+                    Text("Loading Intervention File ...")
                   ],
                 ),
               );
@@ -115,7 +116,21 @@ class _InterventionFileValitionView
                           technicians: technicianList,
                           tools: tools,
                         )
-                      : Container(),
+                      : CurativeInterventionFile(
+                          equipmentName: data['equipmentTagName'],
+                          equipmentStatus: data['equipmentStatus'],
+                          equipmentDiscipline: widget.equipmentDiscipline,
+                          fileName: data['fileName'],
+                          interventionType: widget.interventionType,
+                          criticality: data['criticity'],
+                          breakdownType: data['breakDownType'],
+                          technicians: technicianList,
+                          startingDay: data['startingDay'],
+                          tools: tools,
+                          spareParts: spareParts,
+                          task: data['interventionTask'],
+                          breakdownDescription: data['breakDownDescription'],
+                        ),
                 ),
                 Padding(
                   padding:

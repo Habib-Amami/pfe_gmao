@@ -127,6 +127,7 @@ class PreventiveFile extends StatelessWidget {
           InterventionFileFormField(
             prefixIcon: const Icon(Icons.task),
             initialValue: task,
+            enabled: false,
           ),
           const InterventionFileFormTitle(
             title: "Maintenance technicians",
@@ -134,6 +135,7 @@ class PreventiveFile extends StatelessWidget {
           InterventionFileFormField(
             prefixIcon: const Icon(Icons.engineering_rounded),
             initialValue: technicians,
+            enabled: false,
           ),
           const InterventionFileFormTitle(
             title: "Spare parts",
@@ -141,6 +143,7 @@ class PreventiveFile extends StatelessWidget {
           InterventionFileFormField(
             prefixIcon: const Icon(Icons.construction),
             initialValue: spareParts,
+            enabled: false,
           ),
 
           const InterventionFileFormTitle(
@@ -149,6 +152,7 @@ class PreventiveFile extends StatelessWidget {
           InterventionFileFormField(
             prefixIcon: const Icon(Icons.construction),
             initialValue: tools,
+            enabled: false,
           ),
         ]),
       ),
