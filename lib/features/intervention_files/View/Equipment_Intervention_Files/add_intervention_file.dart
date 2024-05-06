@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:pfe_gmao/features/intervention_files/model/data_models/intervention_file_status.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../notifications/model/notification_model.dart';
@@ -919,9 +920,10 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                             customPeriodValue: int.parse(
                                                 _customDurationController.text),
                                           );
-                                          //creating a document ID for the intervention file
-                                          String fileID = const Uuid().v4();
                                           try {
+                                            //creating a document ID for the intervention file
+                                            String fileID = const Uuid().v4();
+
                                             //add file to db
                                             await _interventionFileController
                                                 .addInterventionFile(
@@ -952,7 +954,8 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                               spareParts:
                                                   selectedSparePartsList,
                                               tools: selectedToolsList,
-                                              fileStatus: interventionTypes[2],
+                                              fileStatus:
+                                                  interventionFileStatus[2],
                                               forecast: forcast,
                                               criticity: _initialCritciality,
                                               breakDownType:
@@ -1016,8 +1019,8 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                             }
                                           } catch (e) {
                                             //erro while adding intervntion file
-                                            //close the confirmation alert
                                             if (context.mounted) {
+                                              //close the confirmation alert
                                               Navigator.pop(context);
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
