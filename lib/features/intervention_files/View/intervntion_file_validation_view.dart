@@ -1,19 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:pfe_gmao/features/intervention_files/View/widgets/intervention%20file%20widgets/curative_file_widget.dart';
 
 import 'widgets/intervention file widgets/preventive_file_widget.dart';
+import 'widgets/intervention%20file%20widgets/curative_file_widget.dart';
 
 class InterventionFileValitionView extends StatefulWidget {
   final String interventionFileID;
   final String interventionType;
+  final String equipmentID;
   final String equipmentDiscipline;
 
   const InterventionFileValitionView({
     required this.interventionFileID,
-    super.key,
     required this.interventionType,
     required this.equipmentDiscipline,
+    required this.equipmentID,
+    super.key,
   });
 
   @override
@@ -35,233 +37,233 @@ class _InterventionFileValitionView
         automaticallyImplyLeading: true,
       ),
       body: FutureBuilder(
-          future: FirebaseFirestore.instance
-              .collection(
-                  'collective_${widget.equipmentDiscipline}_${widget.interventionType}_intervention_files')
-              .doc(widget.interventionFileID)
-              .get(),
-          builder: ((context, snapshot) {
-            // Handle interruption of connection
-            if (snapshot.connectionState == ConnectionState.none) {
-              return const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      color: Colors.red,
-                      size: 50.0,
-                    ),
-                    SizedBox(height: 10.0),
-                    Text("Lost connection"),
-                  ],
-                ),
-              );
-            }
-            // Handle loading state
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    Text("Loading Intervention File ...")
-                  ],
-                ),
-              );
-            }
-            // Show error message if an error occurs
-            if (snapshot.hasError) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // const CircularProgressIndicator(),
-                    Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    ),
-                  ],
-                ),
-              );
-            }
-            Map<String, dynamic> data =
-                snapshot.data!.data() as Map<String, dynamic>;
-            List technicians = [];
-            data['instrumentTechnician']
-                ? technicians.add('Instrument Technician')
-                : debugPrint('no instrument');
-            data['electricalTechnician']
-                ? technicians.add('Electrical Technician')
-                : debugPrint('no electrical');
-            data['mechanicalTechnician']
-                ? technicians.add('Mechanical Technician')
-                : debugPrint('no mechanical');
-            String technicianList = technicians.join(' - ');
-            var spareParts = data['spareParts'].join(' - ');
-            var tools = data['tools'].join(' - ');
-            return ListView(
-              children: [
-                SingleChildScrollView(
-                  child: widget.interventionType == 'Preventive'
-                      ? PreventiveFile(
-                          spareParts: spareParts,
-                          task: data['interventionTask'],
-                          startingDay: data['startingDay'],
-                          forecast: data['forecast'],
-                          equipmentName: data['equipmentTagName'],
-                          equipmentStatus: data['equipmentStatus'],
-                          equipmentDiscipline: widget.equipmentDiscipline,
-                          fileName: data['fileName'],
-                          interventionType: widget.interventionType,
-                          technicians: technicianList,
-                          tools: tools,
-                        )
-                      : CurativeInterventionFile(
-                          equipmentName: data['equipmentTagName'],
-                          equipmentStatus: data['equipmentStatus'],
-                          equipmentDiscipline: widget.equipmentDiscipline,
-                          fileName: data['fileName'],
-                          interventionType: widget.interventionType,
-                          criticality: data['criticity'],
-                          breakdownType: data['breakDownType'],
-                          technicians: technicianList,
-                          startingDay: data['startingDay'],
-                          tools: tools,
-                          spareParts: spareParts,
-                          task: data['interventionTask'],
-                          breakdownDescription: data['breakDownDescription'],
-                        ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 30, right: 30, bottom: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      FilledButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll(
-                              Theme.of(context).colorScheme.error),
-                        ),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text('Deny alert'),
-                                content: const Text(
-                                  'Tell us why you denied this intervention file!',
-                                ),
-                                actions: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      TextButton(
-                                        child: const Text('Cancel'),
-                                        onPressed: () => Navigator.pop(context),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary,
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                          width: 70,
-                                          height: 35,
-                                          child: const Center(
-                                            child: Text(
-                                              'Done',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        child: const Text(
-                          'Deny',
-                          style: TextStyle(color: Colors.white),
-                        ),
+        future: FirebaseFirestore.instance
+            .collection(
+                'collective_${widget.equipmentDiscipline}_${widget.interventionType}_intervention_files')
+            .doc(widget.interventionFileID)
+            .get(),
+        builder: ((context, snapshot) {
+          // Handle interruption of connection
+          if (snapshot.connectionState == ConnectionState.none) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 50.0,
+                  ),
+                  SizedBox(height: 10.0),
+                  Text("Lost connection"),
+                ],
+              ),
+            );
+          }
+          // Handle loading state
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  Text("Loading Intervention File ...")
+                ],
+              ),
+            );
+          }
+          // Show error message if an error occurs
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // const CircularProgressIndicator(),
+                  Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  ),
+                ],
+              ),
+            );
+          }
+          Map<String, dynamic> data =
+              snapshot.data!.data() as Map<String, dynamic>;
+          List technicians = [];
+          data['instrumentTechnician']
+              ? technicians.add('Instrument Technician')
+              : debugPrint('no instrument');
+          data['electricalTechnician']
+              ? technicians.add('Electrical Technician')
+              : debugPrint('no electrical');
+          data['mechanicalTechnician']
+              ? technicians.add('Mechanical Technician')
+              : debugPrint('no mechanical');
+          String technicianList = technicians.join(' - ');
+          var spareParts = data['spareParts'].join(' - ');
+          var tools = data['tools'].join(' - ');
+          return ListView(
+            children: [
+              SingleChildScrollView(
+                child: widget.interventionType == 'Preventive'
+                    ? PreventiveFile(
+                        spareParts: spareParts,
+                        task: data['interventionTask'],
+                        startingDay: data['startingDay'],
+                        forecast: data['forecast'],
+                        equipmentName: data['equipmentTagName'],
+                        equipmentStatus: data['equipmentStatus'],
+                        equipmentDiscipline: widget.equipmentDiscipline,
+                        fileName: data['fileName'],
+                        interventionType: widget.interventionType,
+                        technicians: technicianList,
+                        tools: tools,
+                      )
+                    : CurativeInterventionFile(
+                        equipmentName: data['equipmentTagName'],
+                        equipmentStatus: data['equipmentStatus'],
+                        equipmentDiscipline: widget.equipmentDiscipline,
+                        fileName: data['fileName'],
+                        interventionType: widget.interventionType,
+                        criticality: data['criticity'],
+                        breakdownType: data['breakDownType'],
+                        technicians: technicianList,
+                        startingDay: data['startingDay'],
+                        tools: tools,
+                        spareParts: spareParts,
+                        task: data['interventionTask'],
+                        breakdownDescription: data['breakDownDescription'],
                       ),
-                      FilledButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll(
-                              Theme.of(context).colorScheme.primary),
-                        ),
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text('Confirmation'),
-                                  content: const Text(
-                                      'Do you really want to validate this intervention file?'),
-                                  actions: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        TextButton(
-                                          child: const Text('Cancel'),
-                                          onPressed: () =>
-                                              Navigator.pop(context),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 30, right: 30, bottom: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    FilledButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(
+                            Theme.of(context).colorScheme.error),
+                      ),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Deny alert'),
+                              content: const Text(
+                                'Tell us why you denied this intervention file!',
+                              ),
+                              actions: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    TextButton(
+                                      child: const Text('Cancel'),
+                                      onPressed: () => Navigator.pop(context),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          borderRadius:
+                                              BorderRadius.circular(15),
                                         ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary,
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
-                                            width: 90,
-                                            height: 40,
-                                            child: const Center(
-                                              child: Text(
-                                                'Confirm',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ),
+                                        width: 70,
+                                        height: 35,
+                                        child: const Center(
+                                          child: Text(
+                                            'Done',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w500),
                                           ),
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ],
-                                );
-                              });
-                        },
-                        child: const Text(
-                          'Validate',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                                )
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: const Text(
+                        'Deny',
+                        style: TextStyle(color: Colors.white),
                       ),
-                    ],
-                  ),
-                )
-              ],
-            );
-          })),
+                    ),
+                    FilledButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(
+                            Theme.of(context).colorScheme.primary),
+                      ),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Confirmation'),
+                              content: const Text(
+                                  'Do you really want to validate this intervention file?'),
+                              actions: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    TextButton(
+                                      child: const Text('Cancel'),
+                                      onPressed: () => Navigator.pop(context),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        width: 90,
+                                        height: 40,
+                                        child: const Center(
+                                          child: Text(
+                                            'Confirm',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: const Text(
+                        'Validate',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          );
+        }),
+      ),
     );
   }
 }

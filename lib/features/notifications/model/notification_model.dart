@@ -186,6 +186,7 @@ class NotificationsModel {
     required String interventionFileCreatorToken,
     required String interventionFileID,
     required String interventionType,
+    required String equipmentID,
     required String equipmentTagName,
     required String equipmentDiscipline,
   }) async {
@@ -197,6 +198,7 @@ class NotificationsModel {
       interventionFileCreatorToken: interventionFileCreatorToken,
       interventionFileID: interventionFileID,
       interventionType: interventionType,
+      equipmentID: equipmentID,
       equipmentTagName: equipmentTagName,
       equipmentDiscipline: equipmentDiscipline,
     );
