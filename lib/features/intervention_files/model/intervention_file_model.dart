@@ -143,4 +143,42 @@ class InterventionFileModel {
       await batch.commit();
     }
   }
+
+  //change intervention file status
+  Future<void> changeInterventionFileStatus({
+    required String equipmentID,
+    required String equipmentDiscipline,
+    required String interventionFileID,
+    required String interventionType,
+    required String newStatus,
+  }) async {
+    //creating a FireStore instance
+    FirebaseFirestore fireStore = FirebaseFirestore.instance;
+
+    //creating a batch for updating the intervention file status
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    //getting the reference of the file in the equipment collection
+    DocumentReference fileEquipmentCollection = fireStore
+        .collection(equipmentCollectionRef)
+        .doc(equipmentID)
+        .collection("${interventionType}_intervention_files")
+        .doc(interventionFileID);
+    //updating file in the equipment collection with the new status
+    batch.update(fileEquipmentCollection, {'fileStatus': newStatus});
+
+    //getting the file reference in the collective file collection
+    //using the discipline and the intervention type
+    DocumentReference fileCollectiveCollection = fireStore
+        .collection(
+          "collective_${equipmentDiscipline}_${interventionType}_intervention_files",
+        )
+        .doc(interventionFileID);
+
+    //updating the file status in the collective files collection
+    batch.update(fileCollectiveCollection, {'fileStatus': newStatus});
+
+    //commiting batch
+    batch.commit();
+  }
 }

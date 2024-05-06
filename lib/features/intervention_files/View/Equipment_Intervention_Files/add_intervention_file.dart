@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:pfe_gmao/features/intervention_files/model/data_models/intervention_file_status.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../notifications/model/notification_model.dart';
@@ -13,6 +12,7 @@ import '../../model/constants/breakdown_types.dart';
 import '../../model/constants/criticality_levels_list.dart';
 import '../../model/constants/intervention_types_list.dart';
 import '../../model/constants/time_periods_list.dart';
+import '../../model/data_models/intervention_file_status.dart';
 import '../../model/data_models/preventive_intervention_file.dart';
 import '../../model/data_models/spare_part.dart';
 import '../../model/data_models/tool.dart';

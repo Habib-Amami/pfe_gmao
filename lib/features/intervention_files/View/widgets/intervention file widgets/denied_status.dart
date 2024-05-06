@@ -6,7 +6,7 @@ class DeniedState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 200,
+      width: double.infinity,
       height: 65,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.error,

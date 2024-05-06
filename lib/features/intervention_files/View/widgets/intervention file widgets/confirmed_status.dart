@@ -6,7 +6,7 @@ class ConfirmedState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 250,
+      width: double.infinity,
       height: 65,
       decoration: BoxDecoration(
         color: Colors.green.withOpacity(0.7),
