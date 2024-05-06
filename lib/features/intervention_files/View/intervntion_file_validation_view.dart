@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:pfe_gmao/features/intervention_files/View/widgets/curative_file_widget.dart';
+import 'package:pfe_gmao/features/intervention_files/View/widgets/intervention%20file%20widgets/curative_file_widget.dart';
 
-import 'widgets/preventive_file_widget.dart';
+import 'widgets/intervention file widgets/preventive_file_widget.dart';
 
 class InterventionFileValitionView extends StatefulWidget {
   final String interventionFileID;
