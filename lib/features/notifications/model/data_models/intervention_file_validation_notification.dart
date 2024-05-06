@@ -50,7 +50,7 @@ class InterventionFileValidationNotification {
       equipmentID: json['equipmentID'],
       equipmentTagName: json['equipmentTagName'],
       equipmentDiscipline: json['equipmentDiscipline'],
-      createdAt: json['createdAt'] as Timestamp,
+      createdAt: Timestamp.fromMicrosecondsSinceEpoch(json['createdAt']),
     );
   }
 }
