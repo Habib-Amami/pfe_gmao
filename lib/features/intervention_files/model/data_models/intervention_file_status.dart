@@ -1,1 +1,1 @@
-const List interventionFileStatus = ['confirmed', 'denied', 'in progress'];
+const List interventionFileStatus = ['Confirmed', 'Denied', 'In Progress'];
