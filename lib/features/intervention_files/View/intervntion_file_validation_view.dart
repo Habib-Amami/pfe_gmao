@@ -25,10 +25,10 @@ class InterventionFileValidationView extends StatefulWidget {
 
   @override
   State<InterventionFileValidationView> createState() =>
-      _InterventionFileValitionView();
+      _InterventionFileValidationView();
 }
 
-class _InterventionFileValitionView
+class _InterventionFileValidationView
     extends State<InterventionFileValidationView> {
   @override
   Widget build(BuildContext context) {
