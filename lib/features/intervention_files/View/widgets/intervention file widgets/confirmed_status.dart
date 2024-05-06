@@ -1,0 +1,27 @@
+import 'package:flutter/material.dart';
+
+class ConfirmedState extends StatelessWidget {
+  const ConfirmedState({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 250,
+      height: 65,
+      decoration: BoxDecoration(
+        color: Colors.green.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: const Center(
+        child: Text(
+          'This intervention file has been validated',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ),
+    );
+  }
+}
