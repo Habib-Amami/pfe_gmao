@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
 import 'package:pfe_gmao/features/intervention_files/View/widgets/intervention%20file%20widgets/confirmed_status.dart';
 import 'package:pfe_gmao/features/intervention_files/View/widgets/intervention%20file%20widgets/curative_file_widget.dart';
 import 'package:pfe_gmao/features/intervention_files/View/widgets/intervention%20file%20widgets/denied_status.dart';
@@ -11,13 +12,15 @@ import 'widgets/intervention file widgets/preventive_file_widget.dart';
 class InterventionFileValitionView extends StatefulWidget {
   final String interventionFileID;
   final String interventionType;
+  final String equipmentID;
   final String equipmentDiscipline;
 
   const InterventionFileValitionView({
     required this.interventionFileID,
-    super.key,
     required this.interventionType,
     required this.equipmentDiscipline,
+    required this.equipmentID,
+    super.key,
   });
 
   @override

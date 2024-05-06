@@ -82,7 +82,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
             List<InterventionFileValidationNotification> notifications =
                 snapshot.data!.docs.map((document) {
               return InterventionFileValidationNotification.fromJson(
-                  document.data());
+                document.data(),
+              );
               //return Notification.fromSnapshot(document);
             }).toList();
             return notifications.isEmpty
@@ -107,6 +108,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               MaterialPageRoute(
                                 builder: (context) =>
                                     InterventionFileValitionView(
+                                  equipmentID: notifications[index].equipmentID,
                                   equipmentDiscipline:
                                       notifications[index].equipmentDiscipline,
                                   interventionType:

@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:pfe_gmao/features/intervention_files/controller/intervention_file_controller.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../notifications/model/notification_model.dart';
+import '../../controller/intervention_file_controller.dart';
 import '../../model/constants/breakdown_types.dart';
 import '../../model/constants/criticality_levels_list.dart';
 import '../../model/constants/intervention_types_list.dart';
@@ -952,7 +952,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                               spareParts:
                                                   selectedSparePartsList,
                                               tools: selectedToolsList,
-                                              fileStatus: "In Progress",
+                                              fileStatus: interventionTypes[2],
                                               forecast: forcast,
                                               criticity: _initialCritciality,
                                               breakDownType:
@@ -997,6 +997,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                               interventionFileID: fileID,
                                               interventionType:
                                                   _initialIntervnetionType,
+                                              equipmentID: widget.equipmentID,
                                               equipmentTagName:
                                                   widget.equipmentTagName,
                                               equipmentDiscipline:

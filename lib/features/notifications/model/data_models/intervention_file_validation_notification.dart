@@ -4,6 +4,7 @@ class InterventionFileValidationNotification {
   final String interventionFileCreatorToken;
   final String interventionFileID;
   final String interventionType;
+  final String equipmentID;
   final String equipmentTagName;
   final String equipmentDiscipline;
 
@@ -12,6 +13,7 @@ class InterventionFileValidationNotification {
     required this.notificationBody,
     required this.interventionFileCreatorToken,
     required this.interventionFileID,
+    required this.equipmentID,
     required this.interventionType,
     required this.equipmentTagName,
     required this.equipmentDiscipline,
@@ -25,6 +27,7 @@ class InterventionFileValidationNotification {
       'interventionFileCreatorToken': interventionFileCreatorToken,
       'interventionFileID': interventionFileID,
       'interventionType': interventionType,
+      'equipmentID': equipmentID,
       'equipmentTagName': equipmentTagName,
       'equipmentDiscipline': equipmentDiscipline,
     };
@@ -40,6 +43,7 @@ class InterventionFileValidationNotification {
       interventionFileCreatorToken: json['interventionFileCreatorToken'],
       interventionFileID: json['interventionFileID'],
       interventionType: json['interventionType'],
+      equipmentID: json['equipmentID'],
       equipmentTagName: json['equipmentTagName'],
       equipmentDiscipline: json['equipmentDiscipline'],
     );
