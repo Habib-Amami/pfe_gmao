@@ -34,6 +34,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               .collection('users')
               .doc(currentUser!.uid)
               .collection('notifications')
+              .orderBy('createdAt', descending: true)
               .snapshots(),
           builder: (context, snapshot) {
             // Handle interruption of connection

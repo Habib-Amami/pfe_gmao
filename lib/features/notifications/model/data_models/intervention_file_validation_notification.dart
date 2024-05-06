@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class InterventionFileValidationNotification {
   final String notificationTitle;
   final String notificationBody;
@@ -7,17 +9,18 @@ class InterventionFileValidationNotification {
   final String equipmentID;
   final String equipmentTagName;
   final String equipmentDiscipline;
+  final Timestamp createdAt;
 
-  InterventionFileValidationNotification({
-    required this.notificationTitle,
-    required this.notificationBody,
-    required this.interventionFileCreatorToken,
-    required this.interventionFileID,
-    required this.equipmentID,
-    required this.interventionType,
-    required this.equipmentTagName,
-    required this.equipmentDiscipline,
-  });
+  InterventionFileValidationNotification(
+      {required this.notificationTitle,
+      required this.notificationBody,
+      required this.interventionFileCreatorToken,
+      required this.interventionFileID,
+      required this.equipmentID,
+      required this.interventionType,
+      required this.equipmentTagName,
+      required this.equipmentDiscipline,
+      required this.createdAt});
 
   // toJson method to convert the object to a JSON format
   Map<String, dynamic> toJson() {
@@ -30,6 +33,7 @@ class InterventionFileValidationNotification {
       'equipmentID': equipmentID,
       'equipmentTagName': equipmentTagName,
       'equipmentDiscipline': equipmentDiscipline,
+      'createdAt': createdAt.millisecondsSinceEpoch,
     };
   }
 
@@ -46,6 +50,7 @@ class InterventionFileValidationNotification {
       equipmentID: json['equipmentID'],
       equipmentTagName: json['equipmentTagName'],
       equipmentDiscipline: json['equipmentDiscipline'],
+      createdAt: json['createdAt'] as Timestamp,
     );
   }
 }

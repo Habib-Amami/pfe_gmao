@@ -201,6 +201,7 @@ class NotificationsModel {
       equipmentID: equipmentID,
       equipmentTagName: equipmentTagName,
       equipmentDiscipline: equipmentDiscipline,
+      createdAt: Timestamp.now(),
     );
     // Retrieve the current user ID
     String currentUserID = FirebaseAuth.instance.currentUser!.uid;
