@@ -200,29 +200,64 @@ class NotificationsModel {
       equipmentTagName: equipmentTagName,
       equipmentDiscipline: equipmentDiscipline,
     );
-    // Query admins specific discipline
+    // Retrieve the current user ID
+    String currentUserID = FirebaseAuth.instance.currentUser!.uid;
+    // getting the current user data
+    DocumentSnapshot currentUserDoc = await FirebaseFirestore.instance
+        .collection(userCollectionRef)
+        .doc(currentUserID)
+        .get();
+    Map<String, dynamic>? userData =
+        currentUserDoc.data() as Map<String, dynamic>?;
+
+    //retrieve the role from current user  collection
+    String currentUserRole = userData!['role'].toString();
+
+    // Query admins with the specified discipline
     QuerySnapshot usersSnapshot = await FirebaseFirestore.instance
         .collection(userCollectionRef)
         .where('role', isEqualTo: Roles.Administrator.toShortString())
         .where('discipline', isEqualTo: equipmentDiscipline)
         .get();
+
+    //if the current user is an admin
+    //user his fcm token to element him from the admins who will receieve the notification
+    if (currentUserRole == Roles.Administrator.toShortString()) {
+      // Query admins specific discipline
+      usersSnapshot = await FirebaseFirestore.instance
+          .collection(userCollectionRef)
+          .where('role', isEqualTo: Roles.Administrator.toShortString())
+          .where('discipline', isEqualTo: equipmentDiscipline)
+          .where('FCMtoken', isNotEqualTo: interventionFileCreatorToken)
+          .get();
+    } else {
+      //if the user is not an admin make a query for all admins
+      // with thta discipline
+      usersSnapshot = await FirebaseFirestore.instance
+          .collection(userCollectionRef)
+          .where('role', isEqualTo: Roles.Administrator.toShortString())
+          .where('discipline', isEqualTo: equipmentDiscipline)
+          .get();
+    }
+
     //creating a batch to write in mutiple documents
     WriteBatch batch = FirebaseFirestore.instance.batch();
+
     // Iterate over the query snapshot to get each user's document ID
     for (QueryDocumentSnapshot userDoc in usersSnapshot.docs) {
       //user doc id
       String userId = userDoc.id;
-
       //generate a new notification document id
       String notificationDocId = const Uuid().v4();
       // Add a subcollection called 'notifications' and write the desired data to it
       batch.set(
-          FirebaseFirestore.instance
-              .collection('users')
-              .doc(userId)
-              .collection('notifications')
-              .doc(notificationDocId),
-          notification.toJson());
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('notifications')
+            .doc(notificationDocId),
+        notification.toJson(),
+      );
     }
     //commiting the batch
     await batch.commit();

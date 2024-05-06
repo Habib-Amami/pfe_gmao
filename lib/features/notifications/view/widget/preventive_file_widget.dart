@@ -3,19 +3,6 @@ import 'package:pfe_gmao/features/intervention_files/View/widgets/add_file_form/
 import 'package:pfe_gmao/features/intervention_files/View/widgets/add_file_form/intervntion_file_form_files.dart';
 
 class PreventiveFile extends StatelessWidget {
-  const PreventiveFile(
-      {super.key,
-      required this.equipmentName,
-      required this.equipmentStatus,
-      required this.equipmentDiscipline,
-      required this.fileName,
-      required this.interventionType,
-      required this.forecast,
-      required this.startingDay,
-      required this.task,
-      required this.technicians,
-      required this.spareParts,
-      required this.tools});
   final String equipmentName;
   final String equipmentStatus;
   final String equipmentDiscipline;
@@ -27,6 +14,21 @@ class PreventiveFile extends StatelessWidget {
   final String tools;
   final String task;
   final int forecast;
+
+  const PreventiveFile({
+    super.key,
+    required this.equipmentName,
+    required this.equipmentStatus,
+    required this.equipmentDiscipline,
+    required this.fileName,
+    required this.interventionType,
+    required this.forecast,
+    required this.startingDay,
+    required this.task,
+    required this.technicians,
+    required this.spareParts,
+    required this.tools,
+  });
 
   @override
   Widget build(BuildContext context) {
