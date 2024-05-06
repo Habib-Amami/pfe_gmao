@@ -9,13 +9,13 @@ import 'package:pfe_gmao/features/intervention_files/model/data_models/intervent
 
 import 'widgets/intervention file widgets/preventive_file_widget.dart';
 
-class InterventionFileValitionView extends StatefulWidget {
+class InterventionFileValidationView extends StatefulWidget {
   final String interventionFileID;
   final String interventionType;
   final String equipmentID;
   final String equipmentDiscipline;
 
-  const InterventionFileValitionView({
+  const InterventionFileValidationView({
     required this.interventionFileID,
     required this.interventionType,
     required this.equipmentDiscipline,
@@ -24,12 +24,12 @@ class InterventionFileValitionView extends StatefulWidget {
   });
 
   @override
-  State<InterventionFileValitionView> createState() =>
+  State<InterventionFileValidationView> createState() =>
       _InterventionFileValitionView();
 }
 
 class _InterventionFileValitionView
-    extends State<InterventionFileValitionView> {
+    extends State<InterventionFileValidationView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -89,11 +89,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
             return notifications.isEmpty
                 ? const Padding(
                     padding: EdgeInsets.all(32.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text('No Notification to display'),
-                      ],
+                    child: Center(
+                      child: Text('No Notification to display'),
                     ),
                   )
                 : ListView.builder(
@@ -107,7 +104,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    InterventionFileValitionView(
+                                    InterventionFileValidationView(
                                   equipmentID: notifications[index].equipmentID,
                                   equipmentDiscipline:
                                       notifications[index].equipmentDiscipline,
