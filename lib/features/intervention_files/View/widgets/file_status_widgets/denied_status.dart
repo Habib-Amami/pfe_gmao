@@ -12,13 +12,11 @@ class DeniedState extends StatelessWidget {
         color: Theme.of(context).colorScheme.error,
         borderRadius: BorderRadius.circular(15),
       ),
-      child: const Center(
-        child: Text(
-          'This intervention file has been denied',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w400,
+      child: Expanded(
+        child: Center(
+          child: Text(
+            'This intervention file has been denied',
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
         ),
       ),

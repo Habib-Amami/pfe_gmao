@@ -14,6 +14,7 @@ class NotificationUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      // color: Theme.of(context).colorScheme.tertiaryContainer,
       child: Padding(
         padding: const EdgeInsets.all(6.0),
         child: Row(
@@ -38,17 +39,10 @@ class NotificationUI extends StatelessWidget {
                 children: [
                   Text(
                     notificationTitle,
-                    style: const TextStyle(
-                      fontSize: 19,
-                      fontWeight: FontWeight.w400,
-                    ),
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   Text(
                     notificationMessage,
-                    style: TextStyle(
-                        color: Colors.black.withOpacity(0.6),
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15),
                   )
                 ],
               ),
