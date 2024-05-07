@@ -979,6 +979,10 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                             String? currentUserToken =
                                                 await NotificationsModel()
                                                     .getCurrentUserToken();
+
+                                            //getting current user id
+                                            String currentUserID = FirebaseAuth
+                                                .instance.currentUser!.uid;
                                             //sending psu notification to admins of that didcipline
                                             NotificationsModel()
                                                 .sendIFValidationRequestNotification(
@@ -992,9 +996,11 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                             //admins of that dscipline
                                             //notifications subcollection
                                             NotificationsModel()
-                                                .addNotificationDB(
+                                                .addInterventionFileValidationNotificationDB(
                                               notificationTitle: notifTitle,
                                               notificationBody: notifBody,
+                                              interventionFileCreatorID:
+                                                  currentUserID,
                                               interventionFileCreatorToken:
                                                   currentUserToken!,
                                               interventionFileID: fileID,

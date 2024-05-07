@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class InterventionFileValidationNotification {
   final String notificationTitle;
   final String notificationBody;
+  final String interventionFileCreatorID;
   final String interventionFileCreatorToken;
   final String interventionFileID;
   final String interventionType;
@@ -14,6 +15,7 @@ class InterventionFileValidationNotification {
   InterventionFileValidationNotification({
     required this.notificationTitle,
     required this.notificationBody,
+    required this.interventionFileCreatorID,
     required this.interventionFileCreatorToken,
     required this.interventionFileID,
     required this.equipmentID,
@@ -28,6 +30,7 @@ class InterventionFileValidationNotification {
     return {
       'notificationTitle': notificationTitle,
       'notificationBody': notificationBody,
+      'interventionFileCreatorID': interventionFileCreatorID,
       'interventionFileCreatorToken': interventionFileCreatorToken,
       'interventionFileID': interventionFileID,
       'interventionType': interventionType,
@@ -45,6 +48,7 @@ class InterventionFileValidationNotification {
     return InterventionFileValidationNotification(
       notificationTitle: json['notificationTitle'],
       notificationBody: json['notificationBody'],
+      interventionFileCreatorID: json['interventionFileCreatorID'],
       interventionFileCreatorToken: json['interventionFileCreatorToken'],
       interventionFileID: json['interventionFileID'],
       interventionType: json['interventionType'],

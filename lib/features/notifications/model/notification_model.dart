@@ -180,9 +180,10 @@ class NotificationsModel {
   }
 
   //add a notification the the admins documents
-  void addNotificationDB({
+  void addInterventionFileValidationNotificationDB({
     required String notificationTitle,
     required String notificationBody,
+    required String interventionFileCreatorID,
     required String interventionFileCreatorToken,
     required String interventionFileID,
     required String interventionType,
@@ -195,6 +196,7 @@ class NotificationsModel {
         InterventionFileValidationNotification(
       notificationTitle: notificationTitle,
       notificationBody: notificationBody,
+      interventionFileCreatorID: interventionFileCreatorID,
       interventionFileCreatorToken: interventionFileCreatorToken,
       interventionFileID: interventionFileID,
       interventionType: interventionType,
@@ -264,5 +266,42 @@ class NotificationsModel {
     }
     //commiting the batch
     await batch.commit();
+  }
+
+  //add a notification validation update to the file creator using this FCM token
+  Future<void> addValidationNotificationUpdateDB({
+    required String notificationTitle,
+    required String notificationBody,
+    required String interventionFileCreatorID,
+    required String interventionFileCreatorToken,
+    required String interventionFileID,
+    required String interventionType,
+    required String equipmentID,
+    required String equipmentTagName,
+    required String equipmentDiscipline,
+  }) async {
+    //creating an instance of validation notification
+    InterventionFileValidationNotification notification =
+        InterventionFileValidationNotification(
+      notificationTitle: notificationTitle,
+      notificationBody: notificationBody,
+      interventionFileCreatorID: interventionFileCreatorID,
+      interventionFileCreatorToken: interventionFileCreatorToken,
+      interventionFileID: interventionFileID,
+      interventionType: interventionType,
+      equipmentID: equipmentID,
+      equipmentTagName: equipmentTagName,
+      equipmentDiscipline: equipmentDiscipline,
+      createdAt: Timestamp.now(),
+    );
+    //Generate a doc if
+    String docId = const Uuid().v4();
+    //adding notification to the file creator document using this fcm token
+    await FirebaseFirestore.instance
+        .collection(userCollectionRef)
+        .doc(interventionFileCreatorID)
+        .collection('notifications')
+        .doc(docId)
+        .set(notification.toJson());
   }
 }

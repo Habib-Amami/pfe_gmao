@@ -10,6 +10,7 @@ import 'widgets/intervention_file_widgets/curative_file_widget.dart';
 import 'widgets/intervention_file_widgets/preventive_file_widget.dart';
 
 class InterventionFileValidationView extends StatefulWidget {
+  final String interventionFileCreatorID;
   final String interventionFileCreatorToken;
   final String interventionFileID;
   final String interventionType;
@@ -18,6 +19,7 @@ class InterventionFileValidationView extends StatefulWidget {
   final String equipmentDiscipline;
 
   const InterventionFileValidationView({
+    required this.interventionFileCreatorID,
     required this.interventionFileCreatorToken,
     required this.interventionFileID,
     required this.interventionType,
@@ -206,11 +208,14 @@ class _InterventionFileValidationView
                                                               "The intervention file you created for ${widget.equipmentTagName} was validated",
                                                         );
                                                         NotificationsModel()
-                                                            .addNotificationDB(
+                                                            .addInterventionFileValidationNotificationDB(
                                                           notificationTitle:
                                                               "Validation Update",
                                                           notificationBody:
                                                               "The intervention file you created for ${widget.equipmentTagName} was validated",
+                                                          interventionFileCreatorID:
+                                                              widget
+                                                                  .interventionFileCreatorID,
                                                           interventionFileCreatorToken:
                                                               widget
                                                                   .interventionFileCreatorToken,
@@ -303,11 +308,14 @@ class _InterventionFileValidationView
                                                               "The intervention file you created for ${widget.equipmentTagName} was denied",
                                                         );
                                                         NotificationsModel()
-                                                            .addNotificationDB(
+                                                            .addInterventionFileValidationNotificationDB(
                                                           notificationTitle:
                                                               "Validation Update",
                                                           notificationBody:
                                                               "The intervention file you created for ${widget.equipmentTagName} was denied",
+                                                          interventionFileCreatorID:
+                                                              widget
+                                                                  .interventionFileCreatorID,
                                                           interventionFileCreatorToken:
                                                               widget
                                                                   .interventionFileCreatorToken,
