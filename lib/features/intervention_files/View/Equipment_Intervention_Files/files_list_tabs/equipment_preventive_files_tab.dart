@@ -47,6 +47,7 @@ class EquipmentPreventiveFilesTab extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CircularProgressIndicator(),
+                SizedBox(height: 10),
                 Text("Loading files ...")
               ],
             ),
@@ -113,6 +114,7 @@ class EquipmentPreventiveFilesTab extends StatelessWidget {
             itemCount: files.length,
             itemBuilder: (context, index) {
               return PreventiveInterventionFileCard(
+                equipmentName: files[index].equipmentTagName,
                 fileName: files[index].fileName,
                 fileStatus: files[index].fileStatus,
                 equipmentDiscipline: files[index].equipmentDiscipline,
@@ -127,6 +129,8 @@ class EquipmentPreventiveFilesTab extends StatelessWidget {
                     files[index].electricalTechnician,
                 isInstrumentTechnicianSelected:
                     files[index].instrumentTechnician,
+                fileID: files[index].fileID,
+                interventionType: files[index].maintenanceType,
               );
             },
           ),
