@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-
+import 'package:pfe_gmao/features/intervention_files/View/intervention_file_view.dart';
+import 'package:pfe_gmao/features/intervention_files/View/widgets/add_file_form/intervention_file_status.dart';
 import '../../model/constants/intervention_types_list.dart';
 import '../../model/data_models/curative_intervention_file.dart';
 import '../../model/data_models/preventive_intervention_file.dart';
@@ -25,6 +26,7 @@ class InterventionFilesStream extends StatelessWidget {
           .collection(
             collectionRef,
           )
+          .orderBy('createdAt', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
         // Handle interruption of connection
@@ -114,21 +116,85 @@ class InterventionFilesStream extends StatelessWidget {
             }
           }
           return Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8),
             child: ListView.builder(
               itemCount: files.length,
               itemBuilder: (context, index) {
-                return Card(
-                  child: ListTile(
-                    title: Text(files[index].maintenanceType),
-                    subtitle: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(files[index].equipmentTagName),
-                        Text(files[index].equipmentDiscipline),
-                        Text(files[index].interventionTask)
-                      ],
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => InterventionFileViewPage(
+                                  interventionFileID: files[index].fileID,
+                                  interventionType:
+                                      files[index].maintenanceType,
+                                  equipmentDiscipline:
+                                      files[index].equipmentDiscipline,
+                                )));
+                  },
+                  child: Card(
+                    child: ListTile(
+                      title: Row(
+                        children: [
+                          Text(
+                            files[index].fileName,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          InterventionFileStatus(
+                            status: files[index].fileStatus,
+                          )
+                        ],
+                      ),
+                      subtitle: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Text(
+                                'Equipment:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              Text(files[index].equipmentTagName),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Text(
+                                'data:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              Text(files[index].equipmentDiscipline),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Text(
+                                'Criticality:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              Text(files[index].criticity),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -183,18 +249,82 @@ class InterventionFilesStream extends StatelessWidget {
             child: ListView.builder(
               itemCount: files.length,
               itemBuilder: (context, index) {
-                //TODO : create the UI for the card
-                return Card(
-                  child: ListTile(
-                    title: Text(files[index].maintenanceType),
-                    subtitle: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(files[index].equipmentTagName),
-                        Text(files[index].equipmentDiscipline),
-                        Text(files[index].interventionTask),
-                      ],
+                //TO DO : create the UI for the card
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => InterventionFileViewPage(
+                          interventionFileID: files[index].fileID,
+                          interventionType: files[index].maintenanceType,
+                          equipmentDiscipline: files[index].equipmentDiscipline,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Card(
+                    child: ListTile(
+                      title: Row(
+                        children: [
+                          Text(
+                            files[index].fileName,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          InterventionFileStatus(
+                            status: files[index].fileStatus,
+                          )
+                        ],
+                      ),
+                      subtitle: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Text(
+                                'Equipment:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              Text(files[index].equipmentTagName),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Text(
+                                'data:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              Text(files[index].equipmentDiscipline),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Text(
+                                'Criticality:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              Text('${files[index].forecast.toString()} days'),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 );
