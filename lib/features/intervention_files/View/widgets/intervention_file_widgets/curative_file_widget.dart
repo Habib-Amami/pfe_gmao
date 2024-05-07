@@ -19,6 +19,7 @@ class CurativeInterventionFile extends StatelessWidget {
     required this.tools,
     required this.task,
     required this.breakdownDescription,
+    //required this.creationDate,
   });
   final String equipmentName;
   final String equipmentStatus;
@@ -27,6 +28,7 @@ class CurativeInterventionFile extends StatelessWidget {
   final String interventionType;
   final String criticality;
   final String breakdownType;
+  //final String creationDate;
   final String breakdownDescription;
   final String startingDay;
   final String technicians;
@@ -143,6 +145,20 @@ class CurativeInterventionFile extends StatelessWidget {
                 ),
               ),
             ),
+            // const InterventionFileFormTitle(
+            //   title: "Creation date",
+            // ),
+            // InterventionFileFormField(
+            //   maxLines: 3,
+            //   enabled: false,
+            //   initialValue: creationDate,
+            //   prefixIcon: const Padding(
+            //     padding: EdgeInsets.only(bottom: 48.0),
+            //     child: Icon(
+            //       Icons.description_outlined,
+            //     ),
+            //   ),
+            // ),
             const InterventionFileFormTitle(
               title: "Starting Day",
             ),

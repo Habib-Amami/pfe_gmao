@@ -6,11 +6,12 @@ class NotificationUI extends StatelessWidget {
     required this.notificationTitle,
     required this.notificationMessage,
     required this.notificationIcon,
+    required this.notificationColor,
   });
   final String notificationTitle;
   final String notificationMessage;
   final IconData notificationIcon;
-
+  final Color notificationColor;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -23,12 +24,12 @@ class NotificationUI extends StatelessWidget {
               height: 60,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color: Colors.green.shade100,
+                color: notificationColor.withOpacity(0.3),
               ),
               child: Icon(
                 notificationIcon,
-                color: Colors.green,
-                size: 30,
+                color: notificationColor,
+                size: 35,
               ),
             ),
             const SizedBox(width: 18),
@@ -38,7 +39,8 @@ class NotificationUI extends StatelessWidget {
                 children: [
                   Text(
                     notificationTitle,
-                    style: const TextStyle(
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
                       fontSize: 19,
                       fontWeight: FontWeight.w400,
                     ),
@@ -46,9 +48,10 @@ class NotificationUI extends StatelessWidget {
                   Text(
                     notificationMessage,
                     style: TextStyle(
-                        color: Colors.black.withOpacity(0.6),
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 15,
+                    ),
                   )
                 ],
               ),

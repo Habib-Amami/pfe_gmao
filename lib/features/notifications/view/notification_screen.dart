@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../../intervention_files/View/intervntion_file_validation_view.dart';
@@ -28,7 +30,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         automaticallyImplyLeading: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 14),
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('users')
@@ -99,38 +101,85 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     itemBuilder: ((context, index) {
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 4),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    InterventionFileValidationView(
-                                  interventionFileCreatorID:
-                                      notifications[index]
-                                          .interventionFileCreatorID,
-                                  interventionFileCreatorToken:
-                                      notifications[index]
-                                          .interventionFileCreatorToken,
-                                  equipmentTagName:
-                                      notifications[index].equipmentTagName,
-                                  equipmentID: notifications[index].equipmentID,
-                                  equipmentDiscipline:
-                                      notifications[index].equipmentDiscipline,
-                                  interventionType:
-                                      notifications[index].interventionType,
-                                  interventionFileID:
-                                      notifications[index].interventionFileID,
+                        child: Slidable(
+                          endActionPane: ActionPane(
+                            motion: const StretchMotion(),
+                            children: [
+                              SlidableAction(
+                                onPressed: null,
+                                foregroundColor: Colors.white,
+                                autoClose: true,
+                                label: 'Delete',
+                                icon: Ionicons.trash_bin,
+                                borderRadius: BorderRadius.circular(13),
+                                backgroundColor: Colors.red.shade700,
+                              )
+                            ],
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      InterventionFileValidationView(
+                                    interventionFileCreatorID:
+                                        notifications[index]
+                                            .interventionFileCreatorID,
+                                    interventionFileCreatorToken:
+                                        notifications[index]
+                                            .interventionFileCreatorToken,
+                                    equipmentTagName:
+                                        notifications[index].equipmentTagName,
+                                    equipmentID:
+                                        notifications[index].equipmentID,
+                                    equipmentDiscipline: notifications[index]
+                                        .equipmentDiscipline,
+                                    interventionType:
+                                        notifications[index].interventionType,
+                                    interventionFileID:
+                                        notifications[index].interventionFileID,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          child: NotificationUI(
-                            notificationTitle:
-                                notifications[index].notificationTitle,
-                            notificationMessage:
-                                notifications[index].notificationBody,
-                            notificationIcon: Icons.edit_document,
+                              );
+                            },
+                            child: notifications[index].notificationTitle ==
+                                        'Validation Update' &&
+                                    notifications[index]
+                                        .notificationBody
+                                        .contains('denied')
+                                ? NotificationUI(
+                                    notificationTitle:
+                                        notifications[index].notificationTitle,
+                                    notificationMessage:
+                                        notifications[index].notificationBody,
+                                    notificationIcon:
+                                        Icons.highlight_off_rounded,
+                                    notificationColor: Colors.red,
+                                  )
+                                : notifications[index].notificationTitle ==
+                                            'Validation Update' &&
+                                        notifications[index]
+                                            .notificationBody
+                                            .contains('validated')
+                                    ? NotificationUI(
+                                        notificationTitle: notifications[index]
+                                            .notificationTitle,
+                                        notificationMessage:
+                                            notifications[index]
+                                                .notificationBody,
+                                        notificationIcon:
+                                            Ionicons.checkmark_done_sharp,
+                                        notificationColor: Colors.green,
+                                      )
+                                    : NotificationUI(
+                                        notificationTitle: notifications[index]
+                                            .notificationTitle,
+                                        notificationMessage:
+                                            notifications[index]
+                                                .notificationBody,
+                                        notificationIcon: Icons.edit_document,
+                                        notificationColor: Colors.orangeAccent),
                           ),
                         ),
                       );
