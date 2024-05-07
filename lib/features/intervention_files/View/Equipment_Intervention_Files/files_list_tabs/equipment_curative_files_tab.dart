@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-
 import '../../../../../firebase/cloud_firestore_references.dart';
 import '../../../model/constants/intervention_types_list.dart';
 import '../../../model/data_models/curative_intervention_file.dart';
@@ -47,6 +46,7 @@ class EquipmentCurativeFilesTab extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CircularProgressIndicator(),
+                SizedBox(height: 10),
                 Text("Loading files ...")
               ],
             ),
@@ -116,7 +116,7 @@ class EquipmentCurativeFilesTab extends StatelessWidget {
               return CurativeInterventionFileCard(
                 fileName: files[index].fileName,
                 fileStatus: files[index].fileStatus,
-                equipmentDiscipline: files[index].equipmentDiscipline,
+                equipmentName: files[index].equipmentTagName,
                 interventionTask: files[index].interventionTask,
                 startingDay: files[index].startingDay,
                 spareParts: files[index].spareParts,
@@ -130,6 +130,9 @@ class EquipmentCurativeFilesTab extends StatelessWidget {
                 breakDownDescription: files[index].breakDownDescription,
                 breakDownType: files[index].breakDownType,
                 criticity: files[index].criticity,
+                fileID: files[index].fileID,
+                interventionType: files[index].maintenanceType,
+                equipmentDiscipline: files[index].equipmentDiscipline,
               );
             },
           ),
