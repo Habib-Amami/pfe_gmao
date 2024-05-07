@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:pfe_gmao/features/intervention_files/View/intervention_file_view.dart';
 
 import 'add_file_form/intervention_file_status.dart';
 
 class CurativeInterventionFileCard extends StatelessWidget {
   final String fileName;
+  final String fileID;
   final String fileStatus;
+  final String equipmentName;
   final String equipmentDiscipline;
   final String interventionTask;
+  final String interventionType;
   final String startingDay;
   final String criticity;
   final String breakDownType;
@@ -21,7 +25,7 @@ class CurativeInterventionFileCard extends StatelessWidget {
     super.key,
     required this.fileName,
     required this.fileStatus,
-    required this.equipmentDiscipline,
+    required this.equipmentName,
     required this.interventionTask,
     required this.startingDay,
     required this.spareParts,
@@ -32,6 +36,9 @@ class CurativeInterventionFileCard extends StatelessWidget {
     required this.criticity,
     required this.breakDownType,
     required this.breakDownDescription,
+    required this.fileID,
+    required this.interventionType,
+    required this.equipmentDiscipline,
   });
 
   @override
@@ -47,8 +54,14 @@ class CurativeInterventionFileCard extends StatelessWidget {
         ),
         subtitle: Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
-          child: InterventionFileStatus(
-            status: fileStatus,
+          child: Row(
+            children: [
+              const Text('Status:'),
+              const SizedBox(width: 10),
+              InterventionFileStatus(
+                status: fileStatus,
+              ),
+            ],
           ),
         ),
         expandedAlignment: Alignment.centerLeft,
@@ -58,14 +71,7 @@ class CurativeInterventionFileCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              "Discipline :   $equipmentDiscipline",
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Text(
-              "Task :   $interventionTask",
+              "Equipment :   $equipmentName",
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -86,63 +92,25 @@ class CurativeInterventionFileCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              "Breakdown description :   $breakDownDescription",
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Text(
               "Starting Day :   $startingDay",
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Text(
-              "Tools :   $tools",
-              overflow: TextOverflow.ellipsis,
+          Center(
+            child: TextButton(
+              child: const Text('See more'),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => InterventionFileViewPage(
+                          interventionFileID: fileID,
+                          interventionType: interventionType,
+                          equipmentDiscipline: equipmentDiscipline),
+                    ));
+              },
             ),
-          ),
-          Text(
-            "Spare Parts :   $spareParts",
-            overflow: TextOverflow.ellipsis,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Row(
-              children: [
-                const Text(
-                  "Technicians :",
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 18),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      isMechanicalTechnicianSelected
-                          ? const Text(
-                              "Mechanical technician",
-                            )
-                          : Container(),
-                      isElectricalTechnicianSelected
-                          ? const Text(
-                              'Electrical technician',
-                            )
-                          : Container(),
-                      isInstrumentTechnicianSelected
-                          ? const Text(
-                              'Instrument technician',
-                            )
-                          : Container(),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
+          )
         ],
       ),
     );

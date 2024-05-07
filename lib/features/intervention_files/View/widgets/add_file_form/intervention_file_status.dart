@@ -26,25 +26,18 @@ class InterventionFileStatus extends StatelessWidget {
         iconData = Icons.error_outline;
         iconColor = Colors.grey;
     }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        const Text("Status:"),
-        const SizedBox(width: 10),
-        Container(
-          width: 22,
-          height: 22,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: iconColor,
-          ),
-          child: Icon(
-            size: 18,
-            iconData,
-            color: Colors.white,
-          ),
-        ),
-      ],
+    return Container(
+      width: 22,
+      height: 22,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: iconColor,
+      ),
+      child: Icon(
+        size: 18,
+        iconData,
+        color: Colors.white,
+      ),
     );
   }
 }
