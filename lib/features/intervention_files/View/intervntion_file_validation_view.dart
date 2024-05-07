@@ -208,7 +208,7 @@ class _InterventionFileValidationView
                                                               "The intervention file you created for ${widget.equipmentTagName} was validated",
                                                         );
                                                         NotificationsModel()
-                                                            .addInterventionFileValidationNotificationDB(
+                                                            .addValidationNotificationUpdateDB(
                                                           notificationTitle:
                                                               "Validation Update",
                                                           notificationBody:
@@ -308,7 +308,7 @@ class _InterventionFileValidationView
                                                               "The intervention file you created for ${widget.equipmentTagName} was denied",
                                                         );
                                                         NotificationsModel()
-                                                            .addInterventionFileValidationNotificationDB(
+                                                            .addValidationNotificationUpdateDB(
                                                           notificationTitle:
                                                               "Validation Update",
                                                           notificationBody:

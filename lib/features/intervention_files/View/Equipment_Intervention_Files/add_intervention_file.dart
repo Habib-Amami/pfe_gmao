@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -983,6 +984,10 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                             //getting current user id
                                             String currentUserID = FirebaseAuth
                                                 .instance.currentUser!.uid;
+                                            if (kDebugMode) {
+                                              print(
+                                                  "curent user id: $currentUserID");
+                                            }
                                             //sending psu notification to admins of that didcipline
                                             NotificationsModel()
                                                 .sendIFValidationRequestNotification(
