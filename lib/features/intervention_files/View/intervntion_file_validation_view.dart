@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import '../../notifications/model/notification_model.dart';
 import '../model/data_models/intervention_file_status.dart';
 import '../model/intervention_file_model.dart';
-import 'widgets/file_status_widgets/confirmed_status.dart';
-import 'widgets/file_status_widgets/denied_status.dart';
+import 'widgets/file_status_rectangular_widgets/confirmed_status.dart';
+import 'widgets/file_status_rectangular_widgets/denied_status.dart';
 import 'widgets/intervention_file_widgets/curative_file_widget.dart';
 import 'widgets/intervention_file_widgets/preventive_file_widget.dart';
+//import 'package:intl/intl.dart';
 
 class InterventionFileValidationView extends StatefulWidget {
   final String interventionFileCreatorID;
@@ -111,6 +111,7 @@ class _InterventionFileValidationView
           String technicianList = technicians.join(' - ');
           var spareParts = data['spareParts'].join(' - ');
           var tools = data['tools'].join(' - ');
+          //var creationDate = data['CreatedAt'];
           return ListView(
             children: [
               SingleChildScrollView(
@@ -142,6 +143,13 @@ class _InterventionFileValidationView
                         spareParts: spareParts,
                         task: data['interventionTask'],
                         breakdownDescription: data['breakDownDescription'],
+                        // creationDate: DateFormat(
+                        //   'dd-MM-yyyy',
+                        // ).format(
+                        //   DateTime.fromMillisecondsSinceEpoch(
+                        //     creationDate.seconds * 1000,
+                        //   ),
+                        // ),
                       ),
               ),
               Padding(
