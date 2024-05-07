@@ -155,14 +155,10 @@ class _InterventionFileViewPage extends State<InterventionFileViewPage> {
                               color: Colors.orangeAccent.withOpacity(0.7),
                               borderRadius: BorderRadius.circular(15),
                             ),
-                            child: const Center(
+                            child: Center(
                               child: Text(
                                 'This intervention file still in review',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                                style: Theme.of(context).textTheme.bodySmall,
                               ),
                             ),
                           )

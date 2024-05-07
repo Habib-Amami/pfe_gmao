@@ -12,12 +12,10 @@ class ConfirmedState extends StatelessWidget {
         color: Colors.green.withOpacity(0.7),
         borderRadius: BorderRadius.circular(15),
       ),
-      child: Expanded(
-        child: Center(
-          child: Text(
-            'This intervention file has been validated',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
+      child: Center(
+        child: Text(
+          'This intervention file has been validated',
+          style: Theme.of(context).textTheme.bodySmall,
         ),
       ),
     );

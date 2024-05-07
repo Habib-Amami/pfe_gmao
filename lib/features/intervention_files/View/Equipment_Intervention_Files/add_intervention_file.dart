@@ -971,6 +971,9 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                               equipmentDiscipline:
                                                   widget.equipmentDiscipline,
                                             );
+                                            //creating notification ID
+                                            String notificationID =
+                                                const Uuid().v4();
                                             //creating a notification title
                                             String notifTitle =
                                                 "Requesting Validation";
@@ -1002,6 +1005,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                             //notifications subcollection
                                             NotificationsModel()
                                                 .addInterventionFileValidationNotificationDB(
+                                              notificationID: notificationID,
                                               notificationTitle: notifTitle,
                                               notificationBody: notifBody,
                                               interventionFileCreatorID:

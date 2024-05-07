@@ -1,6 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class InterventionFileValidationNotification {
+  final String notificationID;
   final String notificationTitle;
   final String notificationBody;
   final String interventionFileCreatorID;
@@ -10,9 +9,10 @@ class InterventionFileValidationNotification {
   final String equipmentID;
   final String equipmentTagName;
   final String equipmentDiscipline;
-  final Timestamp createdAt;
+  final DateTime createdAt;
 
   InterventionFileValidationNotification({
+    required this.notificationID,
     required this.notificationTitle,
     required this.notificationBody,
     required this.interventionFileCreatorID,
@@ -28,6 +28,7 @@ class InterventionFileValidationNotification {
   // toJson method to convert the object to a JSON format
   Map<String, dynamic> toJson() {
     return {
+      'notificationID': notificationID,
       'notificationTitle': notificationTitle,
       'notificationBody': notificationBody,
       'interventionFileCreatorID': interventionFileCreatorID,
@@ -37,7 +38,7 @@ class InterventionFileValidationNotification {
       'equipmentID': equipmentID,
       'equipmentTagName': equipmentTagName,
       'equipmentDiscipline': equipmentDiscipline,
-      'createdAt': createdAt.millisecondsSinceEpoch,
+      'createdAt': createdAt.toIso8601String(),
     };
   }
 
@@ -46,6 +47,7 @@ class InterventionFileValidationNotification {
     Map<String, dynamic> json,
   ) {
     return InterventionFileValidationNotification(
+      notificationID: json['notificationID'],
       notificationTitle: json['notificationTitle'],
       notificationBody: json['notificationBody'],
       interventionFileCreatorID: json['interventionFileCreatorID'],
@@ -55,7 +57,7 @@ class InterventionFileValidationNotification {
       equipmentID: json['equipmentID'],
       equipmentTagName: json['equipmentTagName'],
       equipmentDiscipline: json['equipmentDiscipline'],
-      createdAt: Timestamp.fromMicrosecondsSinceEpoch(json['createdAt']),
+      createdAt: DateTime.parse(json['createdAt']),
     );
   }
 }

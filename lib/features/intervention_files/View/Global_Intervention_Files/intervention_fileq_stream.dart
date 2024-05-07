@@ -123,15 +123,15 @@ class InterventionFilesStream extends StatelessWidget {
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => InterventionFileViewPage(
-                                  interventionFileID: files[index].fileID,
-                                  interventionType:
-                                      files[index].maintenanceType,
-                                  equipmentDiscipline:
-                                      files[index].equipmentDiscipline,
-                                )));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => InterventionFileViewPage(
+                          interventionFileID: files[index].fileID,
+                          interventionType: files[index].maintenanceType,
+                          equipmentDiscipline: files[index].equipmentDiscipline,
+                        ),
+                      ),
+                    );
                   },
                   child: Card(
                     child: ListTile(
@@ -160,7 +160,7 @@ class InterventionFilesStream extends StatelessWidget {
                           Row(
                             children: [
                               const Text(
-                                'Equipment:',
+                                'Equipment  :',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -172,7 +172,7 @@ class InterventionFilesStream extends StatelessWidget {
                           Row(
                             children: [
                               const Text(
-                                'data:',
+                                'Discipline  :',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -184,7 +184,7 @@ class InterventionFilesStream extends StatelessWidget {
                           Row(
                             children: [
                               const Text(
-                                'Criticality:',
+                                'Criticality  :',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -290,7 +290,7 @@ class InterventionFilesStream extends StatelessWidget {
                           Row(
                             children: [
                               const Text(
-                                'Equipment:',
+                                'Equipment:  ',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -302,7 +302,7 @@ class InterventionFilesStream extends StatelessWidget {
                           Row(
                             children: [
                               const Text(
-                                'data:',
+                                'Discipline:  ',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -314,7 +314,7 @@ class InterventionFilesStream extends StatelessWidget {
                           Row(
                             children: [
                               const Text(
-                                'Criticality:',
+                                'Forecast:  ',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                 ),

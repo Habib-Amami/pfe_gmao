@@ -181,6 +181,7 @@ class NotificationsModel {
 
   //add a notification the the admins documents
   void addInterventionFileValidationNotificationDB({
+    required String notificationID,
     required String notificationTitle,
     required String notificationBody,
     required String interventionFileCreatorID,
@@ -191,20 +192,6 @@ class NotificationsModel {
     required String equipmentTagName,
     required String equipmentDiscipline,
   }) async {
-    //creating an instance of validation notification
-    InterventionFileValidationNotification notification =
-        InterventionFileValidationNotification(
-      notificationTitle: notificationTitle,
-      notificationBody: notificationBody,
-      interventionFileCreatorID: interventionFileCreatorID,
-      interventionFileCreatorToken: interventionFileCreatorToken,
-      interventionFileID: interventionFileID,
-      interventionType: interventionType,
-      equipmentID: equipmentID,
-      equipmentTagName: equipmentTagName,
-      equipmentDiscipline: equipmentDiscipline,
-      createdAt: Timestamp.now(),
-    );
     // Retrieve the current user ID
     String currentUserID = FirebaseAuth.instance.currentUser!.uid;
     // getting the current user data
@@ -254,6 +241,22 @@ class NotificationsModel {
       String userId = userDoc.id;
       //generate a new notification document id
       String notificationDocId = const Uuid().v4();
+
+      //creating an instance of validation notification
+      InterventionFileValidationNotification notification =
+          InterventionFileValidationNotification(
+        notificationID: notificationDocId,
+        notificationTitle: notificationTitle,
+        notificationBody: notificationBody,
+        interventionFileCreatorID: interventionFileCreatorID,
+        interventionFileCreatorToken: interventionFileCreatorToken,
+        interventionFileID: interventionFileID,
+        interventionType: interventionType,
+        equipmentID: equipmentID,
+        equipmentTagName: equipmentTagName,
+        equipmentDiscipline: equipmentDiscipline,
+        createdAt: DateTime.now(),
+      );
       // Add a subcollection called 'notifications' and write the desired data to it
       batch.set(
         FirebaseFirestore.instance
@@ -270,6 +273,7 @@ class NotificationsModel {
 
   //add a notification validation update to the file creator using this FCM token
   Future<void> addValidationNotificationUpdateDB({
+    required String notificationID,
     required String notificationTitle,
     required String notificationBody,
     required String interventionFileCreatorID,
@@ -283,6 +287,7 @@ class NotificationsModel {
     //creating an instance of validation notification
     InterventionFileValidationNotification notification =
         InterventionFileValidationNotification(
+      notificationID: notificationID,
       notificationTitle: notificationTitle,
       notificationBody: notificationBody,
       interventionFileCreatorID: interventionFileCreatorID,
@@ -292,16 +297,14 @@ class NotificationsModel {
       equipmentID: equipmentID,
       equipmentTagName: equipmentTagName,
       equipmentDiscipline: equipmentDiscipline,
-      createdAt: Timestamp.now(),
+      createdAt: DateTime.now(),
     );
-    //Generate a doc if
-    String docId = const Uuid().v4();
     //adding notification to the file creator document using this fcm token
     await FirebaseFirestore.instance
         .collection(userCollectionRef)
         .doc(interventionFileCreatorID)
         .collection('notifications')
-        .doc(docId)
+        .doc(notificationID)
         .set(notification.toJson());
   }
 }

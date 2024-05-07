@@ -157,17 +157,7 @@ class _HomeState extends State<Home> {
   void getFCMtoken() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-    await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-
-    String? FCMtoken = await FirebaseMessaging.instance.getToken();
+    String? FCMtoken = await messaging.getToken();
 
     if (FCMtoken != null) {
       String userId = FirebaseAuth.instance.currentUser!.uid;

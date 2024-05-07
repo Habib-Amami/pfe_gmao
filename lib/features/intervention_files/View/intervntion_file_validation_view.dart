@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import '../../notifications/model/notification_model.dart';
 import '../model/data_models/intervention_file_status.dart';
 import '../model/intervention_file_model.dart';
@@ -189,6 +190,8 @@ class _InterventionFileValidationView
                                                 ),
                                                 FilledButton(
                                                   onPressed: () {
+                                                    String notificationID =
+                                                        const Uuid().v4();
                                                     setState(
                                                       () {
                                                         InterventionFileModel()
@@ -217,6 +220,8 @@ class _InterventionFileValidationView
                                                         );
                                                         NotificationsModel()
                                                             .addValidationNotificationUpdateDB(
+                                                          notificationID:
+                                                              notificationID,
                                                           notificationTitle:
                                                               "Validation Update",
                                                           notificationBody:
@@ -289,6 +294,8 @@ class _InterventionFileValidationView
                                                 ),
                                                 FilledButton(
                                                   onPressed: () {
+                                                    String notificationID =
+                                                        const Uuid().v4();
                                                     setState(
                                                       () {
                                                         InterventionFileModel()
@@ -317,6 +324,8 @@ class _InterventionFileValidationView
                                                         );
                                                         NotificationsModel()
                                                             .addValidationNotificationUpdateDB(
+                                                          notificationID:
+                                                              notificationID,
                                                           notificationTitle:
                                                               "Validation Update",
                                                           notificationBody:
