@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pfe_gmao/features/intervention_files/model/data_models/spare_part.dart';
-import 'package:pfe_gmao/features/intervention_files/model/data_models/tool.dart';
-import 'package:pfe_gmao/features/intervention_files/model/intervention_file_model.dart';
+
+import '../model/data_models/spare_part.dart';
+import '../model/data_models/tool.dart';
+import '../model/intervention_file_model.dart';
 
 class InterventionFileController {
   //creating an instance of intervention file model

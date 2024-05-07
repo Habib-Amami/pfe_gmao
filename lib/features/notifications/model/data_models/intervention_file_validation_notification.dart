@@ -11,16 +11,17 @@ class InterventionFileValidationNotification {
   final String equipmentDiscipline;
   final Timestamp createdAt;
 
-  InterventionFileValidationNotification(
-      {required this.notificationTitle,
-      required this.notificationBody,
-      required this.interventionFileCreatorToken,
-      required this.interventionFileID,
-      required this.equipmentID,
-      required this.interventionType,
-      required this.equipmentTagName,
-      required this.equipmentDiscipline,
-      required this.createdAt});
+  InterventionFileValidationNotification({
+    required this.notificationTitle,
+    required this.notificationBody,
+    required this.interventionFileCreatorToken,
+    required this.interventionFileID,
+    required this.equipmentID,
+    required this.interventionType,
+    required this.equipmentTagName,
+    required this.equipmentDiscipline,
+    required this.createdAt,
+  });
 
   // toJson method to convert the object to a JSON format
   Map<String, dynamic> toJson() {

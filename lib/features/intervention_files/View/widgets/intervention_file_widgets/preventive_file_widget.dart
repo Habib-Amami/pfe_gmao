@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pfe_gmao/features/intervention_files/View/widgets/add_file_form/intervention_file_form_title.dart';
-import 'package:pfe_gmao/features/intervention_files/View/widgets/add_file_form/intervntion_file_form_files.dart';
+
+import '../add_file_form/intervention_file_form_title.dart';
+import '../add_file_form/intervntion_file_form_files.dart';
 
 class PreventiveFile extends StatelessWidget {
   final String equipmentName;

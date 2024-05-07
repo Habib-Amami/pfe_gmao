@@ -1,24 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../../notifications/model/notification_model.dart';
 import '../model/data_models/intervention_file_status.dart';
 import '../model/intervention_file_model.dart';
-import 'widgets/intervention file widgets/preventive_file_widget.dart';
-import 'widgets/intervention%20file%20widgets/confirmed_status.dart';
-import 'widgets/intervention%20file%20widgets/curative_file_widget.dart';
-import 'widgets/intervention%20file%20widgets/denied_status.dart';
+import 'widgets/file_status_widgets/confirmed_status.dart';
+import 'widgets/file_status_widgets/denied_status.dart';
+import 'widgets/intervention_file_widgets/curative_file_widget.dart';
+import 'widgets/intervention_file_widgets/preventive_file_widget.dart';
 
 class InterventionFileValidationView extends StatefulWidget {
+  final String interventionFileCreatorToken;
   final String interventionFileID;
   final String interventionType;
   final String equipmentID;
+  final String equipmentTagName;
   final String equipmentDiscipline;
 
   const InterventionFileValidationView({
+    required this.interventionFileCreatorToken,
     required this.interventionFileID,
     required this.interventionType,
-    required this.equipmentDiscipline,
     required this.equipmentID,
+    required this.equipmentTagName,
+    required this.equipmentDiscipline,
     super.key,
   });
 
@@ -191,6 +196,15 @@ class _InterventionFileValidationView
                                                               interventionFileStatus[
                                                                   0],
                                                         );
+                                                        NotificationsModel()
+                                                            .sendNotificationToDevice(
+                                                          deviceToken: widget
+                                                              .interventionFileCreatorToken,
+                                                          notificationTitle:
+                                                              "Validation Update",
+                                                          notificationBody:
+                                                              "The intervention file you created for ${widget.equipmentTagName} was validated",
+                                                        );
                                                         Navigator.pop(context);
                                                       },
                                                     );
@@ -257,6 +271,15 @@ class _InterventionFileValidationView
                                                           newStatus:
                                                               interventionFileStatus[
                                                                   1],
+                                                        );
+                                                        NotificationsModel()
+                                                            .sendNotificationToDevice(
+                                                          deviceToken: widget
+                                                              .interventionFileCreatorToken,
+                                                          notificationTitle:
+                                                              "Validation Update",
+                                                          notificationBody:
+                                                              "The intervention file you created for ${widget.equipmentTagName} was denied",
                                                         );
                                                         Navigator.pop(context);
                                                       },

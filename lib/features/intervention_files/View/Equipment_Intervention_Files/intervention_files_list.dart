@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pfe_gmao/features/intervention_files/View/Equipment_Intervention_Files/files_list_tabs/equipment_curative_files_tab.dart';
 
+import 'files_list_tabs/equipment_curative_files_tab.dart';
 import 'files_list_tabs/equipment_preventive_files_tab.dart';
 
 class InterventionFilesList extends StatelessWidget {

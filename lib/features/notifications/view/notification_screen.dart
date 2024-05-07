@@ -106,6 +106,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               MaterialPageRoute(
                                 builder: (context) =>
                                     InterventionFileValidationView(
+                                  interventionFileCreatorToken:
+                                      notifications[index]
+                                          .interventionFileCreatorToken,
+                                  equipmentTagName:
+                                      notifications[index].equipmentTagName,
                                   equipmentID: notifications[index].equipmentID,
                                   equipmentDiscipline:
                                       notifications[index].equipmentDiscipline,

@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:pfe_gmao/features/intervention_files/model/constants/intervention_types_list.dart';
 
 import '../../../../../firebase/cloud_firestore_references.dart';
+import '../../../model/constants/intervention_types_list.dart';
 import '../../../model/data_models/curative_intervention_file.dart';
 import '../../widgets/curative_intervention_file_card.dart';
 
