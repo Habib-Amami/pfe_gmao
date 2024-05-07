@@ -180,7 +180,7 @@ class NotificationsModel {
   }
 
   //add a notification the the admins documents
-  void addInterventionFileValidationNotification({
+  void addNotificationDB({
     required String notificationTitle,
     required String notificationBody,
     required String interventionFileCreatorToken,

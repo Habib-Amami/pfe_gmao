@@ -741,7 +741,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                     // Display the list of selected spare parts
                     : SizedBox(
                         width: double.infinity,
-                        height: 135,
+                        height: 105,
                         child: ListView.builder(
                           itemCount: selectedSparePartsList.length,
                           itemBuilder: (context, index) => Card(
@@ -830,7 +830,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                     // Display the list of selected tools
                     : SizedBox(
                         width: double.infinity,
-                        height: 140,
+                        height: 105,
                         child: ListView.builder(
                           itemExtent: 64,
                           itemCount: selectedToolsList.length,
@@ -992,7 +992,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                             //admins of that dscipline
                                             //notifications subcollection
                                             NotificationsModel()
-                                                .addInterventionFileValidationNotification(
+                                                .addNotificationDB(
                                               notificationTitle: notifTitle,
                                               notificationBody: notifBody,
                                               interventionFileCreatorToken:

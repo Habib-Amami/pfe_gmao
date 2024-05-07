@@ -205,6 +205,27 @@ class _InterventionFileValidationView
                                                           notificationBody:
                                                               "The intervention file you created for ${widget.equipmentTagName} was validated",
                                                         );
+                                                        NotificationsModel()
+                                                            .addNotificationDB(
+                                                          notificationTitle:
+                                                              "Validation Update",
+                                                          notificationBody:
+                                                              "The intervention file you created for ${widget.equipmentTagName} was validated",
+                                                          interventionFileCreatorToken:
+                                                              widget
+                                                                  .interventionFileCreatorToken,
+                                                          interventionFileID: widget
+                                                              .interventionFileID,
+                                                          interventionType: widget
+                                                              .interventionType,
+                                                          equipmentID: widget
+                                                              .equipmentID,
+                                                          equipmentTagName: widget
+                                                              .equipmentTagName,
+                                                          equipmentDiscipline:
+                                                              widget
+                                                                  .equipmentDiscipline,
+                                                        );
                                                         Navigator.pop(context);
                                                       },
                                                     );
@@ -280,6 +301,27 @@ class _InterventionFileValidationView
                                                               "Validation Update",
                                                           notificationBody:
                                                               "The intervention file you created for ${widget.equipmentTagName} was denied",
+                                                        );
+                                                        NotificationsModel()
+                                                            .addNotificationDB(
+                                                          notificationTitle:
+                                                              "Validation Update",
+                                                          notificationBody:
+                                                              "The intervention file you created for ${widget.equipmentTagName} was denied",
+                                                          interventionFileCreatorToken:
+                                                              widget
+                                                                  .interventionFileCreatorToken,
+                                                          interventionFileID: widget
+                                                              .interventionFileID,
+                                                          interventionType: widget
+                                                              .interventionType,
+                                                          equipmentID: widget
+                                                              .equipmentID,
+                                                          equipmentTagName: widget
+                                                              .equipmentTagName,
+                                                          equipmentDiscipline:
+                                                              widget
+                                                                  .equipmentDiscipline,
                                                         );
                                                         Navigator.pop(context);
                                                       },
