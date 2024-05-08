@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:lottie/lottie.dart';
@@ -205,6 +204,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                               .notificationBody
                                               .contains('denied')
                                       ? NotificationUI(
+                                          notificationID: notifications[index]
+                                              .notificationID,
                                           notificationDateOfCreation:
                                               notifications[index].createdAt,
                                           notificationTitle:
@@ -224,6 +225,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                   .notificationBody
                                                   .contains('validated')
                                           ? NotificationUI(
+                                              notificationID:
+                                                  notifications[index]
+                                                      .notificationID,
                                               notificationDateOfCreation:
                                                   notifications[index]
                                                       .createdAt,
@@ -238,6 +242,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                               notificationColor: Colors.green,
                                             )
                                           : NotificationUI(
+                                              notificationID:
+                                                  notifications[index]
+                                                      .notificationID,
                                               notificationDateOfCreation:
                                                   notifications[index]
                                                       .createdAt,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class NotificationUI extends StatelessWidget {
+  final String notificationID;
+
   final DateTime notificationDateOfCreation;
   final String notificationTitle;
   final String notificationMessage;
@@ -14,6 +16,7 @@ class NotificationUI extends StatelessWidget {
     required this.notificationMessage,
     required this.notificationIcon,
     required this.notificationColor,
+    required this.notificationID,
   });
 
   @override
