@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NotificationUI extends StatelessWidget {
-  final String notificationID;
-
   final DateTime notificationDateOfCreation;
   final String notificationTitle;
   final String notificationMessage;
@@ -16,7 +15,6 @@ class NotificationUI extends StatelessWidget {
     required this.notificationMessage,
     required this.notificationIcon,
     required this.notificationColor,
-    required this.notificationID,
   });
 
   @override
@@ -26,7 +24,11 @@ class NotificationUI extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(notificationDateOfCreation.toString()),
+          child: Text(
+            DateFormat('MMM d, yyyy - hh:mm a')
+                .format(notificationDateOfCreation)
+                .toString(),
+          ),
         ),
         Card(
           // color: Theme.of(context).colorScheme.tertiaryContainer,

@@ -4,6 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pfe_gmao/features/notifications/model/notification_model.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../../intervention_files/View/intervntion_file_validation_view.dart';
@@ -158,7 +159,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                   motion: const StretchMotion(),
                                   children: [
                                     SlidableAction(
-                                      onPressed: null,
+                                      onPressed: (context) => setState(() {
+                                        NotificationsModel().deleteNotification(
+                                          notificationID: notifications[index]
+                                              .notificationID,
+                                        );
+                                      }),
                                       foregroundColor: Colors.white,
                                       autoClose: true,
                                       label: 'Delete',
@@ -204,8 +210,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                               .notificationBody
                                               .contains('denied')
                                       ? NotificationUI(
-                                          notificationID: notifications[index]
-                                              .notificationID,
                                           notificationDateOfCreation:
                                               notifications[index].createdAt,
                                           notificationTitle:
@@ -225,9 +229,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                   .notificationBody
                                                   .contains('validated')
                                           ? NotificationUI(
-                                              notificationID:
-                                                  notifications[index]
-                                                      .notificationID,
                                               notificationDateOfCreation:
                                                   notifications[index]
                                                       .createdAt,
@@ -242,9 +243,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                               notificationColor: Colors.green,
                                             )
                                           : NotificationUI(
-                                              notificationID:
-                                                  notifications[index]
-                                                      .notificationID,
                                               notificationDateOfCreation:
                                                   notifications[index]
                                                       .createdAt,

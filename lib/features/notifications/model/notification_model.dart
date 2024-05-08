@@ -307,4 +307,18 @@ class NotificationsModel {
         .doc(notificationID)
         .set(notification.toJson());
   }
+
+  Future<void> deleteNotification({
+    required String notificationID,
+  }) async {
+    // Retrieve the current user ID
+    String currentUserID = FirebaseAuth.instance.currentUser!.uid;
+    //
+    await FirebaseFirestore.instance
+        .collection(userCollectionRef)
+        .doc(currentUserID)
+        .collection("notifications")
+        .doc(notificationID)
+        .delete();
+  }
 }
