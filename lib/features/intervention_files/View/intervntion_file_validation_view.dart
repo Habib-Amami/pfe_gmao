@@ -247,23 +247,37 @@ class _InterventionFileValidationView
                                                       equipmentDiscipline: widget
                                                           .equipmentDiscipline,
                                                     );
-                                                    if (widget
-                                                            .interventionType ==
-                                                        'Preventive') {
-                                                      InterventionModel()
-                                                          .addPreventiveInterventions(
-                                                        startDate:
-                                                            data['startingDay'],
-                                                        forecast:
-                                                            data['forecast'],
-                                                        interventionFileID: widget
-                                                            .interventionFileID,
-                                                        equipmentTagName: widget
-                                                            .equipmentTagName,
-                                                        equipmentDiscipline: widget
-                                                            .equipmentDiscipline,
-                                                      );
-                                                    }
+                                                    widget.interventionType ==
+                                                            'Preventive'
+                                                        ? InterventionModel()
+                                                            .addPreventiveInterventions(
+                                                            startDate: data[
+                                                                'startingDay'],
+                                                            forecast: data[
+                                                                'forecast'],
+                                                            interventionFileID:
+                                                                widget
+                                                                    .interventionFileID,
+                                                            equipmentTagName: widget
+                                                                .equipmentTagName,
+                                                            equipmentDiscipline:
+                                                                widget
+                                                                    .equipmentDiscipline,
+                                                          )
+                                                        : InterventionModel()
+                                                            .addCurativeIventions(
+                                                            startDate: data[
+                                                                'startingDay'],
+                                                            interventionFileID:
+                                                                widget
+                                                                    .interventionFileID,
+                                                            equipmentTagName: widget
+                                                                .equipmentTagName,
+                                                            equipmentDiscipline:
+                                                                widget
+                                                                    .equipmentDiscipline,
+                                                          );
+
                                                     Navigator.pop(context);
                                                   },
                                                   child: const Text(

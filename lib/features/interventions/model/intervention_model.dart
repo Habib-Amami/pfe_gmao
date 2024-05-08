@@ -53,4 +53,38 @@ class InterventionModel {
     //commiting batch
     await batch.commit();
   }
+
+  Future<void> addCurativeIventions({
+    required String startDate,
+    required String interventionFileID,
+    required String equipmentTagName,
+    required String equipmentDiscipline,
+  }) async {
+    String interventionType = interventionTypes[0]; // "Curative"
+    //creating a firestore insatance
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    //foramting the starting day to a DateTime object
+    DateTime startingDate = DateFormat("MM/dd/yyyy").parse(startDate);
+    if (kDebugMode) {
+      print(startingDate.toString());
+    }
+
+    //generating an intervntion id
+    String interventionID = const Uuid().v4();
+    //creating the intervention
+    Intervention intervention = Intervention(
+      interventionID: interventionID,
+      interventionDate: startingDate,
+      interventionType: interventionType,
+      interventionFileID: interventionFileID,
+      equipmentTagName: equipmentTagName,
+      equipmentDiscipline: equipmentDiscipline,
+    );
+    //adding intervetion to firebase
+    await firestore
+        .collection("interventions")
+        .doc(interventionID)
+        .set(intervention.toJson());
+  }
 }
