@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pfe_gmao/features/interventions/model/intervention_model.dart';
 import 'package:uuid/uuid.dart';
+
 import '../../notifications/model/notification_model.dart';
 import '../model/data_models/intervention_file_status.dart';
 import '../model/intervention_file_model.dart';
@@ -209,44 +211,60 @@ class _InterventionFileValidationView
                                                               interventionFileStatus[
                                                                   0],
                                                         );
-                                                        NotificationsModel()
-                                                            .sendNotificationToDevice(
-                                                          deviceToken: widget
-                                                              .interventionFileCreatorToken,
-                                                          notificationTitle:
-                                                              "Validation Update",
-                                                          notificationBody:
-                                                              "The intervention file you created for ${widget.equipmentTagName} was validated",
-                                                        );
-                                                        NotificationsModel()
-                                                            .addValidationNotificationUpdateDB(
-                                                          notificationID:
-                                                              notificationID,
-                                                          notificationTitle:
-                                                              "Validation Update",
-                                                          notificationBody:
-                                                              "The intervention file you created for ${widget.equipmentTagName} was validated",
-                                                          interventionFileCreatorID:
-                                                              widget
-                                                                  .interventionFileCreatorID,
-                                                          interventionFileCreatorToken:
-                                                              widget
-                                                                  .interventionFileCreatorToken,
-                                                          interventionFileID: widget
-                                                              .interventionFileID,
-                                                          interventionType: widget
-                                                              .interventionType,
-                                                          equipmentID: widget
-                                                              .equipmentID,
-                                                          equipmentTagName: widget
-                                                              .equipmentTagName,
-                                                          equipmentDiscipline:
-                                                              widget
-                                                                  .equipmentDiscipline,
-                                                        );
-                                                        Navigator.pop(context);
                                                       },
                                                     );
+                                                    NotificationsModel()
+                                                        .sendNotificationToDevice(
+                                                      deviceToken: widget
+                                                          .interventionFileCreatorToken,
+                                                      notificationTitle:
+                                                          "Validation Update",
+                                                      notificationBody:
+                                                          "The intervention file you created for ${widget.equipmentTagName} was validated",
+                                                    );
+                                                    NotificationsModel()
+                                                        .addValidationNotificationUpdateDB(
+                                                      notificationID:
+                                                          notificationID,
+                                                      notificationTitle:
+                                                          "Validation Update",
+                                                      notificationBody:
+                                                          "The intervention file you created for ${widget.equipmentTagName} was validated",
+                                                      interventionFileCreatorID:
+                                                          widget
+                                                              .interventionFileCreatorID,
+                                                      interventionFileCreatorToken:
+                                                          widget
+                                                              .interventionFileCreatorToken,
+                                                      interventionFileID: widget
+                                                          .interventionFileID,
+                                                      interventionType: widget
+                                                          .interventionType,
+                                                      equipmentID:
+                                                          widget.equipmentID,
+                                                      equipmentTagName: widget
+                                                          .equipmentTagName,
+                                                      equipmentDiscipline: widget
+                                                          .equipmentDiscipline,
+                                                    );
+                                                    if (widget
+                                                            .interventionType ==
+                                                        'Preventive') {
+                                                      InterventionModel()
+                                                          .addPreventiveInterventions(
+                                                        startDate:
+                                                            data['startingDay'],
+                                                        forecast:
+                                                            data['forecast'],
+                                                        interventionFileID: widget
+                                                            .interventionFileID,
+                                                        equipmentTagName: widget
+                                                            .equipmentTagName,
+                                                        equipmentDiscipline: widget
+                                                            .equipmentDiscipline,
+                                                      );
+                                                    }
+                                                    Navigator.pop(context);
                                                   },
                                                   child: const Text(
                                                     'Validate',
