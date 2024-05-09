@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pfe_gmao/features/interventions/model/data_models/intervention.dart';
+import 'package:pfe_gmao/features/interventions/view/intervention_file_view.dart';
+import 'package:pfe_gmao/features/interventions/view/widget/intervention_card.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalenderScreen extends StatefulWidget {
@@ -131,16 +134,45 @@ class _CalenderScreenState extends State<CalenderScreen> {
                       return ListView.builder(
                           itemCount: interventions.length,
                           itemBuilder: (context, index) {
-                            return Card(
-                              color: Colors.red[100],
-                              child: ListTile(
-                                title: Text(
-                                  interventions[index].equipmentTagName,
+                            return Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            InterventionViewPage(
+                                              interventionFileDiscipline:
+                                                  interventions[index]
+                                                      .equipmentDiscipline,
+                                              interventionFileID:
+                                                  interventions[index]
+                                                      .interventionFileID,
+                                              interventionType:
+                                                  interventions[index]
+                                                      .interventionType,
+                                            )),
+                                  ),
+                                  child: CalendarCard(
+                                    title: (index + 1).toString(),
+                                    subtitle:
+                                        interventions[index].interventionType,
+                                    date: interventions[index].interventionDate,
+                                    typeOfCard: 'intervention',
+                                  ),
                                 ),
-                                subtitle:
-                                    Text(interventions[index].interventionType),
-                                leading: const Icon(Icons.file_copy),
-                              ),
+                                //   Card(
+                                //     color: Colors.red[100],
+                                //     child: ListTile(
+                                //       title: Text(
+                                //         interventions[index].equipmentTagName,
+                                //       ),
+                                //       subtitle: Text(
+                                //           interventions[index].interventionType),
+                                //       leading: const Icon(Icons.file_copy),
+                                //     ),
+                                //   ),
+                              ],
                             );
                           });
                     })),
