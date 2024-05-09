@@ -15,11 +15,11 @@ class InterventionModel {
     required String equipmentDiscipline,
   }) async {
     String interventionType = interventionTypes[1]; // "Preventive"
-    //creating a firestore insatance
+    //creating a firestore instance
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     //creating a batch writer
     WriteBatch batch = firestore.batch();
-    //foramting the starting day to a DateTime object
+    //formatting the starting day to a DateTime object
     DateTime startingDate = DateFormat("MM/dd/yyyy").parse(startDate);
     if (kDebugMode) {
       print(startingDate.toString());
@@ -29,7 +29,7 @@ class InterventionModel {
     int interval = (365 / forecast).ceil();
 
     for (int i = 0; i < interval; i++) {
-      //generating an intervntion id
+      //generating an intervention id
       String interventionID = const Uuid().v4();
       //creating the intervention
       Intervention intervention = Intervention(
@@ -40,7 +40,7 @@ class InterventionModel {
         equipmentTagName: equipmentTagName,
         equipmentDiscipline: equipmentDiscipline,
       );
-      //adding intervetion to firebase
+      //adding intervention to firebase
       batch.set(
         firestore.collection("interventions").doc(interventionID),
         intervention.toJson(),
@@ -50,7 +50,7 @@ class InterventionModel {
         Duration(days: forecast),
       );
     }
-    //commiting batch
+    //committing batch
     await batch.commit();
   }
 
@@ -61,16 +61,16 @@ class InterventionModel {
     required String equipmentDiscipline,
   }) async {
     String interventionType = interventionTypes[0]; // "Curative"
-    //creating a firestore insatance
+    //creating a firestore instance
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-    //foramting the starting day to a DateTime object
+    //formatting the starting day to a DateTime object
     DateTime startingDate = DateFormat("MM/dd/yyyy").parse(startDate);
     if (kDebugMode) {
       print(startingDate.toString());
     }
 
-    //generating an intervntion id
+    //generating an intervention id
     String interventionID = const Uuid().v4();
     //creating the intervention
     Intervention intervention = Intervention(
@@ -81,7 +81,7 @@ class InterventionModel {
       equipmentTagName: equipmentTagName,
       equipmentDiscipline: equipmentDiscipline,
     );
-    //adding intervetion to firebase
+    //adding intervention to firebase
     await firestore
         .collection("interventions")
         .doc(interventionID)

@@ -29,7 +29,7 @@ class Intervention {
   Map<String, dynamic> toJson() {
     return {
       'interventionID': interventionID,
-      'interventionDate': interventionDate.toIso8601String(),
+      'interventionDate': interventionDate.toIso8601String().split("T").first,
       'interventionType': interventionType,
       'interventionFileID': interventionFileID,
       'equipmentTagName': equipmentTagName,
