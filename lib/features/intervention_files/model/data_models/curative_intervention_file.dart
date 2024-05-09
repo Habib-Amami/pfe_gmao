@@ -43,6 +43,7 @@ class CurativeInterventionFile {
     required this.spareParts,
     required this.tools,
     required this.fileStatus,
+    required equipmentName,
   });
 
   // toJson method to convert object to JSON
@@ -95,6 +96,7 @@ class CurativeInterventionFile {
       spareParts: List<String>.from(json['spareParts']),
       tools: List<String>.from(json['tools']),
       fileStatus: json['fileStatus'],
+      equipmentName: json['equipmentTagName'],
     );
   }
 }
