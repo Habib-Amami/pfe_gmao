@@ -78,6 +78,7 @@ class InterventionFileModel {
         spareParts: sparePartsNames,
         tools: toolsNames,
         fileStatus: fileStatus,
+        equipmentName: equipmentTagName,
       );
       //adding data to the equipment curative intervention files
       batch.set(
