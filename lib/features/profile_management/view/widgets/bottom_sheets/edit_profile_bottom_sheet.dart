@@ -18,7 +18,7 @@ class _EditProfileBottomSheetState extends State<EditProfileBottomSheet> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   // Create an instance of the ProfileController for managing profile-related actions
-  final ProfileController _profileController = ProfileController();
+  final reauthenticate _profileController = reauthenticate();
 
   // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -242,7 +242,7 @@ class _EditProfileBottomSheetState extends State<EditProfileBottomSheet> {
                             // Verify the entered password
                             bool isVerified =
                                 await _profileController.verifyPassword(
-                              entredPassword: _password,
+                              enteredPassword: _password,
                             );
                             if (isVerified) {
                               try {

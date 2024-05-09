@@ -7,7 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pfe_gmao/features/notifications/model/notification_model.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
-import '../../intervention_files/View/intervntion_file_validation_view.dart';
+import '../../intervention_files/View/intervention_file_validation_view.dart';
 import '../model/data_models/intervention_file_validation_notification.dart';
 import 'widget/notification_widget.dart';
 
@@ -64,7 +64,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             ),
                           ),
                     const Text(
-                      'You denied the notification permision for the application you can change it from',
+                      'You denied the notification permission for the application you can change it from',
                       textAlign: TextAlign.center,
                     ),
                     TextButton(

@@ -12,7 +12,7 @@ class PhoneNumberUpdateAlert extends StatefulWidget {
 
 class _AlertState extends State<PhoneNumberUpdateAlert> {
   // Create an instance of the ProfileController for managing profile-related actions
-  final ProfileController _profileController = ProfileController();
+  final reauthenticate _profileController = reauthenticate();
 
   // Form key for managing the state of the phone number update form
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
@@ -121,7 +121,7 @@ class _AlertState extends State<PhoneNumberUpdateAlert> {
               _formkey.currentState!.save();
               // Verify the entered password
               bool isVerified = await _profileController.verifyPassword(
-                entredPassword: _password,
+                enteredPassword: _password,
               );
               if (isVerified) {
                 try {

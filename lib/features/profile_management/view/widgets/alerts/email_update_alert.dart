@@ -11,7 +11,7 @@ class EmailUpdateAlert extends StatefulWidget {
 
 class _AlertState extends State<EmailUpdateAlert> {
   // Create an instance of the ProfileController for managing profile-related actions
-  final ProfileController _profileController = ProfileController();
+  final reauthenticate _profileController = reauthenticate();
 
   // Form key for managing the state of the email update form
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
@@ -131,7 +131,7 @@ class _AlertState extends State<EmailUpdateAlert> {
             if (_formkey.currentState!.validate()) {
               _formkey.currentState!.save();
               bool isVerified = await _profileController.verifyPassword(
-                entredPassword: _password,
+                enteredPassword: _password,
               );
               if (isVerified) {
                 _profileController.updateEmail(

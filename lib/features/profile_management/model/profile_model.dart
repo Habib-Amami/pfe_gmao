@@ -74,17 +74,17 @@ class ProfileModel {
   }
 
   // Method to upload the selected profile picture to Firebase Storage and
-  //get it doawload URL
+  //get it download URL
   Future<String> uploadProfilePictureDB({
     required String profilePictureRef,
     required File profilePicture,
   }) async {
     // Get references to Firebase Storage
     Reference rootReference = FirebaseStorage.instance.ref();
-    Reference profilePicturesDir =
-        //TODO : add constant refernce in the firebase file
+    Reference reference =
+        //TO DO : add constant reference in the firebase file
         rootReference.child("users_profile_pictures");
-    Reference imageToUploadRef = profilePicturesDir.child(profilePictureRef);
+    Reference imageToUploadRef = reference.child(profilePictureRef);
     // Upload the profile picture file to Firebase Storage
     await imageToUploadRef.putFile(
       profilePicture,

@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:pfe_gmao/features/interventions/model/data_models/intervntion.dart';
+import 'package:pfe_gmao/features/interventions/model/data_models/intervention.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalenderScreen extends StatefulWidget {
@@ -34,6 +32,18 @@ class _CalenderScreenState extends State<CalenderScreen> {
           child: Column(
             children: [
               TableCalendar(
+                calendarStyle: CalendarStyle(
+                  selectedDecoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.85),
+                  ),
+                  todayDecoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.4),
+                  ),
+                ),
                 rowHeight: 50,
                 headerStyle: const HeaderStyle(
                   titleCentered: true,
@@ -52,8 +62,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
                   });
                 },
               ),
-
-              //const Divider(),
+              const Divider(),
               Expanded(
                 child: StreamBuilder(
                     stream: FirebaseFirestore.instance
@@ -125,15 +134,17 @@ class _CalenderScreenState extends State<CalenderScreen> {
                             return Card(
                               color: Colors.red[100],
                               child: ListTile(
-                                title:
-                                    Text(interventions[index].equipmentTagName),
+                                title: Text(
+                                  interventions[index].equipmentTagName,
+                                ),
                                 subtitle:
                                     Text(interventions[index].interventionType),
+                                leading: const Icon(Icons.file_copy),
                               ),
                             );
                           });
                     })),
-              )
+              ),
             ],
           ),
         ),

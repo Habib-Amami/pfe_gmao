@@ -42,7 +42,7 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
   // Form key for managing the state of the add equipment form
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
-  //a boolean flag to check if the Tagname is unique
+  //a boolean flag to check if the Tag name is unique
   bool _isTagNameUnique = false;
 
   // Variable to store initial equipment TagName
@@ -480,7 +480,7 @@ class _EditEquipmentPageState extends State<EditEquipmentPage> {
                     //finish editing button
                     FilledButton.icon(
                       onPressed: () async {
-                        // Show a confirmation dialog before finsh editing the equipment new equipment
+                        // Show a confirmation dialog before finish editing the equipment new equipment
                         return showDialog(
                           context: context,
                           builder: (context) {

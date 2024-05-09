@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../intervention_files/model/constants/intervention_types_list.dart';
-import 'data_models/intervntion.dart';
+import 'data_models/intervention.dart';
 
 class InterventionModel {
   Future<void> addPreventiveInterventions({
