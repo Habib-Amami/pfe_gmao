@@ -22,7 +22,7 @@ class ProfilePictureBottomsheet extends StatefulWidget {
 
 class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
   // Create an instance of the ProfileController for managing profile-related actions
-  final ProfileController _profileController = ProfileController();
+  final reauthenticate _profileController = reauthenticate();
   // Variable to store the selected image file
   File? imageFile;
 
@@ -104,11 +104,11 @@ class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
                     style: const ButtonStyle(
                         elevation: MaterialStatePropertyAll(2)),
                     onPressed: () async {
-                      CroppedFile? pickedImge = await pickImage(
+                      CroppedFile? pickedImage = await pickImage(
                         imageSource: ImageSource.gallery,
                       );
-                      if (pickedImge != null) {
-                        imageFile = File(pickedImge.path);
+                      if (pickedImage != null) {
+                        imageFile = File(pickedImage.path);
                       } else {
                         imageFile = null;
                       }
@@ -123,11 +123,11 @@ class _ProfilePictureBottomsheetState extends State<ProfilePictureBottomsheet> {
                     style: const ButtonStyle(
                         elevation: MaterialStatePropertyAll(2)),
                     onPressed: () async {
-                      CroppedFile? pickedImge = await pickImage(
+                      CroppedFile? pickedImage = await pickImage(
                         imageSource: ImageSource.camera,
                       );
-                      if (pickedImge != null) {
-                        imageFile = File(pickedImge.path);
+                      if (pickedImage != null) {
+                        imageFile = File(pickedImage.path);
                       } else {
                         imageFile = null;
                       }

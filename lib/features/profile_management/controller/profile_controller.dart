@@ -2,14 +2,15 @@ import 'dart:io';
 
 import '../model/profile_model.dart';
 
-class ProfileController {
+// ignore: camel_case_types
+class reauthenticate {
   final ProfileModel _profileModel = ProfileModel();
 
-  // Verify the entered password for reauthentication
-  Future<bool> verifyPassword({required String entredPassword}) async {
+  // Verify the entered password for reauthenticate
+  Future<bool> verifyPassword({required String enteredPassword}) async {
     try {
       await _profileModel.reauthenticateWithPassword(
-        password: entredPassword,
+        password: enteredPassword,
       );
       return true;
     } catch (e) {
@@ -56,7 +57,7 @@ class ProfileController {
   }
 
   // Method to upload the selected profile picture to Firebase Storage and
-  //get it doawload URL
+  //get it download URL
   Future<String> uploadProfilePicture({
     required String profilePictureRef,
     required File profilePicture,

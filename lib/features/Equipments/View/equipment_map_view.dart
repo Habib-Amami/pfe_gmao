@@ -47,6 +47,7 @@ class _EquipmentMapState extends State<EquipmentMap> {
           );
         }
         if (snapshot.hasData) {
+          // ignore: no_leading_underscores_for_local_identifiers
           Position? _currentPosition = snapshot.data;
           return _currentPosition == null
               ? const Center(
@@ -213,7 +214,7 @@ class _EquipmentMapState extends State<EquipmentMap> {
   }
 
   void addPolyLine(List<LatLng> polylineCoordinates) {
-    PolylineId id = const PolylineId("rouet to equipment");
+    PolylineId id = const PolylineId("route to equipment");
     Polyline polyline = Polyline(
       polylineId: id,
       color: const Color(0xff8ccff1),

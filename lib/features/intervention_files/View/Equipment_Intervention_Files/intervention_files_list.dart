@@ -67,7 +67,7 @@ class InterventionFilesList extends StatelessWidget {
 
 // class _InterventionFilesListState extends State<InterventionFilesList> {
 //   List<String> disciplineFilter = ["All", ...disciplineValueList];
-//   List<String> interverntionStatus = ["Confirmed", "Not"];
+//   List<String> interventionStatus = ["Confirmed", "Not"];
 //   bool _customTileExpanded = true;
 //   int? _value1 = 1;
 //   int? _value2 = 1;
@@ -143,7 +143,7 @@ class InterventionFilesList extends StatelessWidget {
 //                       child: Row(
 //                         children: [
 //                           ...List<Widget>.generate(
-//                             interverntionStatus.length,
+//                             interventionStatus.length,
 //                             (index) {
 //                               return Padding(
 //                                 padding: const EdgeInsets.only(right: 8.0),
@@ -152,7 +152,7 @@ class InterventionFilesList extends StatelessWidget {
 //                                   labelStyle:
 //                                       Theme.of(context).textTheme.labelSmall,
 //                                   label: Text(
-//                                     interverntionStatus[index],
+//                                     interventionStatus[index],
 //                                   ),
 //                                   selected: _value2 == index,
 //                                   onSelected: (bool selected) {
