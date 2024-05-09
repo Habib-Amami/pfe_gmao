@@ -132,7 +132,7 @@ class _InterventionFileValidationView
                         technicians: technicianList,
                         tools: tools,
                       )
-                    : CurativeInterventionFile(
+                    : CurativeInterventionFileView(
                         equipmentName: data['equipmentTagName'],
                         equipmentStatus: data['equipmentStatus'],
                         equipmentDiscipline: widget.equipmentDiscipline,

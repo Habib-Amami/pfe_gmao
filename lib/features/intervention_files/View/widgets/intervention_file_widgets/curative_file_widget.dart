@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../add_file_form/intervention_file_form_title.dart';
 import '../add_file_form/intervntion_file_form_files.dart';
 
-class CurativeInterventionFile extends StatelessWidget {
-  const CurativeInterventionFile({
+class CurativeInterventionFileView extends StatelessWidget {
+  const CurativeInterventionFileView({
     super.key,
     required this.equipmentName,
     required this.equipmentStatus,

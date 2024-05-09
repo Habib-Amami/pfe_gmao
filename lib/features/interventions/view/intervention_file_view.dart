@@ -1,33 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-import '../model/data_models/intervention_file_status.dart';
-import 'widgets/file_status_rectangular_widgets/confirmed_status.dart';
-import 'widgets/file_status_rectangular_widgets/denied_status.dart';
-import 'widgets/intervention_file_widgets/curative_file_widget.dart';
-import 'widgets/intervention_file_widgets/preventive_file_widget.dart';
+import 'package:pfe_gmao/features/intervention_files/View/widgets/intervention_file_widgets/curative_file_widget.dart';
+import 'package:pfe_gmao/features/intervention_files/View/widgets/intervention_file_widgets/preventive_file_widget.dart';
 
-class InterventionFileViewPage extends StatefulWidget {
-  //final String interventionFileCreatorID;
-  //final String interventionFileCreatorToken;
+class InterventionViewPage extends StatefulWidget {
   final String interventionFileID;
+  final String interventionFileDiscipline;
   final String interventionType;
-  // final String equipmentID;
-  // final String equipmentTagName;
-  final String equipmentDiscipline;
 
-  const InterventionFileViewPage({
+  const InterventionViewPage({
     required this.interventionFileID,
     super.key,
+    required this.interventionFileDiscipline,
     required this.interventionType,
-    required this.equipmentDiscipline,
   });
 
   @override
-  State<InterventionFileViewPage> createState() => _InterventionFileViewPage();
+  State<InterventionViewPage> createState() => _InterventionViewPage();
 }
 
-class _InterventionFileViewPage extends State<InterventionFileViewPage> {
+class _InterventionViewPage extends State<InterventionViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +44,7 @@ class _InterventionFileViewPage extends State<InterventionFileViewPage> {
       body: FutureBuilder(
         future: FirebaseFirestore.instance
             .collection(
-                'collective_${widget.equipmentDiscipline}_${widget.interventionType}_intervention_files')
+                'collective_${widget.interventionFileDiscipline}_${widget.interventionType}_intervention_files')
             .doc(widget.interventionFileID)
             .get(),
         builder: ((context, snapshot) {
@@ -125,7 +118,7 @@ class _InterventionFileViewPage extends State<InterventionFileViewPage> {
                         forecast: data['forecast'],
                         equipmentName: data['equipmentTagName'],
                         equipmentStatus: data['equipmentStatus'],
-                        equipmentDiscipline: widget.equipmentDiscipline,
+                        equipmentDiscipline: widget.interventionFileDiscipline,
                         fileName: data['fileName'],
                         interventionType: widget.interventionType,
                         technicians: technicianList,
@@ -134,7 +127,7 @@ class _InterventionFileViewPage extends State<InterventionFileViewPage> {
                     : CurativeInterventionFileView(
                         equipmentName: data['equipmentTagName'],
                         equipmentStatus: data['equipmentStatus'],
-                        equipmentDiscipline: widget.equipmentDiscipline,
+                        equipmentDiscipline: widget.interventionFileDiscipline,
                         fileName: data['fileName'],
                         interventionType: widget.interventionType,
                         criticality: data['criticity'],
@@ -145,37 +138,7 @@ class _InterventionFileViewPage extends State<InterventionFileViewPage> {
                         spareParts: spareParts,
                         task: data['interventionTask'],
                         breakdownDescription: data['breakDownDescription'],
-                        // creationDate: DateFormat(
-                        //   'dd-MM-yyyy',
-                        // ).format(
-                        //   DateTime.fromMillisecondsSinceEpoch(
-                        //     creationDate.seconds * 1000,
-                        //   ),
-                        // ),
                       ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 25),
-                child:
-                    // If the intervention file is still in progress
-                    data['fileStatus'] == interventionFileStatus[2]
-                        ? Container(
-                            width: double.infinity,
-                            height: 65,
-                            decoration: BoxDecoration(
-                              color: Colors.orangeAccent.withOpacity(0.7),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'This intervention file still in review',
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ),
-                          )
-                        : data['fileStatus'] == interventionFileStatus[0]
-                            ? const ConfirmedState()
-                            : const DeniedState(),
               ),
             ],
           );
