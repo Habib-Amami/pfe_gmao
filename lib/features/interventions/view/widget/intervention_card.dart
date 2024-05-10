@@ -67,8 +67,8 @@ class CalendarCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           color: Colors.lightBlueAccent.withOpacity(0.8),
         ),
-        height: 75,
-        width: double.infinity,
+        height: 80,
+        width: MediaQuery.sizeOf(context).width,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -83,8 +83,8 @@ class CalendarCard extends StatelessWidget {
                     //color: Colors.lightBlueAccent.withOpacity(0.8),
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  height: 75,
-                  width: 75,
+                  height: 80,
+                  width: 80,
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Column(
@@ -111,16 +111,16 @@ class CalendarCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: 20),
+                const SizedBox(width: 16),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'INT-000$title  (In Progress)',
                         style: TextStyle(
-                            fontSize: 19,
+                            fontSize: 18,
                             fontWeight: FontWeight.w500,
                             color:
                                 Theme.of(context).colorScheme.onInverseSurface
@@ -129,7 +129,7 @@ class CalendarCard extends StatelessWidget {
                       ),
                       Text(
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
                           color: Theme.of(context).colorScheme.inverseSurface,
                         ),
                         'TGN-201: $subtitle',
