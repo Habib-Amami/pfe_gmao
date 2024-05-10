@@ -28,26 +28,20 @@ class _CalenderScreenState extends State<CalenderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {},
-      //   child: Text('add work order'),
-      // ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(left: 9.0, right: 9, bottom: 9),
+          padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
           child: Column(
             children: [
               TableCalendar(
                 calendarStyle: CalendarStyle(
                   selectedDecoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.85),
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   todayDecoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.4),
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 rowHeight: 50,
@@ -71,114 +65,113 @@ class _CalenderScreenState extends State<CalenderScreen> {
               const Divider(),
               Expanded(
                 child: StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('interventions')
-                        .where('interventionDate',
-                            isEqualTo:
-                                selectedDay.toIso8601String().split('T').first)
-                        .snapshots(),
-                    builder: ((context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.none) {
-                        return const Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.error_outline,
-                                color: Colors.red,
-                                size: 50.0,
-                              ),
-                              SizedBox(height: 10.0),
-                              Text("Lost connection"),
-                            ],
-                          ),
-                        );
-                      }
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CircularProgressIndicator(),
-                              Text("Loading Notifications ...")
-                            ],
-                          ),
-                        );
-                      }
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // const CircularProgressIndicator(),
-                              Center(
-                                child: Text('Error: ${snapshot.error}'),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                      // data found
-                      List<Intervention> interventions = snapshot.data!.docs
-                          .map(
-                            (document) => Intervention.fromJson(
-                              document.data(),
+                  stream: FirebaseFirestore.instance
+                      .collection('interventions')
+                      .where('interventionDate',
+                          isEqualTo:
+                              selectedDay.toIso8601String().split('T').first)
+                      .snapshots(),
+                  builder: ((context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.none) {
+                      return const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.error_outline,
+                              color: Colors.red,
+                              size: 50.0,
                             ),
-                          )
-                          .toList();
-                      if (interventions.isEmpty) {
-                        return Center(
-                          child: Text(
-                            'No intervention available this day!',
-                            style: Theme.of(context).textTheme.bodyLarge,
+                            SizedBox(height: 10.0),
+                            Text("Lost connection"),
+                          ],
+                        ),
+                      );
+                    }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(),
+                            Text("Loading Notifications ...")
+                          ],
+                        ),
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // const CircularProgressIndicator(),
+                            Center(
+                              child: Text('Error: ${snapshot.error}'),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    // data found
+                    List<Intervention> interventions = snapshot.data!.docs
+                        .map(
+                          (document) => Intervention.fromJson(
+                            document.data(),
                           ),
-                        );
-                      }
-                      return ListView.builder(
-                          itemCount: interventions.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                GestureDetector(
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            InterventionViewPage(
-                                              interventionFileDiscipline:
-                                                  interventions[index]
-                                                      .equipmentDiscipline,
-                                              interventionFileID:
-                                                  interventions[index]
-                                                      .interventionFileID,
-                                              interventionType:
-                                                  interventions[index]
-                                                      .interventionType,
-                                            )),
-                                  ),
-                                  child: CalendarCard(
-                                    title: (index + 1).toString(),
-                                    subtitle:
+                        )
+                        .toList();
+                    if (interventions.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No intervention available this day!',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      );
+                    }
+                    return ListView.builder(
+                      itemCount: interventions.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => InterventionViewPage(
+                                    interventionFileDiscipline:
+                                        interventions[index]
+                                            .equipmentDiscipline,
+                                    interventionFileID:
+                                        interventions[index].interventionFileID,
+                                    interventionType:
                                         interventions[index].interventionType,
-                                    date: interventions[index].interventionDate,
-                                    typeOfCard: 'intervention',
                                   ),
                                 ),
-                                //   Card(
-                                //     color: Colors.red[100],
-                                //     child: ListTile(
-                                //       title: Text(
-                                //         interventions[index].equipmentTagName,
-                                //       ),
-                                //       subtitle: Text(
-                                //           interventions[index].interventionType),
-                                //       leading: const Icon(Icons.file_copy),
-                                //     ),
-                                //   ),
-                              ],
-                            );
-                          });
-                    })),
+                              ),
+                              child: CalendarCard(
+                                title: (index + 1).toString(),
+                                subtitle: interventions[index].interventionType,
+                                date: interventions[index].interventionDate,
+                                typeOfCard: 'intervention',
+                              ),
+                            ),
+                            //   Card(
+                            //     color: Colors.red[100],
+                            //     child: ListTile(
+                            //       title: Text(
+                            //         interventions[index].equipmentTagName,
+                            //       ),
+                            //       subtitle: Text(
+                            //           interventions[index].interventionType),
+                            //       leading: const Icon(Icons.file_copy),
+                            //     ),
+                            //   ),
+                          ],
+                        );
+                      },
+                    );
+                  }),
+                ),
               ),
             ],
           ),

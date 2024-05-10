@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class CalendarCard extends StatelessWidget {
   const CalendarCard({
@@ -64,8 +63,8 @@ class CalendarCard extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 6.0),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.lightBlueAccent.withOpacity(0.8),
+          borderRadius: BorderRadius.circular(16),
+          color: Colors.lightBlueAccent,
         ),
         height: 80,
         width: MediaQuery.sizeOf(context).width,
@@ -76,46 +75,50 @@ class CalendarCard extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onPrimaryContainer
-                        .withOpacity(0.9),
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                     //color: Colors.lightBlueAccent.withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                   height: 80,
                   width: 80,
                   child: Padding(
-                    padding: const EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(20.0),
                     child: Column(
                       children: [
                         Expanded(
                           child: Text(
                             date.day.toString(),
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.background,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge!
+                                .copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.background,
+                                ),
                           ),
                         ),
                         Text(
                           monthIntToString(date.month),
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.background,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.background,
+                              ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  padding: const EdgeInsets.only(
+                    bottom: 8,
+                    top: 8,
+                    left: 8,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         'INT-000$title  (In Progress)',
