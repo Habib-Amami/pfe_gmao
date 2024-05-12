@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:pfe_gmao/features/Equipments/model/data_models/discipline_list.dart';
 import 'package:pfe_gmao/features/interventions/model/data_models/intervention.dart';
 import 'package:pfe_gmao/features/interventions/view/intervention_file_view.dart';
@@ -161,26 +162,60 @@ class _CalenderScreenState extends State<CalenderScreen> {
                       itemBuilder: (context, index) {
                         return Column(
                           children: [
-                            GestureDetector(
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => InterventionViewPage(
-                                    interventionFileDiscipline:
-                                        interventions[index]
-                                            .equipmentDiscipline,
-                                    interventionFileID:
-                                        interventions[index].interventionFileID,
-                                    interventionType:
-                                        interventions[index].interventionType,
+                            Slidable(
+                              endActionPane: ActionPane(
+                                  motion: const StretchMotion(),
+                                  children: [
+                                    SlidableAction(
+                                      onPressed: (context) => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              AddWorkOrderView(
+                                            equipmentTagName: "TEST Tag Name",
+                                            equipmentDiscipline:
+                                                disciplineValueList[0],
+                                            interventionTask: "Test Task",
+                                            isElectrical: true,
+                                            isInstrument: true,
+                                            isMechanical: true,
+                                            spareParts: const [
+                                              "test spare part",
+                                              "test spare part",
+                                              "test spare part"
+                                            ],
+                                            tools: const [
+                                              "test tools",
+                                              "test tools",
+                                              "test tools",
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ]),
+                              child: GestureDetector(
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => InterventionViewPage(
+                                      interventionFileDiscipline:
+                                          interventions[index]
+                                              .equipmentDiscipline,
+                                      interventionFileID: interventions[index]
+                                          .interventionFileID,
+                                      interventionType:
+                                          interventions[index].interventionType,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              child: CalendarCard(
-                                title: (index + 1).toString(),
-                                subtitle: interventions[index].interventionType,
-                                date: interventions[index].interventionDate,
-                                typeOfCard: 'intervention',
+                                child: CalendarCard(
+                                  title: (index + 1).toString(),
+                                  subtitle:
+                                      interventions[index].interventionType,
+                                  date: interventions[index].interventionDate,
+                                  typeOfCard: 'intervention',
+                                ),
                               ),
                             ),
                             //   Card(
