@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:pfe_gmao/features/interventions/model/intervention_model.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../interventions/model/intervention_model.dart';
 import '../../notifications/model/notification_model.dart';
+import '../model/constants/intervention_types_list.dart';
+import '../model/data_models/curative_intervention_file.dart';
 import '../model/data_models/intervention_file_status.dart';
+import '../model/data_models/preventive_intervention_file.dart';
 import '../model/intervention_file_model.dart';
 import 'widgets/file_status_rectangular_widgets/confirmed_status.dart';
 import 'widgets/file_status_rectangular_widgets/denied_status.dart';
@@ -99,349 +102,966 @@ class _InterventionFileValidationView
               ),
             );
           }
-          Map<String, dynamic> data =
-              snapshot.data!.data() as Map<String, dynamic>;
-          List technicians = [];
-          data['instrumentTechnician']
-              ? technicians.add('Instrument Technician')
-              : debugPrint('no instrument');
-          data['electricalTechnician']
-              ? technicians.add('Electrical Technician')
-              : debugPrint('no electrical');
-          data['mechanicalTechnician']
-              ? technicians.add('Mechanical Technician')
-              : debugPrint('no mechanical');
-          String technicianList = technicians.join(' - ');
-          var spareParts = data['spareParts'].join(' - ');
-          var tools = data['tools'].join(' - ');
-          //var creationDate = data['CreatedAt'];
-          return ListView(
-            children: [
-              SingleChildScrollView(
-                child: widget.interventionType == 'Preventive'
-                    ? PreventiveFile(
-                        spareParts: spareParts,
-                        task: data['interventionTask'],
-                        startingDay: data['startingDay'],
-                        forecast: data['forecast'],
-                        equipmentName: data['equipmentTagName'],
-                        equipmentStatus: data['equipmentStatus'],
-                        equipmentDiscipline: widget.equipmentDiscipline,
-                        fileName: data['fileName'],
-                        interventionType: widget.interventionType,
-                        technicians: technicianList,
-                        tools: tools,
-                      )
-                    : CurativeInterventionFileView(
-                        equipmentName: data['equipmentTagName'],
-                        equipmentStatus: data['equipmentStatus'],
-                        equipmentDiscipline: widget.equipmentDiscipline,
-                        fileName: data['fileName'],
-                        interventionType: widget.interventionType,
-                        criticality: data['criticity'],
-                        breakdownType: data['breakDownType'],
-                        technicians: technicianList,
-                        startingDay: data['startingDay'],
-                        tools: tools,
-                        spareParts: spareParts,
-                        task: data['interventionTask'],
-                        breakdownDescription: data['breakDownDescription'],
-                        // creationDate: DateFormat(
-                        //   'dd-MM-yyyy',
-                        // ).format(
-                        //   DateTime.fromMillisecondsSinceEpoch(
-                        //     creationDate.seconds * 1000,
-                        //   ),
-                        // ),
-                      ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 25),
-                child:
-                    // If the intervention file is still in progress
-                    data['fileStatus'] == interventionFileStatus[2]
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              SizedBox(
-                                width: 100,
-                                child: FilledButton(
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStatePropertyAll(
-                                        Theme.of(context).colorScheme.primary),
-                                  ),
-                                  onPressed: () {
-                                    showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: const Text('Confirmation'),
-                                          content: const Text(
-                                            'Do you really want to validate this intervention file?',
-                                          ),
-                                          actions: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(context),
-                                                  child: const Text('Cancel'),
-                                                ),
-                                                FilledButton(
-                                                  onPressed: () {
-                                                    String notificationID =
-                                                        const Uuid().v4();
-                                                    setState(
-                                                      () {
-                                                        InterventionFileModel()
-                                                            .changeInterventionFileStatus(
-                                                          equipmentID: widget
-                                                              .equipmentID,
-                                                          equipmentDiscipline:
-                                                              widget
-                                                                  .equipmentDiscipline,
-                                                          interventionFileID: widget
-                                                              .interventionFileID,
-                                                          interventionType: widget
-                                                              .interventionType,
-                                                          newStatus:
-                                                              interventionFileStatus[
-                                                                  0],
-                                                        );
-                                                      },
-                                                    );
-                                                    NotificationsModel()
-                                                        .sendNotificationToDevice(
-                                                      deviceToken: widget
-                                                          .interventionFileCreatorToken,
-                                                      notificationTitle:
-                                                          "Validation Update",
-                                                      notificationBody:
-                                                          "The intervention file you created for ${widget.equipmentTagName} was validated",
-                                                    );
-                                                    NotificationsModel()
-                                                        .addValidationNotificationUpdateDB(
-                                                      notificationID:
-                                                          notificationID,
-                                                      notificationTitle:
-                                                          "Validation Update",
-                                                      notificationBody:
-                                                          "The intervention file you created for ${widget.equipmentTagName} was validated",
-                                                      interventionFileCreatorID:
-                                                          widget
-                                                              .interventionFileCreatorID,
-                                                      interventionFileCreatorToken:
-                                                          widget
-                                                              .interventionFileCreatorToken,
-                                                      interventionFileID: widget
-                                                          .interventionFileID,
-                                                      interventionType: widget
-                                                          .interventionType,
-                                                      equipmentID:
-                                                          widget.equipmentID,
-                                                      equipmentTagName: widget
-                                                          .equipmentTagName,
-                                                      equipmentDiscipline: widget
-                                                          .equipmentDiscipline,
-                                                    );
-                                                    widget.interventionType ==
-                                                            'Preventive'
-                                                        ? InterventionModel()
-                                                            .addPreventiveInterventions(
-                                                            startDate: data[
-                                                                'startingDay'],
-                                                            forecast: data[
-                                                                'forecast'],
-                                                            interventionFileID:
-                                                                widget
-                                                                    .interventionFileID,
-                                                            equipmentTagName: widget
-                                                                .equipmentTagName,
-                                                            equipmentDiscipline:
-                                                                widget
-                                                                    .equipmentDiscipline,
-                                                            mechanicalTechnician:
-                                                                data[
-                                                                    'mechanicalTechnician'],
-                                                            electricalTechnician:
-                                                                data[
-                                                                    'electricalTechnician'],
-                                                            instrumentTechnician:
-                                                                data[
-                                                                    'instrumentTechnician'],
-                                                            spareParts: data[
-                                                                'spareParts'],
-                                                            tools:
-                                                                data['tools'],
-                                                            interventionStatus:
-                                                                "Haithem nik omik",
-                                                            interventionTask: data[
-                                                                'interventionTask'],
-                                                          )
-                                                        : InterventionModel()
-                                                            .addCurativeIventions(
-                                                            startDate: data[
-                                                                'startingDay'],
-                                                            interventionFileID:
-                                                                widget
-                                                                    .interventionFileID,
-                                                            equipmentTagName: widget
-                                                                .equipmentTagName,
-                                                            equipmentDiscipline:
-                                                                widget
-                                                                    .equipmentDiscipline,
-                                                            mechanicalTechnician:
-                                                                data[
-                                                                    'mechanicalTechnician'],
-                                                            electricalTechnician:
-                                                                data[
-                                                                    'electricalTechnician'],
-                                                            instrumentTechnician:
-                                                                data[
-                                                                    'instrumentTechnician'],
-                                                            spareParts: data[
-                                                                'spareParts'],
-                                                            tools:
-                                                                data['tools'],
-                                                            interventionStatus:
-                                                                "Haithem nik omik",
-                                                            interventionTask: data[
-                                                                'interventionTask'],
-                                                          );
+          // genearte the ui based on the type of the intervention
+          //"Curative"
+          if (widget.interventionType == interventionTypes[0]) {
+            //mapping the document to a curative file
+            CurativeInterventionFile interventionFile =
+                CurativeInterventionFile.fromJson(snapshot.data!.data()!);
 
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text(
-                                                    'Validate',
-                                                  ),
-                                                ),
-                                              ],
+            //list of tehnicians taht will execute the interevntion
+            List technicians = [];
+            if (interventionFile.mechanicalTechnician) {
+              technicians.add('Mechanical Technician');
+            }
+            if (interventionFile.electricalTechnician) {
+              technicians.add('Electrical Technician');
+            }
+            if (interventionFile.instrumentTechnician) {
+              technicians.add('Instrument Technician');
+            }
+            String technicianList = technicians.join(' - ');
+
+            //joining the spare parts of the intervention file in one string
+            String spareParts = interventionFile.spareParts.join(' - ');
+
+            //joining the tools of the intervention file in one string
+            String tools = interventionFile.tools.join(' - ');
+
+            return ListView(
+              children: [
+                SingleChildScrollView(
+                  child: CurativeInterventionFileView(
+                    equipmentName: widget.equipmentTagName,
+                    equipmentStatus: interventionFile.equipmentStatus,
+                    equipmentDiscipline: widget.equipmentDiscipline,
+                    fileName: interventionFile.fileName,
+                    interventionType: widget.interventionType,
+                    criticality: interventionFile.criticity,
+                    breakdownType: interventionFile.breakDownType,
+                    technicians: technicianList,
+                    startingDay: interventionFile.startingDay,
+                    tools: tools,
+                    spareParts: spareParts,
+                    task: interventionFile.interventionTask,
+                    breakdownDescription: interventionFile.breakDownDescription,
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 16, right: 16, bottom: 25),
+                  child:
+                      // If the intervention file is still in progress
+                      interventionFile.fileStatus == interventionFileStatus[2]
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                SizedBox(
+                                  width: 100,
+                                  child: FilledButton(
+                                    style: ButtonStyle(
+                                      backgroundColor: MaterialStatePropertyAll(
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .primary),
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text('Confirmation'),
+                                            content: const Text(
+                                              'Do you really want to validate this intervention file?',
                                             ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Validate',
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 100,
-                                child: FilledButton(
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStatePropertyAll(
-                                      Theme.of(context).colorScheme.error,
+                                            actions: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
+                                                    child: const Text('Cancel'),
+                                                  ),
+                                                  FilledButton(
+                                                    onPressed: () {
+                                                      String notificationID =
+                                                          const Uuid().v4();
+                                                      setState(
+                                                        () {
+                                                          InterventionFileModel()
+                                                              .changeInterventionFileStatus(
+                                                            equipmentID: widget
+                                                                .equipmentID,
+                                                            equipmentDiscipline:
+                                                                widget
+                                                                    .equipmentDiscipline,
+                                                            interventionFileID:
+                                                                widget
+                                                                    .interventionFileID,
+                                                            interventionType: widget
+                                                                .interventionType,
+                                                            newStatus:
+                                                                interventionFileStatus[
+                                                                    0],
+                                                          );
+                                                        },
+                                                      );
+                                                      NotificationsModel()
+                                                          .sendNotificationToDevice(
+                                                        deviceToken: widget
+                                                            .interventionFileCreatorToken,
+                                                        notificationTitle:
+                                                            "Validation Update",
+                                                        notificationBody:
+                                                            "The intervention file you created for ${widget.equipmentTagName} was validated",
+                                                      );
+                                                      NotificationsModel()
+                                                          .addValidationNotificationUpdateDB(
+                                                        notificationID:
+                                                            notificationID,
+                                                        notificationTitle:
+                                                            "Validation Update",
+                                                        notificationBody:
+                                                            "The intervention file you created for ${widget.equipmentTagName} was validated",
+                                                        interventionFileCreatorID:
+                                                            widget
+                                                                .interventionFileCreatorID,
+                                                        interventionFileCreatorToken:
+                                                            widget
+                                                                .interventionFileCreatorToken,
+                                                        interventionFileID: widget
+                                                            .interventionFileID,
+                                                        interventionType: widget
+                                                            .interventionType,
+                                                        equipmentID:
+                                                            widget.equipmentID,
+                                                        equipmentTagName: widget
+                                                            .equipmentTagName,
+                                                        equipmentDiscipline: widget
+                                                            .equipmentDiscipline,
+                                                      );
+                                                      InterventionModel()
+                                                          .addCurativeIventions(
+                                                        startDate:
+                                                            interventionFile
+                                                                .startingDay,
+                                                        interventionFileID: widget
+                                                            .interventionFileID,
+                                                        equipmentTagName: widget
+                                                            .equipmentTagName,
+                                                        equipmentDiscipline: widget
+                                                            .equipmentDiscipline,
+                                                        mechanicalTechnician:
+                                                            interventionFile
+                                                                .mechanicalTechnician,
+                                                        electricalTechnician:
+                                                            interventionFile
+                                                                .electricalTechnician,
+                                                        instrumentTechnician:
+                                                            interventionFile
+                                                                .instrumentTechnician,
+                                                        spareParts:
+                                                            interventionFile
+                                                                .spareParts,
+                                                        tools: interventionFile
+                                                            .tools,
+                                                        interventionStatus:
+                                                            "In Progress",
+                                                        interventionTask:
+                                                            interventionFile
+                                                                .interventionTask,
+                                                      );
+
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text(
+                                                      'Validate',
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Validate',
                                     ),
                                   ),
-                                  onPressed: () {
-                                    showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: const Text('Deny alert'),
-                                          content: const Text(
-                                            'Tell us why you denied this intervention file!',
-                                          ),
-                                          actions: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                TextButton(
-                                                  child: const Text('Cancel'),
-                                                  onPressed: () =>
-                                                      Navigator.pop(context),
-                                                ),
-                                                FilledButton(
-                                                  onPressed: () {
-                                                    String notificationID =
-                                                        const Uuid().v4();
-                                                    setState(
-                                                      () {
-                                                        InterventionFileModel()
-                                                            .changeInterventionFileStatus(
-                                                          equipmentID: widget
-                                                              .equipmentID,
-                                                          equipmentDiscipline:
-                                                              widget
-                                                                  .equipmentDiscipline,
-                                                          interventionFileID: widget
-                                                              .interventionFileID,
-                                                          interventionType: widget
-                                                              .interventionType,
-                                                          newStatus:
-                                                              interventionFileStatus[
-                                                                  1],
-                                                        );
-                                                        NotificationsModel()
-                                                            .sendNotificationToDevice(
-                                                          deviceToken: widget
-                                                              .interventionFileCreatorToken,
-                                                          notificationTitle:
-                                                              "Validation Update",
-                                                          notificationBody:
-                                                              "The intervention file you created for ${widget.equipmentTagName} was denied",
-                                                        );
-                                                        NotificationsModel()
-                                                            .addValidationNotificationUpdateDB(
-                                                          notificationID:
-                                                              notificationID,
-                                                          notificationTitle:
-                                                              "Validation Update",
-                                                          notificationBody:
-                                                              "The intervention file you created for ${widget.equipmentTagName} was denied",
-                                                          interventionFileCreatorID:
-                                                              widget
-                                                                  .interventionFileCreatorID,
-                                                          interventionFileCreatorToken:
-                                                              widget
-                                                                  .interventionFileCreatorToken,
-                                                          interventionFileID: widget
-                                                              .interventionFileID,
-                                                          interventionType: widget
-                                                              .interventionType,
-                                                          equipmentID: widget
-                                                              .equipmentID,
-                                                          equipmentTagName: widget
-                                                              .equipmentTagName,
-                                                          equipmentDiscipline:
-                                                              widget
-                                                                  .equipmentDiscipline,
-                                                        );
-                                                        Navigator.pop(context);
-                                                      },
-                                                    );
-                                                  },
-                                                  child: const Text(
-                                                    'Deny',
+                                ),
+                                SizedBox(
+                                  width: 100,
+                                  child: FilledButton(
+                                    style: ButtonStyle(
+                                      backgroundColor: MaterialStatePropertyAll(
+                                        Theme.of(context).colorScheme.error,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text('Deny alert'),
+                                            content: const Text(
+                                              'Tell us why you denied this intervention file!',
+                                            ),
+                                            actions: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  TextButton(
+                                                    child: const Text('Cancel'),
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
                                                   ),
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Deny',
+                                                  FilledButton(
+                                                    onPressed: () {
+                                                      String notificationID =
+                                                          const Uuid().v4();
+                                                      setState(
+                                                        () {
+                                                          InterventionFileModel()
+                                                              .changeInterventionFileStatus(
+                                                            equipmentID: widget
+                                                                .equipmentID,
+                                                            equipmentDiscipline:
+                                                                widget
+                                                                    .equipmentDiscipline,
+                                                            interventionFileID:
+                                                                widget
+                                                                    .interventionFileID,
+                                                            interventionType: widget
+                                                                .interventionType,
+                                                            newStatus:
+                                                                interventionFileStatus[
+                                                                    1],
+                                                          );
+                                                          NotificationsModel()
+                                                              .sendNotificationToDevice(
+                                                            deviceToken: widget
+                                                                .interventionFileCreatorToken,
+                                                            notificationTitle:
+                                                                "Validation Update",
+                                                            notificationBody:
+                                                                "The intervention file you created for ${widget.equipmentTagName} was denied",
+                                                          );
+                                                          NotificationsModel()
+                                                              .addValidationNotificationUpdateDB(
+                                                            notificationID:
+                                                                notificationID,
+                                                            notificationTitle:
+                                                                "Validation Update",
+                                                            notificationBody:
+                                                                "The intervention file you created for ${widget.equipmentTagName} was denied",
+                                                            interventionFileCreatorID:
+                                                                widget
+                                                                    .interventionFileCreatorID,
+                                                            interventionFileCreatorToken:
+                                                                widget
+                                                                    .interventionFileCreatorToken,
+                                                            interventionFileID:
+                                                                widget
+                                                                    .interventionFileID,
+                                                            interventionType: widget
+                                                                .interventionType,
+                                                            equipmentID: widget
+                                                                .equipmentID,
+                                                            equipmentTagName: widget
+                                                                .equipmentTagName,
+                                                            equipmentDiscipline:
+                                                                widget
+                                                                    .equipmentDiscipline,
+                                                          );
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                      );
+                                                    },
+                                                    child: const Text(
+                                                      'Deny',
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Deny',
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          )
-                        : data['fileStatus'] == interventionFileStatus[0]
-                            ? const ConfirmedState()
-                            : const DeniedState(),
-              ),
-            ],
-          );
+                              ],
+                            )
+                          : interventionFile.fileStatus ==
+                                  interventionFileStatus[0]
+                              ? const ConfirmedState()
+                              : const DeniedState(),
+                ),
+              ],
+            );
+          } else {
+            //mapping the document to a Preventive file
+            PreventiveInterventionFile interventionFile =
+                PreventiveInterventionFile.fromJson(snapshot.data!.data()!);
+
+            //list of tehnicians taht will execute the interevntion
+            List technicians = [];
+            if (interventionFile.mechanicalTechnician) {
+              technicians.add('Mechanical Technician');
+            }
+            if (interventionFile.electricalTechnician) {
+              technicians.add('Electrical Technician');
+            }
+            if (interventionFile.instrumentTechnician) {
+              technicians.add('Instrument Technician');
+            }
+            String technicianList = technicians.join(' - ');
+
+            //joining the spare parts of the intervention file in one string
+            String spareParts = interventionFile.spareParts.join(' - ');
+
+            //joining the tools of the intervention file in one string
+            String tools = interventionFile.tools.join(' - ');
+            return ListView(
+              children: [
+                SingleChildScrollView(
+                  child: PreventiveFile(
+                    spareParts: spareParts,
+                    task: interventionFile.interventionTask,
+                    startingDay: interventionFile.startingDay,
+                    forecast: interventionFile.forecast,
+                    equipmentName: interventionFile.equipmentTagName,
+                    equipmentStatus: interventionFile.equipmentStatus,
+                    equipmentDiscipline: widget.equipmentDiscipline,
+                    fileName: interventionFile.fileStatus,
+                    interventionType: widget.interventionType,
+                    technicians: technicianList,
+                    tools: tools,
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 16, right: 16, bottom: 25),
+                  child:
+                      // If the intervention file is still in progress
+                      interventionFile.fileStatus == interventionFileStatus[2]
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                SizedBox(
+                                  width: 100,
+                                  child: FilledButton(
+                                    style: ButtonStyle(
+                                      backgroundColor: MaterialStatePropertyAll(
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .primary),
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text('Confirmation'),
+                                            content: const Text(
+                                              'Do you really want to validate this intervention file?',
+                                            ),
+                                            actions: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
+                                                    child: const Text('Cancel'),
+                                                  ),
+                                                  FilledButton(
+                                                    onPressed: () {
+                                                      String notificationID =
+                                                          const Uuid().v4();
+                                                      setState(
+                                                        () {
+                                                          InterventionFileModel()
+                                                              .changeInterventionFileStatus(
+                                                            equipmentID: widget
+                                                                .equipmentID,
+                                                            equipmentDiscipline:
+                                                                widget
+                                                                    .equipmentDiscipline,
+                                                            interventionFileID:
+                                                                widget
+                                                                    .interventionFileID,
+                                                            interventionType: widget
+                                                                .interventionType,
+                                                            newStatus:
+                                                                interventionFileStatus[
+                                                                    0],
+                                                          );
+                                                        },
+                                                      );
+                                                      NotificationsModel()
+                                                          .sendNotificationToDevice(
+                                                        deviceToken: widget
+                                                            .interventionFileCreatorToken,
+                                                        notificationTitle:
+                                                            "Validation Update",
+                                                        notificationBody:
+                                                            "The intervention file you created for ${widget.equipmentTagName} was validated",
+                                                      );
+                                                      NotificationsModel()
+                                                          .addValidationNotificationUpdateDB(
+                                                        notificationID:
+                                                            notificationID,
+                                                        notificationTitle:
+                                                            "Validation Update",
+                                                        notificationBody:
+                                                            "The intervention file you created for ${widget.equipmentTagName} was validated",
+                                                        interventionFileCreatorID:
+                                                            widget
+                                                                .interventionFileCreatorID,
+                                                        interventionFileCreatorToken:
+                                                            widget
+                                                                .interventionFileCreatorToken,
+                                                        interventionFileID: widget
+                                                            .interventionFileID,
+                                                        interventionType: widget
+                                                            .interventionType,
+                                                        equipmentID:
+                                                            widget.equipmentID,
+                                                        equipmentTagName: widget
+                                                            .equipmentTagName,
+                                                        equipmentDiscipline: widget
+                                                            .equipmentDiscipline,
+                                                      );
+                                                      InterventionModel()
+                                                          .addPreventiveInterventions(
+                                                        startDate:
+                                                            interventionFile
+                                                                .startingDay,
+                                                        forecast:
+                                                            interventionFile
+                                                                .forecast,
+                                                        interventionFileID: widget
+                                                            .interventionFileID,
+                                                        equipmentTagName: widget
+                                                            .equipmentTagName,
+                                                        equipmentDiscipline: widget
+                                                            .equipmentDiscipline,
+                                                        mechanicalTechnician:
+                                                            interventionFile
+                                                                .mechanicalTechnician,
+                                                        electricalTechnician:
+                                                            interventionFile
+                                                                .electricalTechnician,
+                                                        instrumentTechnician:
+                                                            interventionFile
+                                                                .instrumentTechnician,
+                                                        spareParts:
+                                                            interventionFile
+                                                                .spareParts,
+                                                        tools: interventionFile
+                                                            .tools,
+                                                        interventionStatus:
+                                                            "In Progress",
+                                                        interventionTask:
+                                                            interventionFile
+                                                                .interventionTask,
+                                                      );
+
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text(
+                                                      'Validate',
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Validate',
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 100,
+                                  child: FilledButton(
+                                    style: ButtonStyle(
+                                      backgroundColor: MaterialStatePropertyAll(
+                                        Theme.of(context).colorScheme.error,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text('Deny alert'),
+                                            content: const Text(
+                                              'Tell us why you denied this intervention file!',
+                                            ),
+                                            actions: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  TextButton(
+                                                    child: const Text('Cancel'),
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
+                                                  ),
+                                                  FilledButton(
+                                                    onPressed: () {
+                                                      String notificationID =
+                                                          const Uuid().v4();
+                                                      setState(
+                                                        () {
+                                                          InterventionFileModel()
+                                                              .changeInterventionFileStatus(
+                                                            equipmentID: widget
+                                                                .equipmentID,
+                                                            equipmentDiscipline:
+                                                                widget
+                                                                    .equipmentDiscipline,
+                                                            interventionFileID:
+                                                                widget
+                                                                    .interventionFileID,
+                                                            interventionType: widget
+                                                                .interventionType,
+                                                            newStatus:
+                                                                interventionFileStatus[
+                                                                    1],
+                                                          );
+                                                          NotificationsModel()
+                                                              .sendNotificationToDevice(
+                                                            deviceToken: widget
+                                                                .interventionFileCreatorToken,
+                                                            notificationTitle:
+                                                                "Validation Update",
+                                                            notificationBody:
+                                                                "The intervention file you created for ${widget.equipmentTagName} was denied",
+                                                          );
+                                                          NotificationsModel()
+                                                              .addValidationNotificationUpdateDB(
+                                                            notificationID:
+                                                                notificationID,
+                                                            notificationTitle:
+                                                                "Validation Update",
+                                                            notificationBody:
+                                                                "The intervention file you created for ${widget.equipmentTagName} was denied",
+                                                            interventionFileCreatorID:
+                                                                widget
+                                                                    .interventionFileCreatorID,
+                                                            interventionFileCreatorToken:
+                                                                widget
+                                                                    .interventionFileCreatorToken,
+                                                            interventionFileID:
+                                                                widget
+                                                                    .interventionFileID,
+                                                            interventionType: widget
+                                                                .interventionType,
+                                                            equipmentID: widget
+                                                                .equipmentID,
+                                                            equipmentTagName: widget
+                                                                .equipmentTagName,
+                                                            equipmentDiscipline:
+                                                                widget
+                                                                    .equipmentDiscipline,
+                                                          );
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                      );
+                                                    },
+                                                    child: const Text(
+                                                      'Deny',
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Deny',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : interventionFile.fileStatus ==
+                                  interventionFileStatus[0]
+                              ? const ConfirmedState()
+                              : const DeniedState(),
+                ),
+              ],
+            );
+          }
+          // Map<String, dynamic> data =
+          //     snapshot.data!.data() as Map<String, dynamic>;
+          // List technicians = [];
+          // data['instrumentTechnician']
+          //     ? technicians.add('Instrument Technician')
+          //     : debugPrint('no instrument');
+          // data['electricalTechnician']
+          //     ? technicians.add('Electrical Technician')
+          //     : debugPrint('no electrical');
+          // data['mechanicalTechnician']
+          //     ? technicians.add('Mechanical Technician')
+          //     : debugPrint('no mechanical');
+          // String technicianList = technicians.join(' - ');
+          // var spareParts = data['spareParts'].join(' - ');
+          // var tools = data['tools'].join(' - ');
+          // //var creationDate = data['CreatedAt'];
+          // return ListView(
+          //   children: [
+          //     SingleChildScrollView(
+          //       child: widget.interventionType == 'Preventive'
+          //           ? PreventiveFile(
+          //               spareParts: spareParts,
+          //               task: data['interventionTask'],
+          //               startingDay: data['startingDay'],
+          //               forecast: data['forecast'],
+          //               equipmentName: data['equipmentTagName'],
+          //               equipmentStatus: data['equipmentStatus'],
+          //               equipmentDiscipline: widget.equipmentDiscipline,
+          //               fileName: data['fileName'],
+          //               interventionType: widget.interventionType,
+          //               technicians: technicianList,
+          //               tools: tools,
+          //             )
+          //           : CurativeInterventionFileView(
+          //               equipmentName: data['equipmentTagName'],
+          //               equipmentStatus: data['equipmentStatus'],
+          //               equipmentDiscipline: widget.equipmentDiscipline,
+          //               fileName: data['fileName'],
+          //               interventionType: widget.interventionType,
+          //               criticality: data['criticity'],
+          //               breakdownType: data['breakDownType'],
+          //               technicians: technicianList,
+          //               startingDay: data['startingDay'],
+          //               tools: tools,
+          //               spareParts: spareParts,
+          //               task: data['interventionTask'],
+          //               breakdownDescription: data['breakDownDescription'],
+          //               // creationDate: DateFormat(
+          //               //   'dd-MM-yyyy',
+          //               // ).format(
+          //               //   DateTime.fromMillisecondsSinceEpoch(
+          //               //     creationDate.seconds * 1000,
+          //               //   ),
+          //               // ),
+          //             ),
+          //     ),
+          //     Padding(
+          //       padding: const EdgeInsets.only(left: 16, right: 16, bottom: 25),
+          //       child:
+          //           // If the intervention file is still in progress
+          //           data['fileStatus'] == interventionFileStatus[2]
+          //               ? Row(
+          //                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //                   children: [
+          //                     SizedBox(
+          //                       width: 100,
+          //                       child: FilledButton(
+          //                         style: ButtonStyle(
+          //                           backgroundColor: MaterialStatePropertyAll(
+          //                               Theme.of(context).colorScheme.primary),
+          //                         ),
+          //                         onPressed: () {
+          //                           showDialog(
+          //                             barrierDismissible: false,
+          //                             context: context,
+          //                             builder: (BuildContext context) {
+          //                               return AlertDialog(
+          //                                 title: const Text('Confirmation'),
+          //                                 content: const Text(
+          //                                   'Do you really want to validate this intervention file?',
+          //                                 ),
+          //                                 actions: [
+          //                                   Row(
+          //                                     mainAxisAlignment:
+          //                                         MainAxisAlignment.spaceEvenly,
+          //                                     children: [
+          //                                       TextButton(
+          //                                         onPressed: () =>
+          //                                             Navigator.pop(context),
+          //                                         child: const Text('Cancel'),
+          //                                       ),
+          //                                       FilledButton(
+          //                                         onPressed: () {
+          //                                           String notificationID =
+          //                                               const Uuid().v4();
+          //                                           setState(
+          //                                             () {
+          //                                               InterventionFileModel()
+          //                                                   .changeInterventionFileStatus(
+          //                                                 equipmentID: widget
+          //                                                     .equipmentID,
+          //                                                 equipmentDiscipline:
+          //                                                     widget
+          //                                                         .equipmentDiscipline,
+          //                                                 interventionFileID: widget
+          //                                                     .interventionFileID,
+          //                                                 interventionType: widget
+          //                                                     .interventionType,
+          //                                                 newStatus:
+          //                                                     interventionFileStatus[
+          //                                                         0],
+          //                                               );
+          //                                             },
+          //                                           );
+          //                                           NotificationsModel()
+          //                                               .sendNotificationToDevice(
+          //                                             deviceToken: widget
+          //                                                 .interventionFileCreatorToken,
+          //                                             notificationTitle:
+          //                                                 "Validation Update",
+          //                                             notificationBody:
+          //                                                 "The intervention file you created for ${widget.equipmentTagName} was validated",
+          //                                           );
+          //                                           NotificationsModel()
+          //                                               .addValidationNotificationUpdateDB(
+          //                                             notificationID:
+          //                                                 notificationID,
+          //                                             notificationTitle:
+          //                                                 "Validation Update",
+          //                                             notificationBody:
+          //                                                 "The intervention file you created for ${widget.equipmentTagName} was validated",
+          //                                             interventionFileCreatorID:
+          //                                                 widget
+          //                                                     .interventionFileCreatorID,
+          //                                             interventionFileCreatorToken:
+          //                                                 widget
+          //                                                     .interventionFileCreatorToken,
+          //                                             interventionFileID: widget
+          //                                                 .interventionFileID,
+          //                                             interventionType: widget
+          //                                                 .interventionType,
+          //                                             equipmentID:
+          //                                                 widget.equipmentID,
+          //                                             equipmentTagName: widget
+          //                                                 .equipmentTagName,
+          //                                             equipmentDiscipline: widget
+          //                                                 .equipmentDiscipline,
+          //                                           );
+          //                                           widget.interventionType ==
+          //                                                   'Preventive'
+          //                                               ? InterventionModel()
+          //                                                   .addPreventiveInterventions(
+          //                                                   startDate: data[
+          //                                                       'startingDay'],
+          //                                                   forecast: data[
+          //                                                       'forecast'],
+          //                                                   interventionFileID:
+          //                                                       widget
+          //                                                           .interventionFileID,
+          //                                                   equipmentTagName: widget
+          //                                                       .equipmentTagName,
+          //                                                   equipmentDiscipline:
+          //                                                       widget
+          //                                                           .equipmentDiscipline,
+          //                                                   mechanicalTechnician:
+          //                                                       data[
+          //                                                           'mechanicalTechnician'],
+          //                                                   electricalTechnician:
+          //                                                       data[
+          //                                                           'electricalTechnician'],
+          //                                                   instrumentTechnician:
+          //                                                       data[
+          //                                                           'instrumentTechnician'],
+          //                                                   spareParts: data[
+          //                                                       'spareParts'],
+          //                                                   tools:
+          //                                                       data['tools'],
+          //                                                   interventionStatus:
+          //                                                       "Haithem nik omik",
+          //                                                   interventionTask: data[
+          //                                                       'interventionTask'],
+          //                                                 )
+          //                                               : InterventionModel()
+          //                                                   .addCurativeIventions(
+          //                                                   startDate: data[
+          //                                                       'startingDay'],
+          //                                                   interventionFileID:
+          //                                                       widget
+          //                                                           .interventionFileID,
+          //                                                   equipmentTagName: widget
+          //                                                       .equipmentTagName,
+          //                                                   equipmentDiscipline:
+          //                                                       widget
+          //                                                           .equipmentDiscipline,
+          //                                                   mechanicalTechnician:
+          //                                                       data[
+          //                                                           'mechanicalTechnician'],
+          //                                                   electricalTechnician:
+          //                                                       data[
+          //                                                           'electricalTechnician'],
+          //                                                   instrumentTechnician:
+          //                                                       data[
+          //                                                           'instrumentTechnician'],
+          //                                                   spareParts: data[
+          //                                                       'spareParts'],
+          //                                                   tools:
+          //                                                       data['tools'],
+          //                                                   interventionStatus:
+          //                                                       "Haithem nik omik",
+          //                                                   interventionTask: data[
+          //                                                       'interventionTask'],
+          //                                                 );
+
+          //                                           Navigator.pop(context);
+          //                                         },
+          //                                         child: const Text(
+          //                                           'Validate',
+          //                                         ),
+          //                                       ),
+          //                                     ],
+          //                                   ),
+          //                                 ],
+          //                               );
+          //                             },
+          //                           );
+          //                         },
+          //                         child: const Text(
+          //                           'Validate',
+          //                         ),
+          //                       ),
+          //                     ),
+          //                     SizedBox(
+          //                       width: 100,
+          //                       child: FilledButton(
+          //                         style: ButtonStyle(
+          //                           backgroundColor: MaterialStatePropertyAll(
+          //                             Theme.of(context).colorScheme.error,
+          //                           ),
+          //                         ),
+          //                         onPressed: () {
+          //                           showDialog(
+          //                             barrierDismissible: false,
+          //                             context: context,
+          //                             builder: (context) {
+          //                               return AlertDialog(
+          //                                 title: const Text('Deny alert'),
+          //                                 content: const Text(
+          //                                   'Tell us why you denied this intervention file!',
+          //                                 ),
+          //                                 actions: [
+          //                                   Row(
+          //                                     mainAxisAlignment:
+          //                                         MainAxisAlignment.spaceAround,
+          //                                     children: [
+          //                                       TextButton(
+          //                                         child: const Text('Cancel'),
+          //                                         onPressed: () =>
+          //                                             Navigator.pop(context),
+          //                                       ),
+          //                                       FilledButton(
+          //                                         onPressed: () {
+          //                                           String notificationID =
+          //                                               const Uuid().v4();
+          //                                           setState(
+          //                                             () {
+          //                                               InterventionFileModel()
+          //                                                   .changeInterventionFileStatus(
+          //                                                 equipmentID: widget
+          //                                                     .equipmentID,
+          //                                                 equipmentDiscipline:
+          //                                                     widget
+          //                                                         .equipmentDiscipline,
+          //                                                 interventionFileID: widget
+          //                                                     .interventionFileID,
+          //                                                 interventionType: widget
+          //                                                     .interventionType,
+          //                                                 newStatus:
+          //                                                     interventionFileStatus[
+          //                                                         1],
+          //                                               );
+          //                                               NotificationsModel()
+          //                                                   .sendNotificationToDevice(
+          //                                                 deviceToken: widget
+          //                                                     .interventionFileCreatorToken,
+          //                                                 notificationTitle:
+          //                                                     "Validation Update",
+          //                                                 notificationBody:
+          //                                                     "The intervention file you created for ${widget.equipmentTagName} was denied",
+          //                                               );
+          //                                               NotificationsModel()
+          //                                                   .addValidationNotificationUpdateDB(
+          //                                                 notificationID:
+          //                                                     notificationID,
+          //                                                 notificationTitle:
+          //                                                     "Validation Update",
+          //                                                 notificationBody:
+          //                                                     "The intervention file you created for ${widget.equipmentTagName} was denied",
+          //                                                 interventionFileCreatorID:
+          //                                                     widget
+          //                                                         .interventionFileCreatorID,
+          //                                                 interventionFileCreatorToken:
+          //                                                     widget
+          //                                                         .interventionFileCreatorToken,
+          //                                                 interventionFileID: widget
+          //                                                     .interventionFileID,
+          //                                                 interventionType: widget
+          //                                                     .interventionType,
+          //                                                 equipmentID: widget
+          //                                                     .equipmentID,
+          //                                                 equipmentTagName: widget
+          //                                                     .equipmentTagName,
+          //                                                 equipmentDiscipline:
+          //                                                     widget
+          //                                                         .equipmentDiscipline,
+          //                                               );
+          //                                               Navigator.pop(context);
+          //                                             },
+          //                                           );
+          //                                         },
+          //                                         child: const Text(
+          //                                           'Deny',
+          //                                         ),
+          //                                       ),
+          //                                     ],
+          //                                   )
+          //                                 ],
+          //                               );
+          //                             },
+          //                           );
+          //                         },
+          //                         child: const Text(
+          //                           'Deny',
+          //                         ),
+          //                       ),
+          //                     ),
+          //                   ],
+          //                 )
+          //               : data['fileStatus'] == interventionFileStatus[0]
+          //                   ? const ConfirmedState()
+          //                   : const DeniedState(),
+          //     ),
+          //   ],
+          // );
         }),
       ),
     );

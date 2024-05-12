@@ -20,7 +20,7 @@ class EmptySelectionContainer extends StatelessWidget {
           border: Border.all(
             color: Theme.of(context).colorScheme.primary,
           ),
-          color: Colors.grey[300],
+          color: Theme.of(context).colorScheme.surface,
         ),
         child: Center(
           child: Text(
