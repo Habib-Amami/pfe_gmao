@@ -1,18 +1,36 @@
 class Intervention {
   final String interventionID;
+  final String interventionTask;
   final DateTime interventionDate;
   final String interventionType;
+  final String interventionStatus;
+
   final String interventionFileID;
+
   final String equipmentTagName;
   final String equipmentDiscipline;
 
+  final bool mechanicalTechnician;
+  final bool electricalTechnician;
+  final bool instrumentTechnician;
+
+  final List<String> spareParts;
+  final List<String> tools;
+
   Intervention({
     required this.interventionID,
+    required this.interventionTask,
     required this.interventionDate,
     required this.interventionType,
+    required this.interventionStatus,
     required this.interventionFileID,
     required this.equipmentTagName,
     required this.equipmentDiscipline,
+    required this.mechanicalTechnician,
+    required this.electricalTechnician,
+    required this.instrumentTechnician,
+    required this.spareParts,
+    required this.tools,
   });
 
   factory Intervention.fromJson(Map<String, dynamic> json) {
@@ -23,6 +41,13 @@ class Intervention {
       interventionFileID: json['interventionFileID'],
       equipmentTagName: json['equipmentTagName'],
       equipmentDiscipline: json['equipmentDiscipline'],
+      mechanicalTechnician: json['mechanicalTechnician'],
+      electricalTechnician: json['electricalTechnician'],
+      instrumentTechnician: json['instrumentTechnician'],
+      spareParts: List<String>.from(json['spareParts']),
+      tools: List<String>.from(json['tools']),
+      interventionStatus: json['interventionStatus'],
+      interventionTask: json['interventionTask'],
     );
   }
 
@@ -34,6 +59,13 @@ class Intervention {
       'interventionFileID': interventionFileID,
       'equipmentTagName': equipmentTagName,
       'equipmentDiscipline': equipmentDiscipline,
+      'mechanicalTechnician': mechanicalTechnician,
+      'electricalTechnician': electricalTechnician,
+      'instrumentTechnician': instrumentTechnician,
+      'spareParts': spareParts,
+      'tools': tools,
+      'interventionStatus': interventionStatus,
+      'interventionTask': interventionTask,
     };
   }
 }
