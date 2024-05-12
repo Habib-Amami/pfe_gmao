@@ -13,6 +13,13 @@ class InterventionModel {
     required String interventionFileID,
     required String equipmentTagName,
     required String equipmentDiscipline,
+    required bool mechanicalTechnician,
+    required bool electricalTechnician,
+    required bool instrumentTechnician,
+    required List<String> spareParts,
+    required List<String> tools,
+    required String interventionStatus,
+    required String interventionTask,
   }) async {
     String interventionType = interventionTypes[1]; // "Preventive"
     //creating a firestore instance
@@ -39,6 +46,13 @@ class InterventionModel {
         interventionFileID: interventionFileID,
         equipmentTagName: equipmentTagName,
         equipmentDiscipline: equipmentDiscipline,
+        mechanicalTechnician: mechanicalTechnician,
+        electricalTechnician: electricalTechnician,
+        instrumentTechnician: instrumentTechnician,
+        spareParts: spareParts,
+        tools: tools,
+        interventionStatus: interventionStatus,
+        interventionTask: interventionTask,
       );
       //adding intervention to firebase
       batch.set(
@@ -59,6 +73,13 @@ class InterventionModel {
     required String interventionFileID,
     required String equipmentTagName,
     required String equipmentDiscipline,
+    required bool mechanicalTechnician,
+    required bool electricalTechnician,
+    required bool instrumentTechnician,
+    required List<String> spareParts,
+    required List<String> tools,
+    required String interventionStatus,
+    required String interventionTask,
   }) async {
     String interventionType = interventionTypes[0]; // "Curative"
     //creating a firestore instance
@@ -80,6 +101,13 @@ class InterventionModel {
       interventionFileID: interventionFileID,
       equipmentTagName: equipmentTagName,
       equipmentDiscipline: equipmentDiscipline,
+      mechanicalTechnician: mechanicalTechnician,
+      electricalTechnician: electricalTechnician,
+      instrumentTechnician: instrumentTechnician,
+      spareParts: spareParts,
+      tools: tools,
+      interventionStatus: interventionStatus,
+      interventionTask: interventionTask,
     );
     //adding intervention to firebase
     await firestore

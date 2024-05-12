@@ -263,6 +263,23 @@ class _InterventionFileValidationView
                                                             equipmentDiscipline:
                                                                 widget
                                                                     .equipmentDiscipline,
+                                                            mechanicalTechnician:
+                                                                data[
+                                                                    'mechanicalTechnician'],
+                                                            electricalTechnician:
+                                                                data[
+                                                                    'electricalTechnician'],
+                                                            instrumentTechnician:
+                                                                data[
+                                                                    'instrumentTechnician'],
+                                                            spareParts: data[
+                                                                'spareParts'],
+                                                            tools:
+                                                                data['tools'],
+                                                            interventionStatus:
+                                                                "Haithem nik omik",
+                                                            interventionTask: data[
+                                                                'interventionTask'],
                                                           )
                                                         : InterventionModel()
                                                             .addCurativeIventions(
@@ -276,6 +293,23 @@ class _InterventionFileValidationView
                                                             equipmentDiscipline:
                                                                 widget
                                                                     .equipmentDiscipline,
+                                                            mechanicalTechnician:
+                                                                data[
+                                                                    'mechanicalTechnician'],
+                                                            electricalTechnician:
+                                                                data[
+                                                                    'electricalTechnician'],
+                                                            instrumentTechnician:
+                                                                data[
+                                                                    'instrumentTechnician'],
+                                                            spareParts: data[
+                                                                'spareParts'],
+                                                            tools:
+                                                                data['tools'],
+                                                            interventionStatus:
+                                                                "Haithem nik omik",
+                                                            interventionTask: data[
+                                                                'interventionTask'],
                                                           );
 
                                                     Navigator.pop(context);
