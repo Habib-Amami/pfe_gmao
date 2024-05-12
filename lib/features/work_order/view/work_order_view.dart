@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class WorkOrderScreen extends StatelessWidget {
-  const WorkOrderScreen({super.key});
+class WorkOrderView extends StatelessWidget {
+  const WorkOrderView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text("Work Order Screen"),
+        child: Text("Work Order View"),
       ),
     );
   }

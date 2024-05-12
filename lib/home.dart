@@ -16,7 +16,7 @@ import 'firebase/cloud_firestore_references.dart';
 import 'main.dart';
 import 'features/interventions/view/calender_screen.dart';
 import 'menu_screens/settings.dart';
-import 'menu_screens/work_order_screen.dart';
+import 'features/work_order/view/work_order_view.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -31,7 +31,7 @@ class _HomeState extends State<Home> {
     EquipmentScreen(),
     GlobalInterventionFilesList(),
     CalenderScreen(),
-    WorkOrderScreen(),
+    WorkOrderView(),
   ];
 
   @override

@@ -26,16 +26,19 @@ class UserModel {
   final Roles role;
   final String serialNumber;
   final String FCMtoken;
+  final String discipline;
 
   // Constructor for creating a UserModel instance
-  UserModel(
-      {required this.userName,
-      required this.email,
-      required this.phoneNumber,
-      required this.photoURL,
-      required this.role,
-      required this.serialNumber,
-      required this.FCMtoken});
+  UserModel({
+    required this.userName,
+    required this.email,
+    required this.phoneNumber,
+    required this.photoURL,
+    required this.role,
+    required this.serialNumber,
+    required this.FCMtoken,
+    required this.discipline,
+  });
 
   // Factory method to create a UserModel instance from Firestore data
   factory UserModel.fromFirestore(
@@ -44,14 +47,14 @@ class UserModel {
   ) {
     final data = snapshot.data();
     return UserModel(
-      userName: data?['userName'] as String,
-      email: data?['email'] as String,
-      photoURL: data?['photoURL'] as String,
-      role: _parseRole(data?['role']),
-      phoneNumber: data?['phoneNumber'] as String,
-      serialNumber: data?['serialNumber'] as String,
-      FCMtoken: data?["FCMtoken"] as String,
-    );
+        userName: data?['userName'] as String,
+        email: data?['email'] as String,
+        photoURL: data?['photoURL'] as String,
+        role: _parseRole(data?['role']),
+        phoneNumber: data?['phoneNumber'] as String,
+        serialNumber: data?['serialNumber'] as String,
+        FCMtoken: data?["FCMtoken"] as String,
+        discipline: data?['discipline'] as String);
   }
 
   // Helper method to convert role string to Roles enum
@@ -96,6 +99,7 @@ class UserModel {
       'role': role.toShortString(),
       'serialNumber': serialNumber,
       'FCMtoken': FCMtoken,
+      'discipline': discipline,
     };
   }
 }

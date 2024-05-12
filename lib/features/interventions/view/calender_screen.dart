@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pfe_gmao/features/Equipments/model/data_models/discipline_list.dart';
 import 'package:pfe_gmao/features/interventions/model/data_models/intervention.dart';
 import 'package:pfe_gmao/features/interventions/view/intervention_file_view.dart';
 import 'package:pfe_gmao/features/interventions/view/widget/intervention_card.dart';
+import 'package:pfe_gmao/features/work_order/view/add_work_order_view.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalenderScreen extends StatefulWidget {
@@ -28,6 +30,32 @@ class _CalenderScreenState extends State<CalenderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AddWorkOrderView(
+              equipmentTagName: "TEST Tag Name",
+              equipmentDiscipline: disciplineValueList[0],
+              interventionTask: "Test Task",
+              isElectrical: true,
+              isInstrument: true,
+              isMechanical: true,
+              spareParts: const [
+                "test spare part",
+                "test spare part",
+                "test spare part"
+              ],
+              tools: const [
+                "test tools",
+                "test tools",
+                "test tools",
+              ],
+            ),
+          ),
+        ),
+        label: const Text("Word Order"),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
