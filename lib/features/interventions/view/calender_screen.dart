@@ -199,6 +199,10 @@ class _CalenderScreenState extends State<CalenderScreen> {
                                       interventions[index].interventionType,
                                   date: interventions[index].interventionDate,
                                   typeOfCard: 'intervention',
+                                  status:
+                                      interventions[index].interventionStatus,
+                                  equipmentName:
+                                      interventions[index].equipmentTagName,
                                 ),
                               ),
                             ),
