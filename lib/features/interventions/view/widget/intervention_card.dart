@@ -7,11 +7,15 @@ class CalendarCard extends StatelessWidget {
     required this.subtitle,
     required this.date,
     required this.typeOfCard,
+    required this.status,
+    required this.equipmentName,
   });
   final String title;
   final String subtitle;
   final DateTime date;
   final String typeOfCard;
+  final String status;
+  final String equipmentName;
 
   // function to convert month from int to his abbreviation string
   String monthIntToString(int monthInInt) {
@@ -121,7 +125,7 @@ class CalendarCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'INT-000$title  (In Progress)',
+                        'INT-000$title  ($status)',
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
@@ -135,7 +139,7 @@ class CalendarCard extends StatelessWidget {
                           fontSize: 14,
                           color: Theme.of(context).colorScheme.inverseSurface,
                         ),
-                        'TGN-201: $subtitle',
+                        '$equipmentName: $subtitle ',
                       ),
                     ],
                   ),
