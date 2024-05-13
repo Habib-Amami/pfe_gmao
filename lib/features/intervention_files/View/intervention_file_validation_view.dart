@@ -270,7 +270,8 @@ class _InterventionFileValidationView
                                                         tools: interventionFile
                                                             .tools,
                                                         interventionStatus:
-                                                            "In Progress",
+                                                            interventionFileStatus[
+                                                                0],
                                                         interventionTask:
                                                             interventionFile
                                                                 .interventionTask,
@@ -577,7 +578,8 @@ class _InterventionFileValidationView
                                                         tools: interventionFile
                                                             .tools,
                                                         interventionStatus:
-                                                            "In Progress",
+                                                            interventionFileStatus[
+                                                                0],
                                                         interventionTask:
                                                             interventionFile
                                                                 .interventionTask,

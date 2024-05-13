@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:pfe_gmao/features/Equipments/model/data_models/discipline_list.dart';
-import 'package:pfe_gmao/features/interventions/model/data_models/intervention.dart';
-import 'package:pfe_gmao/features/interventions/view/intervention_file_view.dart';
-import 'package:pfe_gmao/features/interventions/view/widget/intervention_card.dart';
-import 'package:pfe_gmao/features/work_order/view/add_work_order_view.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+import '../../work_order/view/add_work_order_view.dart';
+import '../model/data_models/intervention.dart';
+import 'intervention_file_view.dart';
+import 'widget/intervention_card.dart';
 
 class CalenderScreen extends StatefulWidget {
   const CalenderScreen({super.key});
@@ -31,32 +31,6 @@ class _CalenderScreenState extends State<CalenderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AddWorkOrderView(
-              equipmentTagName: "TEST Tag Name",
-              equipmentDiscipline: disciplineValueList[0],
-              interventionTask: "Test Task",
-              isElectrical: true,
-              isInstrument: true,
-              isMechanical: true,
-              spareParts: const [
-                "test spare part",
-                "test spare part",
-                "test spare part"
-              ],
-              tools: const [
-                "test tools",
-                "test tools",
-                "test tools",
-              ],
-            ),
-          ),
-        ),
-        label: const Text("Word Order"),
-      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
@@ -164,42 +138,46 @@ class _CalenderScreenState extends State<CalenderScreen> {
                           children: [
                             Slidable(
                               endActionPane: ActionPane(
-                                  motion: const StretchMotion(),
-                                  children: [
-                                    SlidableAction(
-                                      foregroundColor: Colors.white,
-                                      autoClose: true,
-                                      label: 'Add Work Order',
-                                      icon: Icons.add,
-                                      borderRadius: BorderRadius.circular(13),
-                                      backgroundColor: Colors.red.shade700,
-                                      onPressed: (context) => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddWorkOrderView(
-                                            equipmentTagName: "TEST Tag Name",
-                                            equipmentDiscipline:
-                                                disciplineValueList[0],
-                                            interventionTask: "Test Task",
-                                            isElectrical: true,
-                                            isInstrument: true,
-                                            isMechanical: true,
-                                            spareParts: const [
-                                              "test spare part",
-                                              "test spare part",
-                                              "test spare part"
-                                            ],
-                                            tools: const [
-                                              "test tools",
-                                              "test tools",
-                                              "test tools",
-                                            ],
-                                          ),
+                                motion: const StretchMotion(),
+                                children: [
+                                  SlidableAction(
+                                    foregroundColor: Colors.white,
+                                    autoClose: true,
+                                    label: 'Add Work Order',
+                                    icon: Icons.add,
+                                    borderRadius: BorderRadius.circular(13),
+                                    backgroundColor: Colors.red.shade700,
+                                    onPressed: (context) => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AddWorkOrderView(
+                                          equipmentTagName: interventions[index]
+                                              .equipmentTagName,
+                                          equipmentDiscipline:
+                                              interventions[index]
+                                                  .equipmentDiscipline,
+                                          interventionTask: interventions[index]
+                                              .interventionTask,
+                                          executionDate: interventions[index]
+                                              .interventionDate
+                                              .toIso8601String()
+                                              .split("T")
+                                              .first,
+                                          isMechanical: interventions[index]
+                                              .mechanicalTechnician,
+                                          isElectrical: interventions[index]
+                                              .electricalTechnician,
+                                          isInstrument: interventions[index]
+                                              .instrumentTechnician,
+                                          spareParts:
+                                              interventions[index].spareParts,
+                                          tools: interventions[index].tools,
                                         ),
                                       ),
-                                    )
-                                  ]),
+                                    ),
+                                  )
+                                ],
+                              ),
                               child: GestureDetector(
                                 onTap: () => Navigator.push(
                                   context,
