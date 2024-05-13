@@ -50,7 +50,7 @@ class CurativeInterventionFileView extends StatelessWidget {
             InterventionFileFormField(
               prefixIcon: const Icon(Icons.local_offer_outlined),
               initialValue: equipmentName,
-              enabled: false,
+              readOnly: true,
             ),
             Row(
               children: [
@@ -64,7 +64,8 @@ class CurativeInterventionFileView extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.sizeOf(context).width / 2 - 24,
                       child: InterventionFileFormField(
-                        enabled: false,
+                        prefixIcon: const Icon(Icons.power_outlined),
+                        readOnly: true,
                         initialValue: equipmentStatus,
                       ),
                     ),
@@ -83,7 +84,8 @@ class CurativeInterventionFileView extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.sizeOf(context).width / 2 - 24,
                       child: InterventionFileFormField(
-                        enabled: false,
+                        readOnly: true,
+                        prefixIcon: const Icon(Icons.podcasts),
                         initialValue: equipmentDiscipline,
                       ),
                     ),
@@ -96,7 +98,7 @@ class CurativeInterventionFileView extends StatelessWidget {
             ),
 
             InterventionFileFormField(
-              enabled: false,
+              readOnly: true,
               initialValue: fileName,
               keyboardType: TextInputType.text,
               prefixIcon: const Icon(
@@ -108,7 +110,7 @@ class CurativeInterventionFileView extends StatelessWidget {
             ),
 
             InterventionFileFormField(
-              enabled: false,
+              readOnly: true,
               prefixIcon: const Icon(Icons.medical_services),
               initialValue: interventionType,
             ),
@@ -117,7 +119,7 @@ class CurativeInterventionFileView extends StatelessWidget {
               title: "Criticality",
             ),
             InterventionFileFormField(
-              enabled: false,
+              readOnly: true,
               prefixIcon: const Icon(Icons.medical_services),
               initialValue: criticality,
             ),
@@ -126,7 +128,7 @@ class CurativeInterventionFileView extends StatelessWidget {
               title: "Breakdown type",
             ),
             InterventionFileFormField(
-              enabled: false,
+              readOnly: true,
               prefixIcon: const Icon(Icons.medical_services),
               initialValue: breakdownType,
             ),
@@ -136,7 +138,7 @@ class CurativeInterventionFileView extends StatelessWidget {
             ),
             InterventionFileFormField(
               maxLines: 3,
-              enabled: false,
+              readOnly: true,
               initialValue: breakdownDescription,
               prefixIcon: const Padding(
                 padding: EdgeInsets.only(bottom: 48.0),
@@ -163,7 +165,7 @@ class CurativeInterventionFileView extends StatelessWidget {
               title: "Starting Day",
             ),
             InterventionFileFormField(
-              enabled: false,
+              readOnly: true,
               initialValue: startingDay,
               prefixIcon: const Icon(Icons.timelapse_rounded),
             ),
@@ -173,7 +175,7 @@ class CurativeInterventionFileView extends StatelessWidget {
             InterventionFileFormField(
               prefixIcon: const Icon(Icons.task),
               initialValue: task,
-              enabled: false,
+              readOnly: true,
             ),
             const InterventionFileFormTitle(
               title: "Maintenance technicians",
@@ -181,7 +183,7 @@ class CurativeInterventionFileView extends StatelessWidget {
             InterventionFileFormField(
               prefixIcon: const Icon(Icons.engineering_rounded),
               initialValue: technicians,
-              enabled: false,
+              readOnly: true,
             ),
             const InterventionFileFormTitle(
               title: "Spare parts",
@@ -189,7 +191,7 @@ class CurativeInterventionFileView extends StatelessWidget {
             InterventionFileFormField(
               prefixIcon: const Icon(Icons.construction),
               initialValue: spareParts,
-              enabled: false,
+              readOnly: true,
             ),
 
             const InterventionFileFormTitle(
@@ -198,7 +200,7 @@ class CurativeInterventionFileView extends StatelessWidget {
             InterventionFileFormField(
               prefixIcon: const Icon(Icons.construction),
               initialValue: tools,
-              enabled: false,
+              readOnly: true,
             ),
           ],
         ),
