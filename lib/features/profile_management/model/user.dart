@@ -19,6 +19,7 @@ extension RolesToString on Roles {
 
 // Model class representing a user
 class UserModel {
+  final String id;
   final String userName;
   final String email;
   final String phoneNumber;
@@ -30,6 +31,7 @@ class UserModel {
 
   // Constructor for creating a UserModel instance
   UserModel({
+    required this.id,
     required this.userName,
     required this.email,
     required this.phoneNumber,
@@ -47,14 +49,16 @@ class UserModel {
   ) {
     final data = snapshot.data();
     return UserModel(
-        userName: data?['userName'] as String,
-        email: data?['email'] as String,
-        photoURL: data?['photoURL'] as String,
-        role: _parseRole(data?['role']),
-        phoneNumber: data?['phoneNumber'] as String,
-        serialNumber: data?['serialNumber'] as String,
-        FCMtoken: data?["FCMtoken"] as String,
-        discipline: data?['discipline'] as String);
+      id: data?['id'] as String,
+      userName: data?['userName'] as String,
+      email: data?['email'] as String,
+      photoURL: data?['photoURL'] as String,
+      role: _parseRole(data?['role']),
+      phoneNumber: data?['phoneNumber'] as String,
+      serialNumber: data?['serialNumber'] as String,
+      FCMtoken: data?["FCMtoken"] as String,
+      discipline: data?['discipline'] as String,
+    );
   }
 
   // Helper method to convert role string to Roles enum
@@ -92,6 +96,7 @@ class UserModel {
   // Method to convert UserModel to a map for Firestore
   Map<String, dynamic> toFirestore() {
     return {
+      'id': id,
       'userName': userName,
       'email': email,
       'phoneNumber': phoneNumber,
@@ -101,5 +106,11 @@ class UserModel {
       'FCMtoken': FCMtoken,
       'discipline': discipline,
     };
+  }
+
+  // Override toString method to provide a string representation of UserModel
+  @override
+  String toString() {
+    return 'UserModel{id: $id, userName: $userName, email: $email, phoneNumber: $phoneNumber, role: $role, serialNumber: $serialNumber, discipline: $discipline}';
   }
 }

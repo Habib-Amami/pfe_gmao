@@ -97,7 +97,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             CircularProgressIndicator(),
-                            Text("Loading Notifications ...")
+                            Text("Loading Interventions ...")
                           ],
                         ),
                       );
