@@ -341,7 +341,7 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
                                 ),
                                 trailing: Radio<UserModel>(
                                   value: filteredElectricsEnginners[index],
-                                  groupValue: selectedMechanicalEngineer,
+                                  groupValue: selectedElectricalEngineer,
                                   onChanged: (value) {
                                     setState(() {
                                       selectedElectricalEngineer = value!;
@@ -398,7 +398,7 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
                                 ),
                                 trailing: Radio<UserModel>(
                                   value: filteredInstrumentalEnginners[index],
-                                  groupValue: selectedMechanicalEngineer,
+                                  groupValue: selectedInstrumentalEngineer,
                                   onChanged: (value) {
                                     setState(() {
                                       selectedInstrumentalEngineer = value!;
