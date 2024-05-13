@@ -18,6 +18,7 @@ class InterventionFileFormField extends StatelessWidget {
   final TextStyle? textStyle; // TextInputAction for the input field
   final TextAlign? textAlign;
   final bool? enabled; // Flag to enable/disable input field
+  final bool readOnly;
   final TextEditingController? controller; // Controller for controlling input
   final String? initialValue; // Initial value for the input field
   final int? maxLines;
@@ -42,6 +43,7 @@ class InterventionFileFormField extends StatelessWidget {
     this.onFieldSubmitted,
     this.hintStyle,
     this.inputFormatters,
+    required this.readOnly,
   });
 
   @override
@@ -50,6 +52,7 @@ class InterventionFileFormField extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 16),
       // TextFormField for input field
       child: TextFormField(
+        readOnly: readOnly,
         style: textStyle,
         textAlign: textAlign ?? TextAlign.start,
         controller: controller,

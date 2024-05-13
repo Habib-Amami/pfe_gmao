@@ -42,13 +42,11 @@ class PreventiveFile extends StatelessWidget {
           ),
           // Display a form field for displaying the equipment tag name
           InterventionFileFormField(
+            readOnly: true,
             prefixIcon: const Icon(
               Icons.local_offer_outlined,
-              color: Colors.black,
             ),
             initialValue: equipmentName,
-            enabled: false,
-            textStyle: const TextStyle(color: Colors.black),
           ),
           Row(
             children: [
@@ -62,13 +60,11 @@ class PreventiveFile extends StatelessWidget {
                   SizedBox(
                     width: MediaQuery.sizeOf(context).width / 2 - 24,
                     child: InterventionFileFormField(
-                      enabled: false,
                       prefixIcon: const Icon(
                         Icons.power,
-                        color: Colors.black,
                       ),
-                      textStyle: const TextStyle(color: Colors.black),
                       initialValue: equipmentStatus,
+                      readOnly: true,
                     ),
                   ),
                 ],
@@ -86,13 +82,11 @@ class PreventiveFile extends StatelessWidget {
                   SizedBox(
                     width: MediaQuery.sizeOf(context).width / 2 - 24,
                     child: InterventionFileFormField(
-                      enabled: false,
                       prefixIcon: const Icon(
                         Icons.workspace_premium,
-                        color: Colors.black,
                       ),
-                      textStyle: const TextStyle(color: Colors.black),
                       initialValue: equipmentDiscipline,
+                      readOnly: true,
                     ),
                   ),
                 ],
@@ -104,12 +98,10 @@ class PreventiveFile extends StatelessWidget {
           ),
           // Form field for entering the intervention file name
           InterventionFileFormField(
-            enabled: false,
-            textStyle: const TextStyle(color: Colors.black),
+            readOnly: true,
             initialValue: fileName,
             keyboardType: TextInputType.text,
             prefixIcon: const Icon(
-              color: Colors.black,
               Icons.file_copy_rounded,
             ),
           ),
@@ -118,29 +110,25 @@ class PreventiveFile extends StatelessWidget {
           ),
           // Dropdown menu for selecting the maintenance type
           InterventionFileFormField(
-            enabled: false,
-            textStyle: const TextStyle(color: Colors.black),
-            prefixIcon: const Icon(Icons.medical_services, color: Colors.black),
             initialValue: interventionType,
+            readOnly: true,
           ),
           const InterventionFileFormTitle(
             title: "Forecast",
           ),
           InterventionFileFormField(
-            enabled: false,
-            textStyle: const TextStyle(color: Colors.black),
-            prefixIcon: const Icon(Icons.medical_services, color: Colors.black),
+            readOnly: true,
             initialValue: '${forecast.toString()} days',
           ),
           const InterventionFileFormTitle(
             title: "Starting Day",
           ),
           InterventionFileFormField(
-            enabled: false,
-            textStyle: const TextStyle(color: Colors.black),
+            readOnly: true,
             initialValue: startingDay,
-            prefixIcon:
-                const Icon(Icons.timelapse_rounded, color: Colors.black),
+            prefixIcon: const Icon(
+              Icons.timelapse_rounded,
+            ),
           ),
           const InterventionFileFormTitle(
             title: "Intervention task",
@@ -148,40 +136,40 @@ class PreventiveFile extends StatelessWidget {
           InterventionFileFormField(
             prefixIcon: const Icon(
               Icons.task,
-              color: Colors.black,
             ),
             initialValue: task,
-            textStyle: const TextStyle(color: Colors.black),
-            enabled: false,
+            readOnly: true,
           ),
           const InterventionFileFormTitle(
             title: "Maintenance technicians",
           ),
           InterventionFileFormField(
-            prefixIcon:
-                const Icon(Icons.engineering_rounded, color: Colors.black),
+            prefixIcon: const Icon(
+              Icons.engineering_rounded,
+            ),
             initialValue: technicians,
-            enabled: false,
-            textStyle: const TextStyle(color: Colors.black),
+            readOnly: true,
           ),
           const InterventionFileFormTitle(
             title: "Spare parts",
           ),
           InterventionFileFormField(
-            prefixIcon: const Icon(Icons.construction, color: Colors.black),
+            prefixIcon: const Icon(
+              Icons.construction,
+            ),
             initialValue: spareParts,
-            enabled: false,
-            textStyle: const TextStyle(color: Colors.black),
+            readOnly: true,
           ),
 
           const InterventionFileFormTitle(
             title: "Tools",
           ),
           InterventionFileFormField(
-            prefixIcon: const Icon(Icons.construction, color: Colors.black),
+            prefixIcon: const Icon(
+              Icons.construction,
+            ),
             initialValue: tools,
-            enabled: false,
-            textStyle: const TextStyle(color: Colors.black),
+            readOnly: true,
           ),
         ]),
       ),

@@ -266,9 +266,9 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                 ),
                 // Display a form field for displaying the equipment tag name
                 InterventionFileFormField(
+                  readOnly: true,
                   prefixIcon: const Icon(Icons.local_offer_outlined),
                   initialValue: widget.equipmentTagName,
-                  enabled: false,
                 ),
                 Row(
                   children: [
@@ -282,7 +282,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width / 2 - 24,
                           child: InterventionFileFormField(
-                            enabled: false,
+                            readOnly: true,
                             prefixIcon: Icon(statusIconData),
                             initialValue: widget.equipmentStatus,
                           ),
@@ -302,7 +302,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width / 2 - 24,
                           child: InterventionFileFormField(
-                            enabled: false,
+                            readOnly: true,
                             prefixIcon: Icon(disciplineIconData),
                             initialValue: widget.equipmentDiscipline,
                           ),
@@ -316,6 +316,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                 ),
                 // Form field for entering the intervention file name
                 InterventionFileFormField(
+                  readOnly: false,
                   hintText: "Enter the intervention file name",
                   keyboardType: TextInputType.text,
                   prefixIcon: const Icon(
@@ -418,6 +419,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                         Expanded(
                                           flex: 4,
                                           child: InterventionFileFormField(
+                                            readOnly: false,
                                             prefixIcon: const Icon(
                                               Icons.hourglass_empty_rounded,
                                             ),
@@ -523,6 +525,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                           ),
                           // Form field for entering the breakdown description
                           InterventionFileFormField(
+                            readOnly: false,
                             maxLines: 3,
                             hintText: "Describe the breakdown",
                             prefixIcon: const Padding(
@@ -555,6 +558,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                       child: InterventionFileFormField(
                         controller: _startingDateController,
                         enabled: false,
+                        readOnly: false,
                         hintText: "Pick a date from the calender",
                         prefixIcon: const Icon(Icons.timelapse_rounded),
                         validator: (value) {
@@ -626,6 +630,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                 ),
                 // Form field for entering the intervention task
                 InterventionFileFormField(
+                  readOnly: false,
                   prefixIcon: const Icon(Icons.task),
                   hintText: "Enter an intervention task",
                   validator: (value) {
@@ -688,6 +693,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                 ),
                 // Form field for searching spare parts by name
                 InterventionFileFormField(
+                  readOnly: false,
                   prefixIcon: const Icon(Icons.search),
                   hintText: "search for a spare part by name",
                   // Callback function invoked when the input value changes
@@ -779,6 +785,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                 ),
                 // Form field for searching tools by name
                 InterventionFileFormField(
+                  readOnly: false,
                   prefixIcon: const Icon(Icons.search),
                   hintText: "search for a tool by name",
                   onChanged: (value) => filterTools(value),
