@@ -27,7 +27,7 @@ class InterventionModel {
     //creating a batch writer
     WriteBatch batch = firestore.batch();
     //formatting the starting day to a DateTime object
-    DateTime startingDate = DateFormat("MM/dd/yyyy").parse(startDate);
+    DateTime startingDate = DateFormat("dd/MM/yyyy").parse(startDate);
     if (kDebugMode) {
       print(startingDate.toString());
     }
@@ -86,7 +86,7 @@ class InterventionModel {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     //formatting the starting day to a DateTime object
-    DateTime startingDate = DateFormat("MM/dd/yyyy").parse(startDate);
+    DateTime startingDate = DateFormat("dd/MM/yyyy").parse(startDate);
     if (kDebugMode) {
       print(startingDate.toString());
     }
