@@ -167,6 +167,12 @@ class _CalenderScreenState extends State<CalenderScreen> {
                                   motion: const StretchMotion(),
                                   children: [
                                     SlidableAction(
+                                      foregroundColor: Colors.white,
+                                      autoClose: true,
+                                      label: 'Add Work Order',
+                                      icon: Icons.add,
+                                      borderRadius: BorderRadius.circular(13),
+                                      backgroundColor: Colors.red.shade700,
                                       onPressed: (context) => Navigator.push(
                                         context,
                                         MaterialPageRoute(
