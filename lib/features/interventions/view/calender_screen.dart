@@ -144,9 +144,9 @@ class _CalenderScreenState extends State<CalenderScreen> {
                                     foregroundColor: Colors.white,
                                     autoClose: true,
                                     label: 'Add Work Order',
-                                    icon: Icons.add,
-                                    borderRadius: BorderRadius.circular(13),
-                                    backgroundColor: Colors.red.shade700,
+                                    icon: Icons.work_history,
+                                    borderRadius: BorderRadius.circular(16),
+                                    backgroundColor: Colors.deepOrangeAccent,
                                     onPressed: (context) => Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -206,17 +206,6 @@ class _CalenderScreenState extends State<CalenderScreen> {
                                 ),
                               ),
                             ),
-                            //   Card(
-                            //     color: Colors.red[100],
-                            //     child: ListTile(
-                            //       title: Text(
-                            //         interventions[index].equipmentTagName,
-                            //       ),
-                            //       subtitle: Text(
-                            //           interventions[index].interventionType),
-                            //       leading: const Icon(Icons.file_copy),
-                            //     ),
-                            //   ),
                           ],
                         );
                       },
