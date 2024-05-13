@@ -38,11 +38,11 @@ class WorkOrderFormField extends StatelessWidget {
     this.textStyle,
     this.textAlign,
     this.maxLines,
-    super.key,
     this.onChanged,
     this.onFieldSubmitted,
     this.hintStyle,
     this.inputFormatters,
+    super.key,
   });
 
   @override

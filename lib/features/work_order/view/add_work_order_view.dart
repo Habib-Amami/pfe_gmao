@@ -14,6 +14,7 @@ class AddWorkOrderView extends StatefulWidget {
   final String equipmentTagName;
   final String equipmentDiscipline;
   final String interventionTask;
+  final String executionDate;
   final bool isMechanical;
   final bool isElectrical;
   final bool isInstrument;
@@ -25,6 +26,7 @@ class AddWorkOrderView extends StatefulWidget {
     required this.equipmentTagName,
     required this.equipmentDiscipline,
     required this.interventionTask,
+    required this.executionDate,
     required this.isMechanical,
     required this.isElectrical,
     required this.isInstrument,
@@ -144,6 +146,7 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
     fetchEngineersData(
       engineersDiscipline: engineersDisciplineList,
     );
+    _executionDateController.text = widget.executionDate;
     super.initState();
   }
 

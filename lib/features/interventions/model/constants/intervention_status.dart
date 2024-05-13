@@ -1,1 +1,5 @@
-const interventionStatus = ['Initial', 'In Progress', 'Terminated'];
+const List<String> interventionStatus = [
+  'Initial',
+  'In Progress',
+  'Terminated'
+];
