@@ -201,6 +201,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       value: currendtUser.role.toShortString(),
                       labelWidth: 140,
                     ),
+                    LabeledValueRow(
+                      label: "Discipline :",
+                      value: currendtUser.discipline,
+                      labelWidth: 140,
+                    ),
                     // Buttons to edit profile and log out
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
