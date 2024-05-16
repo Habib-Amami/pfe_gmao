@@ -68,7 +68,9 @@ class CalendarCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          color: Colors.lightBlueAccent,
+          color: typeOfCard == 'intervention'
+              ? Colors.lightBlueAccent
+              : const Color.fromRGBO(115, 93, 165, 1),
         ),
         height: 80,
         width: MediaQuery.sizeOf(context).width,
@@ -79,8 +81,10 @@ class CalendarCard extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    //color: Colors.lightBlueAccent.withOpacity(0.8),
+                    color: typeOfCard == 'intervention'
+                        ? Theme.of(context).colorScheme.onPrimaryContainer
+                        : const Color.fromRGBO(211, 197, 229, 1),
+                    //: const Color.fromRGBO(234, 115, 141, 1),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   height: 80,
@@ -124,16 +128,28 @@ class CalendarCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        'INT-000$title  ($status)',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color:
-                                Theme.of(context).colorScheme.onInverseSurface
-                            //color: Theme.of(context).colorScheme.inverseSurface,
+                      typeOfCard == 'intervention'
+                          ? Text(
+                              'INT-000$title  ($status)',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface
+                                  //color: Theme.of(context).colorScheme.inverseSurface,
+                                  ),
+                            )
+                          : Text(
+                              'WO-001-24  ($status)',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onInverseSurface,
+                              ),
                             ),
-                      ),
                       Text(
                         style: TextStyle(
                           fontSize: 14,

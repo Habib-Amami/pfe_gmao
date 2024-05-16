@@ -54,12 +54,14 @@ dependencies:
   lottie: ^3.1.0
   open_filex: ^4.4.0
   path_provider: ^2.1.2
+  provider: ^6.1.2
   permission_handler: ^11.3.0
   table_calendar: ^3.1.0
   uuid: ^4.3.3
   http: ^1.2.1
   flutter_local_notifications: ^17.1.1
   numberpicker: ^2.1.2
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_lints: ^3.0.1
