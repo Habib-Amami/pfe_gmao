@@ -1,5 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:pfe_gmao/theme/provider/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../features/profile_management/model/user.dart';
 import '../features/profile_management/view/profile_view.dart';
@@ -237,13 +241,39 @@ class _SettingsState extends State<Setting> {
                               fontWeight: FontWeight.w500, fontSize: 16),
                         ),
                         const Spacer(),
-                        Switch(
-                          value: isDark,
-                          onChanged: (value) {
-                            setState(() {
-                              isDark = value;
-                            });
+                        // CupertinoButton(
+                        //   onPressed: () {
+                        //     setState(() {
+                        //       Provider.of<ThemeProvider>(context, listen: false)
+                        //           .toggleTheme();
+                        //     });
+                        //   },
+                        //   color: Colors.grey.shade200,
+                        //   padding: const EdgeInsets.symmetric(horizontal: 16),
+                        //   alignment: Alignment.centerRight,
+                        //   borderRadius: BorderRadius.circular(16),
+                        //   child: const Icon(
+                        //     Icons.light_mode,
+                        //     color: Colors.black,
+                        //   ),
+                        // ),
+                        GestureDetector(
+                          onTap: () {
+                            Provider.of<ThemeProvider>(context, listen: false)
+                                .toggleTheme();
                           },
+                          child: Container(
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: const Icon(
+                              Icons.lightbulb,
+                              color: Colors.black,
+                            ),
+                          ),
                         ),
                       ],
                     ),

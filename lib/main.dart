@@ -11,12 +11,12 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pfe_gmao/features/notifications/model/notification_model.dart';
-
+import 'package:pfe_gmao/theme/provider/theme_provider.dart';
+import 'package:provider/provider.dart';
 import 'features/authentication/login/view/login_view.dart';
 import 'firebase/firebase_options.dart';
 import 'firebase/firebase_services.dart';
 import 'home.dart';
-import 'theme/theme.dart';
 
 // flutter local notification global initialization
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -32,7 +32,7 @@ void main() async {
     persistenceEnabled: true,
   );
 
-  //top level function for handeling background notifications
+  //top level function for handling background notifications
   FirebaseMessaging.onBackgroundMessage(
       NotificationsModel.firebaseMessagingBackgroundHandler);
 
@@ -96,32 +96,45 @@ void main() async {
   }
   //compacting the credentials box
   await Hive.box<String>("credentials").compact();
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      themeMode: ThemeMode.system,
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      home: StreamBuilder(
-        stream: FirebaseService.instance.authInstance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.active) {
-            return snapshot.hasData ? const Home() : const LoginView();
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-      ),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Demo',
+          theme: themeProvider.themeData,
+          themeMode: ThemeMode.system,
+          home: StreamBuilder(
+            stream: FirebaseService.instance.authInstance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.active) {
+                return snapshot.hasData ? const Home() : const LoginView();
+              }
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
