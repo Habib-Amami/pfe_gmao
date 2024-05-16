@@ -40,7 +40,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
                 calendarStyle: CalendarStyle(
                   selectedDecoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                   todayDecoration: BoxDecoration(
                     shape: BoxShape.circle,

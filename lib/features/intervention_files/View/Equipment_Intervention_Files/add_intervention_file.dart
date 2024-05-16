@@ -276,7 +276,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const InterventionFileFormTitle(
-                          title: "Status",
+                          title: "State",
                         ),
                         // Form field for displaying equipment status
                         SizedBox(
@@ -312,7 +312,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                   ],
                 ),
                 const InterventionFileFormTitle(
-                  title: "Name Intervention File",
+                  title: "Intervention File Name",
                 ),
                 // Form field for entering the intervention file name
                 InterventionFileFormField(
