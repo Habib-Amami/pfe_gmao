@@ -91,7 +91,7 @@ class WorkOrderFormField extends StatelessWidget {
               if (states.contains(MaterialState.error)) {
                 return Theme.of(context).colorScheme.error;
               }
-              return Colors.black;
+              return Colors.grey.shade500;
             },
           ),
           disabledBorder: const OutlineInputBorder(
