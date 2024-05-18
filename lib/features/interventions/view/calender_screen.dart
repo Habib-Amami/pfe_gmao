@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:pfe_gmao/firebase/cloud_firestore_references.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../work_order/view/add_work_order_view.dart';
@@ -25,8 +26,35 @@ class _CalenderScreenState extends State<CalenderScreen> {
     });
   }
 
+  Future<String?> getUserRole() async {
+    // Get the user document from Firestore
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser?.uid)
+        .get();
+
+    // Explicitly cast the result of data() to a Map<String, dynamic>
+    Map<String, dynamic>? userData =
+        userSnapshot.data() as Map<String, dynamic>?;
+
+    //retrieve the role from user collection
+    String? userRole = userData?['role'].toString();
+    return userRole;
+  }
+
   // to change the calender format
   CalendarFormat _calendarFormat = CalendarFormat.month;
+
+  bool isAdmin = false;
+  @override
+  void initState() {
+    super.initState();
+    getUserRole().then((role) {
+      setState(() {
+        isAdmin = role == 'Administrator';
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +68,14 @@ class _CalenderScreenState extends State<CalenderScreen> {
                 calendarStyle: CalendarStyle(
                   selectedDecoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   todayDecoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .secondary
+                        .withOpacity(0.6),
                   ),
                 ),
                 rowHeight: 50,
@@ -136,76 +167,122 @@ class _CalenderScreenState extends State<CalenderScreen> {
                       itemBuilder: (context, index) {
                         return Column(
                           children: [
-                            Slidable(
-                              endActionPane: ActionPane(
-                                motion: const StretchMotion(),
-                                children: [
-                                  SlidableAction(
-                                    foregroundColor: Colors.white,
-                                    autoClose: true,
-                                    label: 'Add Work Order',
-                                    icon: Icons.work_history,
-                                    borderRadius: BorderRadius.circular(16),
-                                    backgroundColor: Colors.deepOrangeAccent,
-                                    onPressed: (context) => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => AddWorkOrderView(
-                                          equipmentTagName: interventions[index]
-                                              .equipmentTagName,
-                                          equipmentDiscipline:
-                                              interventions[index]
-                                                  .equipmentDiscipline,
-                                          interventionTask: interventions[index]
-                                              .interventionTask,
-                                          executionDate: interventions[index]
-                                              .interventionDate
-                                              .toIso8601String()
-                                              .split("T")
-                                              .first,
-                                          isMechanical: interventions[index]
-                                              .mechanicalTechnician,
-                                          isElectrical: interventions[index]
-                                              .electricalTechnician,
-                                          isInstrument: interventions[index]
-                                              .instrumentTechnician,
-                                          spareParts:
-                                              interventions[index].spareParts,
-                                          tools: interventions[index].tools,
+                            isAdmin
+                                ? Slidable(
+                                    endActionPane: ActionPane(
+                                      motion: const StretchMotion(),
+                                      children: [
+                                        SlidableAction(
+                                          foregroundColor: Colors.white,
+                                          autoClose: true,
+                                          label: 'Add Work Order',
+                                          icon: Icons.work_history,
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          backgroundColor:
+                                              Colors.deepOrangeAccent,
+                                          onPressed: (context) =>
+                                              Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AddWorkOrderView(
+                                                equipmentTagName:
+                                                    interventions[index]
+                                                        .equipmentTagName,
+                                                equipmentDiscipline:
+                                                    interventions[index]
+                                                        .equipmentDiscipline,
+                                                interventionTask:
+                                                    interventions[index]
+                                                        .interventionTask,
+                                                executionDate:
+                                                    interventions[index]
+                                                        .interventionDate
+                                                        .toIso8601String()
+                                                        .split("T")
+                                                        .first,
+                                                isMechanical:
+                                                    interventions[index]
+                                                        .mechanicalTechnician,
+                                                isElectrical:
+                                                    interventions[index]
+                                                        .electricalTechnician,
+                                                isInstrument:
+                                                    interventions[index]
+                                                        .instrumentTechnician,
+                                                spareParts: interventions[index]
+                                                    .spareParts,
+                                                tools:
+                                                    interventions[index].tools,
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              InterventionViewPage(
+                                            interventionFileDiscipline:
+                                                interventions[index]
+                                                    .equipmentDiscipline,
+                                            interventionFileID:
+                                                interventions[index]
+                                                    .interventionFileID,
+                                            interventionType:
+                                                interventions[index]
+                                                    .interventionType,
+                                          ),
                                         ),
+                                      ),
+                                      child: CalendarCard(
+                                        title: (index + 1).toString(),
+                                        subtitle: interventions[index]
+                                            .interventionType,
+                                        date: interventions[index]
+                                            .interventionDate,
+                                        typeOfCard: 'intervention',
+                                        status: interventions[index]
+                                            .interventionStatus,
+                                        equipmentName: interventions[index]
+                                            .equipmentTagName,
                                       ),
                                     ),
                                   )
-                                ],
-                              ),
-                              child: GestureDetector(
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => InterventionViewPage(
-                                      interventionFileDiscipline:
-                                          interventions[index]
-                                              .equipmentDiscipline,
-                                      interventionFileID: interventions[index]
-                                          .interventionFileID,
-                                      interventionType:
+                                : GestureDetector(
+                                    onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            InterventionViewPage(
+                                          interventionFileDiscipline:
+                                              interventions[index]
+                                                  .equipmentDiscipline,
+                                          interventionFileID:
+                                              interventions[index]
+                                                  .interventionFileID,
+                                          interventionType: interventions[index]
+                                              .interventionType,
+                                        ),
+                                      ),
+                                    ),
+                                    child: CalendarCard(
+                                      title: (index + 1).toString(),
+                                      subtitle:
                                           interventions[index].interventionType,
+                                      date:
+                                          interventions[index].interventionDate,
+                                      typeOfCard: 'intervention',
+                                      status: interventions[index]
+                                          .interventionStatus,
+                                      equipmentName:
+                                          interventions[index].equipmentTagName,
                                     ),
                                   ),
-                                ),
-                                child: CalendarCard(
-                                  title: (index + 1).toString(),
-                                  subtitle:
-                                      interventions[index].interventionType,
-                                  date: interventions[index].interventionDate,
-                                  typeOfCard: 'intervention',
-                                  status:
-                                      interventions[index].interventionStatus,
-                                  equipmentName:
-                                      interventions[index].equipmentTagName,
-                                ),
-                              ),
-                            ),
                           ],
                         );
                       },
