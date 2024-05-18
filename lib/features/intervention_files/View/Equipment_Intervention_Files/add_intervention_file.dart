@@ -996,7 +996,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                                 .instance.currentUser!.uid;
                                             if (kDebugMode) {
                                               print(
-                                                  "curent user id: $currentUserID");
+                                                  "current user id: $currentUserID");
                                             }
                                             //sending psu notification to admins of that didcipline
                                             NotificationsModel()
@@ -1008,8 +1008,8 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                               notificationBody: notifBody,
                                             );
                                             //adding a notification document to
-                                            //admins of that dscipline
-                                            //notifications subcollection
+                                            //admins of that discipline
+                                            //notifications sub collection
                                             NotificationsModel()
                                                 .addInterventionFileValidationNotificationDB(
                                               notificationID: notificationID,
@@ -1040,7 +1040,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                               );
                                             }
                                           } catch (e) {
-                                            //erro while adding intervntion file
+                                            //error while adding intervention file
                                             if (context.mounted) {
                                               //close the confirmation alert
                                               Navigator.pop(context);
