@@ -157,6 +157,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               child: Slidable(
                                 endActionPane: ActionPane(
                                   motion: const StretchMotion(),
+                                  extentRatio: 0.3,
                                   children: [
                                     SlidableAction(
                                       onPressed: (context) => setState(() {
