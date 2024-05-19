@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:pfe_gmao/features/profile_management/model/user.dart';
 import 'package:pfe_gmao/firebase/cloud_firestore_references.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -26,28 +28,25 @@ class _CalenderScreenState extends State<CalenderScreen> {
     });
   }
 
-  Future<String?> getUserRole() async {
-    // Get the user document from Firestore
-    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUser?.uid)
-        .get();
+  late UserModel user;
 
-    // Explicitly cast the result of data() to a Map<String, dynamic>
-    Map<String, dynamic>? userData =
-        userSnapshot.data() as Map<String, dynamic>?;
-
-    //retrieve the role from user collection
-    String? userRole = userData?['role'].toString();
-    return userRole;
+  //methode to fetch the admin data
+  Future<bool> adminCheck() async {
+    await FirebaseFirestore.instance
+        .collection(userCollectionRef)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then(
+      (snapshot) {
+        user = UserModel.fromFirestore(snapshot, null);
+      },
+    );
+    // ignore: unrelated_type_equality_checks
+    return user.role == Roles.Administrator.toShortString();
   }
 
-  void checkAdmin() {
-    getUserRole().then((role) {
-      setState(() {
-        isAdmin = role == 'Administrator';
-      });
-    });
+  void fecthUserRole() async {
+    isAdmin = await adminCheck();
   }
 
   // to change the calender format
@@ -56,7 +55,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
   bool isAdmin = false;
   @override
   void initState() {
-    checkAdmin();
+    fecthUserRole();
     super.initState();
   }
 
