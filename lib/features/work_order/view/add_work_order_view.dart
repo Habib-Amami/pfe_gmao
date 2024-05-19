@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:pfe_gmao/features/notifications/model/notification_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
@@ -648,13 +649,22 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
                                                       .text),
                                             ),
                                           );
+                                          NotificationsModel()
+                                              .sendNotificationToDevice(
+                                            deviceToken:
+                                                selectedEngineer!.FCMtoken,
+                                            notificationTitle: "NEw Work Order",
+                                            notificationBody:
+                                                "you have a new work order for ${widget.equipmentTagName}",
+                                          );
                                           if (context.mounted) {
                                             Navigator.pop(context);
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
                                               const SnackBar(
                                                 content: Text(
-                                                    "Work Order Created successfully"),
+                                                  "Work Order Created successfully",
+                                                ),
                                               ),
                                             );
                                           }
