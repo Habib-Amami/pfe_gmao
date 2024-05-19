@@ -1,1 +1,6 @@
-const workOrderStatus = ['In progress', 'Denied', 'Stand by', 'Finished'];
+const List<String> workOrderStatus = [
+  'In Progress',
+  'Denied',
+  'Stand by',
+  'Finished'
+];

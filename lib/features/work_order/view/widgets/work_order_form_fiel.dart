@@ -57,7 +57,7 @@ class WorkOrderFormField extends StatelessWidget {
         controller: controller,
         enabled: enabled,
         keyboardType: keyboardType,
-        textInputAction: TextInputAction.next,
+        textInputAction: textInputAction ?? TextInputAction.next,
         decoration: InputDecoration(
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(

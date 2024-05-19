@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../interventions/model/constants/intervention_status.dart';
 import '../../interventions/model/intervention_model.dart';
 import '../../notifications/model/notification_model.dart';
 import '../model/constants/intervention_types_list.dart';
@@ -270,7 +271,7 @@ class _InterventionFileValidationView
                                                         tools: interventionFile
                                                             .tools,
                                                         interventionStatus:
-                                                            interventionFileStatus[
+                                                            interventionStatus[
                                                                 0],
                                                         interventionTask:
                                                             interventionFile

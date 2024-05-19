@@ -656,6 +656,8 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                     setState(() {
                       _isMechanicalTechnicianSelected =
                           !_isMechanicalTechnicianSelected;
+                      _isElectricalTechnicianSelected = false;
+                      _isInstrumentTechnicianSelected = false;
                     });
                   },
                 ),
@@ -669,6 +671,8 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                     setState(() {
                       _isElectricalTechnicianSelected =
                           !_isElectricalTechnicianSelected;
+                      _isMechanicalTechnicianSelected = false;
+                      _isInstrumentTechnicianSelected = false;
                     });
                   },
                 ),
@@ -682,6 +686,8 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                     setState(() {
                       _isInstrumentTechnicianSelected =
                           !_isInstrumentTechnicianSelected;
+                      _isMechanicalTechnicianSelected = false;
+                      _isElectricalTechnicianSelected = false;
                     });
                   },
                 ),
