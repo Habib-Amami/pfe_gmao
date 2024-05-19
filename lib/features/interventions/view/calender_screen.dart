@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:pfe_gmao/features/profile_management/model/user.dart';
-import 'package:pfe_gmao/firebase/cloud_firestore_references.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../../../firebase/cloud_firestore_references.dart';
+import '../../profile_management/model/user.dart';
 import '../../work_order/view/add_work_order_view.dart';
 import '../model/data_models/intervention.dart';
 import 'intervention_file_view.dart';
@@ -41,8 +42,10 @@ class _CalenderScreenState extends State<CalenderScreen> {
         user = UserModel.fromFirestore(snapshot, null);
       },
     );
-    // ignore: unrelated_type_equality_checks
-    return user.role == Roles.Administrator.toShortString();
+    if (kDebugMode) {
+      print(user);
+    }
+    return user.role == Roles.Administrator;
   }
 
   void fecthUserRole() async {
@@ -53,6 +56,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
 
   bool isAdmin = false;
+
   @override
   void initState() {
     fecthUserRole();
@@ -173,6 +177,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
                             isAdmin
                                 ? Slidable(
                                     endActionPane: ActionPane(
+                                      extentRatio: 0.4,
                                       motion: const StretchMotion(),
                                       children: [
                                         SlidableAction(
