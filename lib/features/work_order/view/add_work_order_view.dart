@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
@@ -71,7 +72,7 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
   List<UserModel> mechanicsEnginners = [];
   //Filtered mechanics engineers
   List<UserModel> filteredMechanicsEnginners = [];
-  //selected mechanical enginner
+  //selected mechanical engineer
   UserModel? selectedMechanicalEngineer;
 
   //Electrics engineers
@@ -218,7 +219,12 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: const Text("Add a Work Order"),
+        title: Text(
+          "Add a Work Order",
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -729,6 +735,13 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
                         controller: _stepsController,
                         hintText: "create a small step",
                         prefixIcon: const Icon(Icons.task_outlined),
+                        suffexIcon: IconButton(
+                          focusColor: Theme.of(context).colorScheme.primary,
+                          icon: const Icon(
+                            Ionicons.close_circle,
+                          ),
+                          onPressed: () => _stepsController.clear(),
+                        ),
                       ),
                     ),
                     // Expanded widget to ensure the icon button takes up the remaining space
@@ -744,9 +757,21 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
                             IconButton.filledTonal(
                               tooltip: "Press to add a step to the steps list",
                               onPressed: () {
-                                setState(() {
-                                  stepsList.add(_stepsController.text);
-                                });
+                                if (_stepsController.text.isEmpty ||
+                                    _stepsController.text.length <= 2) {
+                                  const snackBar = SnackBar(
+                                    content: Center(
+                                      child: Text(
+                                          'Please enter a appropriate step to the task!'),
+                                    ),
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                } else {
+                                  setState(() {
+                                    stepsList.add(_stepsController.text);
+                                  });
+                                }
                               },
                               // Icon displayed on the button
                               icon: const Icon(
@@ -838,6 +863,72 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (stepsList.isEmpty) {
+                          const snackBar = SnackBar(
+                              content: Center(
+                                  child: Text(
+                                      'please provide steps to the task')));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else if (startingHour >= finishingHour) {
+                          const snackBar = SnackBar(
+                            content: Center(
+                                child: Text(
+                                    'Finishing hour must be grater than starting hour')),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('Confirmation'),
+                                  content: const Text(
+                                      'Are you sure you want to create this work order?'),
+                                  actions: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('Cancel'),
+                                        ),
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStatePropertyAll(
+                                                      Theme.of(context)
+                                                          .colorScheme
+                                                          .secondary)),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(
+                                            'Confirm',
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .surface),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                );
+                              });
+                        }
+                      },
+                      child: const Text('Create Work Order'),
+                    ),
+                  ),
+                )
               ],
             ),
           ),
