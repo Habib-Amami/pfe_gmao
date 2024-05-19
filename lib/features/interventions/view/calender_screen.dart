@@ -42,18 +42,22 @@ class _CalenderScreenState extends State<CalenderScreen> {
     return userRole;
   }
 
+  void checkAdmin() {
+    getUserRole().then((role) {
+      setState(() {
+        isAdmin = role == 'Administrator';
+      });
+    });
+  }
+
   // to change the calender format
   CalendarFormat _calendarFormat = CalendarFormat.month;
 
   bool isAdmin = false;
   @override
   void initState() {
+    checkAdmin();
     super.initState();
-    getUserRole().then((role) {
-      setState(() {
-        isAdmin = role == 'Administrator';
-      });
-    });
   }
 
   @override
@@ -193,6 +197,15 @@ class _CalenderScreenState extends State<CalenderScreen> {
                                                 equipmentDiscipline:
                                                     interventions[index]
                                                         .equipmentDiscipline,
+                                                interventionID:
+                                                    interventions[index]
+                                                        .interventionID,
+                                                interventionType:
+                                                    interventions[index]
+                                                        .interventionType,
+                                                interventionFileID:
+                                                    interventions[index]
+                                                        .interventionFileID,
                                                 interventionTask:
                                                     interventions[index]
                                                         .interventionTask,

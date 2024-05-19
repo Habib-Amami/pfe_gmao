@@ -1,21 +1,28 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:pfe_gmao/features/work_order/view/widgets/timer.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../../profile_management/model/user.dart';
+import '../model/constants/work_order_status.dart';
+import '../model/work_order_model.dart';
+import 'widgets/timer.dart';
 import 'widgets/work_order_form_fiel.dart';
 import 'widgets/work_order_form_title.dart';
 
 class AddWorkOrderView extends StatefulWidget {
   final String equipmentTagName;
   final String equipmentDiscipline;
+  final String interventionID;
+  final String interventionType;
   final String interventionTask;
+  final String interventionFileID;
   final String executionDate;
   final bool isMechanical;
   final bool isElectrical;
@@ -27,7 +34,10 @@ class AddWorkOrderView extends StatefulWidget {
     super.key,
     required this.equipmentTagName,
     required this.equipmentDiscipline,
+    required this.interventionID,
+    required this.interventionType,
     required this.interventionTask,
+    required this.interventionFileID,
     required this.executionDate,
     required this.isMechanical,
     required this.isElectrical,
@@ -41,6 +51,8 @@ class AddWorkOrderView extends StatefulWidget {
 }
 
 class _AddWorkOrderViewState extends State<AddWorkOrderView> {
+  //ADMINISTRATOR INFORMATION
+  late UserModel admin;
   //variable for the execution date
   DateTime? executionDate;
   // Controller for the execution date field
@@ -74,6 +86,20 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
   //Selected enginner
   UserModel? selectedEngineer;
 
+  //methode to fetch the admin data
+  Future<UserModel> getAdminDate() async {
+    await FirebaseFirestore.instance
+        .collection(userCollectionRef)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then(
+      (snapshot) {
+        admin = UserModel.fromFirestore(snapshot, null);
+      },
+    );
+    return admin;
+  }
+
   //methode to fetch engineers data based on the selected disciplines
   //for the interventions
   Future<List<UserModel>> getEngineersDate({
@@ -100,7 +126,7 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
     return engineersList;
   }
 
-  void fetchEngineersData({
+  void fetchData({
     required List<String> engineersDiscipline,
   }) async {
     engineersList = await getEngineersDate(
@@ -110,7 +136,13 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
       print('All Engineers:');
       print(engineersList);
     }
-
+    admin = await getAdminDate();
+    if (kDebugMode) {
+      print('All Engineers:');
+      print(engineersList);
+      print('Admin');
+      print(admin);
+    }
     setState(() {
       filterEngineersList = [...engineersList];
     });
@@ -152,7 +184,7 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
     if (widget.isInstrument) {
       engineersDisciplineList.add('Instrumental');
     }
-    fetchEngineersData(
+    fetchData(
       engineersDiscipline: engineersDisciplineList,
     );
 
@@ -229,7 +261,6 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
                 initialValue: widget.equipmentDiscipline,
                 readOnly: true,
               ),
-
               const WorkOrderFormTitle(
                 title: "Technician",
               ),
@@ -279,118 +310,6 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
                   ),
                 ),
               ),
-              // if (widget.isElectrical)
-              //   Column(
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: [
-              //       const WorkOrderFormTitle(
-              //         title: "Electrical Technician",
-              //       ),
-              //       WorkOrderFormField(
-              //         hintText: "Search for a electrical engineer",
-              //         prefixIcon: const Icon(Icons.flash_on),
-              //         onChanged: (keyword) {
-              //           filterEngineers(
-              //             enteredKeyword: keyword,
-              //             allEngineersList: electricsEngineers,
-              //             filteredList: filteredElectricsEnginners,
-              //           );
-              //         },
-              //       ),
-              //       Padding(
-              //         padding: const EdgeInsets.only(bottom: 16.0),
-              //         child: SizedBox(
-              //           width: double.infinity,
-              //           height: 120,
-              //           child: ListView.builder(
-              //             itemCount: filteredElectricsEnginners.length,
-              //             itemBuilder: (context, index) => Card(
-              //               elevation: 3,
-              //               child: ListTile(
-              //                 leading: CircleAvatar(
-              //                   radius: 25,
-              //                   backgroundImage: NetworkImage(
-              //                     filteredElectricsEnginners[index].photoURL,
-              //                   ),
-              //                 ),
-              //                 title: Text(
-              //                   filteredElectricsEnginners[index].userName,
-              //                 ),
-              //                 subtitle: Text(
-              //                   filteredElectricsEnginners[index].email,
-              //                 ),
-              //                 trailing: Radio<UserModel>(
-              //                   value: filteredElectricsEnginners[index],
-              //                   groupValue: selectedElectricalEngineer,
-              //                   onChanged: (value) {
-              //                     setState(() {
-              //                       selectedElectricalEngineer = value!;
-              //                     });
-              //                   },
-              //                 ),
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // if (widget.isInstrument)
-              //   Column(
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: [
-              //       const WorkOrderFormTitle(
-              //         title: "Instrument Technician",
-              //       ),
-              //       WorkOrderFormField(
-              //         hintText: "Search for a instrument engineer",
-              //         prefixIcon: const Icon(Icons.design_services),
-              //         onChanged: (keyword) {
-              //           filterEngineers(
-              //             enteredKeyword: keyword,
-              //             allEngineersList: instrumentalEngineers,
-              //             filteredList: filteredInstrumentalEnginners,
-              //           );
-              //         },
-              //       ),
-              //       Padding(
-              //         padding: const EdgeInsets.only(bottom: 16.0),
-              //         child: SizedBox(
-              //           width: double.infinity,
-              //           height: 120,
-              //           child: ListView.builder(
-              //             itemCount: filteredInstrumentalEnginners.length,
-              //             itemBuilder: (context, index) => Card(
-              //               elevation: 3,
-              //               child: ListTile(
-              //                 leading: CircleAvatar(
-              //                   radius: 25,
-              //                   backgroundImage: NetworkImage(
-              //                     filteredInstrumentalEnginners[index].photoURL,
-              //                   ),
-              //                 ),
-              //                 title: Text(
-              //                   filteredInstrumentalEnginners[index].userName,
-              //                 ),
-              //                 subtitle: Text(
-              //                   filteredInstrumentalEnginners[index].email,
-              //                 ),
-              //                 trailing: Radio<UserModel>(
-              //                   value: filteredInstrumentalEnginners[index],
-              //                   groupValue: selectedInstrumentalEngineer,
-              //                   onChanged: (value) {
-              //                     setState(() {
-              //                       selectedInstrumentalEngineer = value!;
-              //                     });
-              //                   },
-              //                 ),
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
               const WorkOrderFormTitle(
                 title: "Execution Date",
               ),
@@ -440,7 +359,7 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
                               if (executionDate != null) {
                                 setState(() {
                                   _executionDateController.text = DateFormat(
-                                    "dd/MM/yyyy",
+                                    "yyyy-dd-MM",
                                   ).format(
                                     executionDate!,
                                   );
@@ -682,8 +601,63 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
                                         child: const Text('Cancel'),
                                       ),
                                       FilledButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
+                                        onPressed: () async {
+                                          //Getting teh
+                                          //generating a work order id
+                                          String orderID = const Uuid().v4();
+                                          //adding work order to database
+                                          await WorkOrderModel().addWorkOrderDB(
+                                            workorderID: orderID,
+                                            workorderStatus: workOrderStatus[0],
+                                            workorderCreatorID: admin.id,
+                                            workorderCreatorUserName:
+                                                admin.userName,
+                                            workorderCreatorToken:
+                                                admin.FCMtoken,
+                                            interventionID:
+                                                widget.interventionID,
+                                            interventionType:
+                                                widget.interventionType,
+                                            interventionFileID:
+                                                widget.interventionFileID,
+                                            equipmentTagName:
+                                                widget.equipmentTagName,
+                                            equipmentDiscipline:
+                                                widget.equipmentDiscipline,
+                                            technicianID: selectedEngineer!.id,
+                                            technicianUserName:
+                                                selectedEngineer!.userName,
+                                            technicianToken:
+                                                selectedEngineer!.FCMtoken,
+                                            tools: widget.tools,
+                                            spareParts: widget.spareParts,
+                                            executionDay: DateTime.parse(
+                                                _executionDateController.text),
+                                            startTime: TimeOfDay(
+                                              hour: int.parse(
+                                                  _startingHourController.text),
+                                              minute: int.parse(
+                                                  _startingMinuteController
+                                                      .text),
+                                            ),
+                                            finishTime: TimeOfDay(
+                                              hour: int.parse(
+                                                  _finshingHourController.text),
+                                              minute: int.parse(
+                                                  _finshingMinuteController
+                                                      .text),
+                                            ),
+                                          );
+                                          if (context.mounted) {
+                                            Navigator.pop(context);
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    "Work Order Created successfully"),
+                                              ),
+                                            );
+                                          }
                                         },
                                         child: Text(
                                           'Confirm',

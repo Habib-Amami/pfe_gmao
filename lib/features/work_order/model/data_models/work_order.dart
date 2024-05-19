@@ -3,95 +3,95 @@ import 'package:flutter/material.dart';
 class WorkOrder {
   final String workorderID;
   final String workorderStatus;
-  final String wordorderCreatorID;
+  final String workorderCreatorID;
+  final String workorderCreatorUserName;
   final String workorderCreatorToken;
   final String interventionID;
   final String interventionType;
   final String interventionFileID;
   final String equipmentTagName;
   final String equipmentDiscipline;
-  final String mechanicalTechnicianID;
-  final String mechanicalTechnicianToken;
-  final String electricalTechnicianID;
-  final String electricalTechnicianToken;
-  final String instrumentTechnicianID;
-  final String instrumentTechnicianToken;
+  final String technicianID;
+  final String technicianUserName;
+  final String technicianToken;
   final List<String> tools;
   final List<String> spareParts;
   final DateTime executionDay;
-  final TimeOfDay startHour;
-  final TimeOfDay finishHour;
+  final TimeOfDay startTime;
+  final TimeOfDay finishTime;
 
   WorkOrder({
     required this.workorderID,
     required this.workorderStatus,
-    required this.wordorderCreatorID,
+    required this.workorderCreatorID,
+    required this.workorderCreatorUserName,
     required this.workorderCreatorToken,
     required this.interventionID,
     required this.interventionType,
     required this.interventionFileID,
     required this.equipmentTagName,
     required this.equipmentDiscipline,
-    required this.mechanicalTechnicianID,
-    required this.mechanicalTechnicianToken,
-    required this.electricalTechnicianID,
-    required this.electricalTechnicianToken,
-    required this.instrumentTechnicianID,
-    required this.instrumentTechnicianToken,
+    required this.technicianID,
+    required this.technicianUserName,
+    required this.technicianToken,
     required this.tools,
     required this.spareParts,
     required this.executionDay,
-    required this.startHour,
-    required this.finishHour,
+    required this.startTime,
+    required this.finishTime,
   });
 
   factory WorkOrder.fromJson(Map<String, dynamic> json) {
     return WorkOrder(
-      workorderID: json['wordorderID'],
+      workorderID: json['workorderID'],
       workorderStatus: json['workorderStatus'],
-      wordorderCreatorID: json['wordorderCreatorID'],
+      workorderCreatorID: json['workorderCreatorID'],
+      workorderCreatorUserName: json['workorderCreatorUserName'],
       workorderCreatorToken: json['workorderCreatorToken'],
       interventionID: json['interventionID'],
       interventionType: json['interventionType'],
       interventionFileID: json['interventionFileID'],
       equipmentTagName: json['equipmentTagName'],
       equipmentDiscipline: json['equipmentDiscipline'],
-      mechanicalTechnicianID: json['mechanicalTechnicianID'],
-      mechanicalTechnicianToken: json['mechanicalTechnicianToken'],
-      electricalTechnicianID: json['electricalTechnicianID'],
-      electricalTechnicianToken: json['electricalTechnicianToken'],
-      instrumentTechnicianID: json['instrumentTechnicianID'],
-      instrumentTechnicianToken: json['instrumentTechnicianToken'],
+      technicianID: json['technicianID'],
+      technicianUserName: json['technicianUserName'],
+      technicianToken: json['technicianToken'],
       tools: List<String>.from(json['tools']),
       spareParts: List<String>.from(json['spareParts']),
       executionDay: DateTime.parse(json['executionDay']),
-      startHour: TimeOfDay.fromDateTime(DateTime.parse(json['startHour'])),
-      finishHour: TimeOfDay.fromDateTime(DateTime.parse(json['finishHour'])),
+      startTime: TimeOfDay(
+        hour: int.parse(json['startHour'].split(":")[0]),
+        minute: int.parse(json['startHour'].split(":")[1]),
+      ),
+      finishTime: TimeOfDay(
+        hour: int.parse(json['finishHour'].split(":")[0]),
+        minute: int.parse(json['finishHour'].split(":")[1]),
+      ),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'wordorderID': workorderID,
+      'workorderID': workorderID,
       'workorderStatus': workorderStatus,
-      'wordorderCreatorID': wordorderCreatorID,
+      'workorderCreatorID': workorderCreatorID,
+      'workorderCreatorUserName': workorderCreatorUserName,
       'workorderCreatorToken': workorderCreatorToken,
       'interventionID': interventionID,
       'interventionType': interventionType,
       'interventionFileID': interventionFileID,
       'equipmentTagName': equipmentTagName,
       'equipmentDiscipline': equipmentDiscipline,
-      'mechanicalTechnicianID': mechanicalTechnicianID,
-      'mechanicalTechnicianToken': mechanicalTechnicianToken,
-      'electricalTechnicianID': electricalTechnicianID,
-      'electricalTechnicianToken': electricalTechnicianToken,
-      'instrumentTechnicianID': instrumentTechnicianID,
-      'instrumentTechnicianToken': instrumentTechnicianToken,
+      'technicianID': technicianID,
+      'technicianUserName': technicianUserName,
+      'technicianToken': technicianToken,
       'tools': tools,
       'spareParts': spareParts,
-      'executionDay': executionDay.toIso8601String(),
-      'startHour': '${startHour.hour}:${startHour.minute}',
-      'finishHour': '${finishHour.hour}:${finishHour.minute}',
+      'executionDay': executionDay.toIso8601String().split('T').first,
+      'startHour':
+          '${startTime.hour.toString().padLeft(2, '0')}:${startTime.minute.toString().padLeft(2, '0')}',
+      'finishHour':
+          '${finishTime.hour.toString().padLeft(2, '0')}:${finishTime.minute.toString().padLeft(2, '0')}',
     };
   }
 }
