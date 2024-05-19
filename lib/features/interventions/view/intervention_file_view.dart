@@ -35,7 +35,7 @@ class _InterventionViewPage extends State<InterventionViewPage> {
           },
         ),
         title: Text(
-          'Intervention File Validation',
+          'Intervention File',
           style: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
         centerTitle: true,

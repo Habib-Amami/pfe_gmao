@@ -7,7 +7,7 @@ import '../../intervention_files/model/constants/intervention_types_list.dart';
 import 'data_models/intervention.dart';
 
 class InterventionModel {
-  Future<void> addPreventiveInterventions({
+  Future<void> addPreventiveInterventionsDB({
     required String startDate,
     required int forecast,
     required String interventionFileID,
@@ -68,7 +68,7 @@ class InterventionModel {
     await batch.commit();
   }
 
-  Future<void> addCurativeIventions({
+  Future<void> addCurativeIventionDB({
     required String startDate,
     required String interventionFileID,
     required String equipmentTagName,
