@@ -14,7 +14,7 @@ import '../../profile_management/model/user.dart';
 import '../model/constants/work_order_status.dart';
 import '../model/work_order_model.dart';
 import 'widgets/timer.dart';
-import 'widgets/work_order_form_fiel.dart';
+import 'widgets/work_order_form_field.dart';
 import 'widgets/work_order_form_title.dart';
 
 class AddWorkOrderView extends StatefulWidget {
