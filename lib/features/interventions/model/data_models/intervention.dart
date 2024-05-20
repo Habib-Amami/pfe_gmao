@@ -35,19 +35,20 @@ class Intervention {
 
   factory Intervention.fromJson(Map<String, dynamic> json) {
     return Intervention(
-      interventionID: json['interventionID'],
-      interventionDate: DateTime.parse(json['interventionDate']),
-      interventionType: json['interventionType'],
-      interventionFileID: json['interventionFileID'],
-      equipmentTagName: json['equipmentTagName'],
-      equipmentDiscipline: json['equipmentDiscipline'],
-      mechanicalTechnician: json['mechanicalTechnician'],
-      electricalTechnician: json['electricalTechnician'],
-      instrumentTechnician: json['instrumentTechnician'],
-      spareParts: List<String>.from(json['spareParts']),
-      tools: List<String>.from(json['tools']),
-      interventionStatus: json['interventionStatus'],
-      interventionTask: json['interventionTask'],
+      interventionID: json['interventionID'] ?? '',
+      interventionDate: DateTime.parse(
+          json['interventionDate'] ?? DateTime.now().toIso8601String()),
+      interventionType: json['interventionType'] ?? '',
+      interventionFileID: json['interventionFileID'] ?? '',
+      equipmentTagName: json['equipmentTagName'] ?? '',
+      equipmentDiscipline: json['equipmentDiscipline'] ?? '',
+      mechanicalTechnician: json['mechanicalTechnician'] ?? false,
+      electricalTechnician: json['electricalTechnician'] ?? false,
+      instrumentTechnician: json['instrumentTechnician'] ?? false,
+      spareParts: List<String>.from(json['spareParts'] ?? []),
+      tools: List<String>.from(json['tools'] ?? []),
+      interventionStatus: json['interventionStatus'] ?? '',
+      interventionTask: json['interventionTask'] ?? '',
     );
   }
 
