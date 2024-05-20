@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pfe_gmao/features/profile_management/model/user.dart';
 import 'package:pfe_gmao/features/work_order/model/data_models/work_order.dart';
+import 'package:pfe_gmao/features/work_order/view/widgets/work_order_card.dart';
 import 'package:pfe_gmao/features/work_order/view/work%20order%20view/admin_wo_view.dart';
 import 'package:pfe_gmao/features/work_order/view/work%20order%20view/engineer_wo_view.dart';
 import 'package:pfe_gmao/firebase/cloud_firestore_references.dart';
@@ -53,6 +54,7 @@ class _WorkOrderViewState extends State<WorkOrderView> {
             .collection(userCollectionRef)
             .doc(FirebaseAuth.instance.currentUser!.uid)
             .collection("work_order")
+            .orderBy('executionDay', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
           // Handle interruption of connection
@@ -115,31 +117,37 @@ class _WorkOrderViewState extends State<WorkOrderView> {
             itemCount: workOrders.length,
             itemBuilder: (context, index) => ListTile(
               title: GestureDetector(
-                onTap: () {
-                  isAdmin
-                      ? Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AdminWorkOrderView(
-                              interventionId: workOrders[index].interventionID,
-                              workOrderID: workOrders[index].workorderID,
+                  onTap: () {
+                    isAdmin
+                        ? Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AdminWorkOrderView(
+                                interventionId:
+                                    workOrders[index].interventionID,
+                                workOrderID: workOrders[index].workorderID,
+                              ),
                             ),
-                          ),
-                        )
-                      : Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EngineerWorkOrderView(
-                              interventionId: workOrders[index].interventionID,
-                              workOrderID: workOrders[index].workorderID,
+                          )
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EngineerWorkOrderView(
+                                interventionId:
+                                    workOrders[index].interventionID,
+                                workOrderID: workOrders[index].workorderID,
+                              ),
                             ),
-                          ),
-                        );
-                },
-                child: Card(
-                  child: Text(workOrders[index].equipmentTagName),
-                ),
-              ),
+                          );
+                  },
+                  child: WorkOrderCard(
+                    date: workOrders[index].executionDay,
+                    status: workOrders[index].workorderStatus,
+                    interventionType: workOrders[index].interventionType,
+                    woID: workOrders[index].workorderID,
+                    startingTime: workOrders[index].startTime,
+                    finishingTime: workOrders[index].finishTime,
+                  )),
             ),
           );
         },
