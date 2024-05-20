@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pfe_gmao/features/profile_management/model/user.dart';
 import 'package:pfe_gmao/features/work_order/model/data_models/work_order.dart';
+import 'package:pfe_gmao/features/work_order/view/work%20order%20view/admin_wo_view.dart';
+import 'package:pfe_gmao/features/work_order/view/work%20order%20view/engineer_wo_view.dart';
 import 'package:pfe_gmao/firebase/cloud_firestore_references.dart';
 
 class WorkOrderView extends StatefulWidget {
@@ -13,6 +16,35 @@ class WorkOrderView extends StatefulWidget {
 
 class _WorkOrderViewState extends State<WorkOrderView> {
   DateTime today = DateTime.now();
+  late UserModel user;
+
+  //method to fetch the admin data
+  Future<bool> adminCheck() async {
+    await FirebaseFirestore.instance
+        .collection(userCollectionRef)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then(
+      (snapshot) {
+        user = UserModel.fromFirestore(snapshot, null);
+      },
+    );
+
+    return user.role == Roles.Administrator;
+  }
+
+  void fecthUserRole() async {
+    isAdmin = await adminCheck();
+  }
+
+  bool isAdmin = false;
+
+  @override
+  void initState() {
+    fecthUserRole();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +97,7 @@ class _WorkOrderViewState extends State<WorkOrderView> {
             );
           }
           //if their is data
-          List<WorkOrder> workorders = snapshot.data!.docs
+          List<WorkOrder> workOrders = snapshot.data!.docs
               .map(
                 (order) => WorkOrder.fromJson(
                   order.data(),
@@ -73,16 +105,41 @@ class _WorkOrderViewState extends State<WorkOrderView> {
               )
               .toList();
           //if their is no work orders
-          if (workorders.isEmpty) {
+          if (workOrders.isEmpty) {
             //build a ui when is their is not work orders
             return const Center(
               child: Text("no work orders"),
             );
           }
           return ListView.builder(
-            itemCount: workorders.length,
+            itemCount: workOrders.length,
             itemBuilder: (context, index) => ListTile(
-              title: Text(workorders[index].equipmentTagName),
+              title: GestureDetector(
+                onTap: () {
+                  isAdmin
+                      ? Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AdminWorkOrderView(
+                              interventionId: workOrders[index].interventionID,
+                              workOrderID: workOrders[index].workorderID,
+                            ),
+                          ),
+                        )
+                      : Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EngineerWorkOrderView(
+                              interventionId: workOrders[index].interventionID,
+                              workOrderID: workOrders[index].workorderID,
+                            ),
+                          ),
+                        );
+                },
+                child: Card(
+                  child: Text(workOrders[index].equipmentTagName),
+                ),
+              ),
             ),
           );
         },
