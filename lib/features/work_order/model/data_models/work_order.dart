@@ -14,6 +14,7 @@ class WorkOrder {
   final String technicianID;
   final String technicianUserName;
   final String technicianToken;
+  final List<String> steps;
   final List<String> tools;
   final List<String> spareParts;
   final DateTime executionDay;
@@ -34,6 +35,7 @@ class WorkOrder {
     required this.technicianID,
     required this.technicianUserName,
     required this.technicianToken,
+    required this.steps,
     required this.tools,
     required this.spareParts,
     required this.executionDay,
@@ -56,6 +58,7 @@ class WorkOrder {
       technicianID: json['technicianID'],
       technicianUserName: json['technicianUserName'],
       technicianToken: json['technicianToken'],
+      steps: List<String>.from(json['steps']),
       tools: List<String>.from(json['tools']),
       spareParts: List<String>.from(json['spareParts']),
       executionDay: DateTime.parse(json['executionDay']),
@@ -85,6 +88,7 @@ class WorkOrder {
       'technicianID': technicianID,
       'technicianUserName': technicianUserName,
       'technicianToken': technicianToken,
+      'steps': steps,
       'tools': tools,
       'spareParts': spareParts,
       'executionDay': executionDay.toIso8601String().split('T').first,

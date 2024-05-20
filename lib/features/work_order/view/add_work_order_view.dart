@@ -630,6 +630,7 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
                                                 selectedEngineer!.userName,
                                             technicianToken:
                                                 selectedEngineer!.FCMtoken,
+                                            steps: stepsList,
                                             tools: widget.tools,
                                             spareParts: widget.spareParts,
                                             executionDay: DateTime.parse(
