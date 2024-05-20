@@ -6,14 +6,12 @@ class CalendarCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.date,
-    required this.typeOfCard,
     required this.status,
     required this.equipmentName,
   });
   final String title;
   final String subtitle;
   final DateTime date;
-  final String typeOfCard;
   final String status;
   final String equipmentName;
 
@@ -67,11 +65,8 @@ class CalendarCard extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 6.0),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: typeOfCard == 'intervention'
-              ? Colors.lightBlueAccent
-              : const Color.fromRGBO(115, 93, 165, 1),
-        ),
+            borderRadius: BorderRadius.circular(16),
+            color: Colors.lightBlueAccent),
         height: 80,
         width: MediaQuery.sizeOf(context).width,
         child: Row(
@@ -81,10 +76,7 @@ class CalendarCard extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: typeOfCard == 'intervention'
-                        ? Theme.of(context).colorScheme.onPrimaryContainer
-                        : const Color.fromRGBO(211, 197, 229, 1),
-                    //: const Color.fromRGBO(234, 115, 141, 1),
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   height: 80,
@@ -128,28 +120,14 @@ class CalendarCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      typeOfCard == 'intervention'
-                          ? Text(
-                              'INT-000$title  ($status)',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .inverseSurface
-                                  //color: Theme.of(context).colorScheme.inverseSurface,
-                                  ),
-                            )
-                          : Text(
-                              'WO-001-24  ($status)',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onInverseSurface,
-                              ),
-                            ),
+                      Text(
+                        'INT-000$title  ($status)',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color:
+                                Theme.of(context).colorScheme.inverseSurface),
+                      ),
                       Text(
                         style: TextStyle(
                           fontSize: 14,
