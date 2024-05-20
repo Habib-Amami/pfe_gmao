@@ -215,27 +215,21 @@ class _AdminWorkOrderViewState extends State<AdminWorkOrderView> {
                                       UserModel.fromFirestore(
                                           snapshot.data!, null);
 
-                                  return Container(
-                                    height: 75,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primaryContainer,
-                                      borderRadius: BorderRadius.circular(18),
-                                    ),
+                                  return Card(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primaryContainer,
                                     child: Row(
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 8),
+                                          padding: const EdgeInsets.all(8),
                                           child: CircleAvatar(
                                             backgroundColor: Theme.of(context)
                                                 .colorScheme
-                                                .onErrorContainer,
-                                            radius: 45,
+                                                .primary,
+                                            radius: 40,
                                             child: CircleAvatar(
-                                              radius: 45,
+                                              radius: 40,
                                               backgroundImage: NetworkImage(
                                                 technicianInfo.photoURL,
                                               ),
