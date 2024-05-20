@@ -31,7 +31,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
 
   late UserModel user;
 
-  //methode to fetch the admin data
+  //method to fetch the admin data
   Future<bool> adminCheck() async {
     await FirebaseFirestore.instance
         .collection(userCollectionRef)
@@ -55,7 +55,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
   // to change the calender format
   CalendarFormat _calendarFormat = CalendarFormat.month;
 
-  bool isAdmin = false;
+  bool isAdmin = true;
 
   @override
   void initState() {
