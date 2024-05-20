@@ -211,7 +211,6 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                           snapshot.data!, null);
 
                                   return Container(
-                                    height: 75,
                                     width: double.infinity,
                                     decoration: BoxDecoration(
                                       color: Theme.of(context)
@@ -220,6 +219,8 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                       borderRadius: BorderRadius.circular(18),
                                     ),
                                     child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -228,9 +229,9 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                             backgroundColor: Theme.of(context)
                                                 .colorScheme
                                                 .onErrorContainer,
-                                            radius: 45,
+                                            radius: 35,
                                             child: CircleAvatar(
-                                              radius: 45,
+                                              radius: 35,
                                               backgroundImage: NetworkImage(
                                                 technicianInfo.photoURL,
                                               ),
