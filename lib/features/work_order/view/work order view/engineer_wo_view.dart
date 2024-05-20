@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pfe_gmao/features/interventions/model/data_models/intervention.dart';
 import 'package:pfe_gmao/features/profile_management/model/user.dart';
 import 'package:pfe_gmao/features/work_order/model/data_models/work_order.dart';
@@ -23,6 +25,9 @@ class EngineerWorkOrderView extends StatefulWidget {
 
 class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
   late Future<Intervention?> _interventionFuture;
+  List<ValueNotifier<bool>> _isCheckedList = [];
+  int numberOfChecked = 0;
+  bool? isChecked = false;
   // intervention information query
   Future<Intervention?> getInterventionById(String interventionID) async {
     try {
@@ -125,6 +130,12 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
               );
             }
             WorkOrder wo = snapshot.data!;
+            if (_isCheckedList.isEmpty) {
+              _isCheckedList = List<ValueNotifier<bool>>.generate(
+                wo.steps.length,
+                (_) => ValueNotifier<bool>(false),
+              );
+            }
             return ListView(
               children: [
                 SingleChildScrollView(
@@ -370,6 +381,7 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                   );
                                 }
                                 Intervention intervention = snapshot.data!;
+
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -386,14 +398,56 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                     // steps
                                     const WorkOrderFormTitle(
                                         title: 'Intervention Steps'),
-                                    const WorkOrderFormField(
-                                      initialValue:
-                                          '7ot steps hnneee o bar9achhom xD',
-                                      readOnly: true,
-                                      prefixIcon: Icon(
-                                        Icons.calendar_month_outlined,
+                                    // ignore: unused_local_variable
+                                    for (int i = 0; i < wo.steps.length; i++)
+                                      Padding(
+                                        padding: i == wo.steps.length - 1
+                                            ? const EdgeInsets.only(
+                                                bottom: 16.0)
+                                            : const EdgeInsets.only(bottom: 0),
+                                        child: Card(
+                                          child: ListTile(
+                                            title: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                    '${i + 1}- ${wo.steps[i]}'),
+                                                ValueListenableBuilder<bool>(
+                                                  valueListenable:
+                                                      _isCheckedList[i],
+                                                  builder:
+                                                      (context, isChecked, _) {
+                                                    return Checkbox(
+                                                      value: isChecked,
+                                                      onChanged: (value) {
+                                                        _isCheckedList[i]
+                                                            .value = value!;
+                                                        numberOfChecked =
+                                                            _isCheckedList
+                                                                .where((notifier) =>
+                                                                    notifier
+                                                                        .value)
+                                                                .length;
+                                                      },
+                                                    );
+                                                  },
+                                                )
+                                              ],
+                                            ),
+                                            titleTextStyle: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                                ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
                                     // spare parts
                                     const WorkOrderFormTitle(
                                         title: 'Spare Parts'),
@@ -447,6 +501,8 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                           ),
                                         ),
                                       ),
+                                    const WorkOrderFormTitle(
+                                        title: 'Work order State')
                                   ],
                                 );
                               })),
