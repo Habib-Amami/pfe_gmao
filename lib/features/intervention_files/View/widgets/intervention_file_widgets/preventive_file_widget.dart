@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../add_file_form/intervention_file_form_title.dart';
-import '../add_file_form/intervntion_file_form_files.dart';
+import '../add_file_form/intervention_file_form_files.dart';
 
 class PreventiveFile extends StatelessWidget {
   final String equipmentName;

@@ -20,7 +20,7 @@ import '../../model/data_models/tool.dart';
 import '../widgets/add_file_form/empty_selection_container.dart';
 import '../widgets/add_file_form/intervention_file_drop_down_menu.dart';
 import '../widgets/add_file_form/intervention_file_form_title.dart';
-import '../widgets/add_file_form/intervntion_file_form_files.dart';
+import '../widgets/add_file_form/intervention_file_form_files.dart';
 import '../widgets/add_file_form/list_header.dart';
 import '../widgets/add_file_form/spare_part_card.dart';
 import '../widgets/add_file_form/technician_card.dart';
