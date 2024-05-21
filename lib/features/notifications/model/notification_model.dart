@@ -316,22 +316,26 @@ class NotificationsModel {
     required String notificationBody,
     required String workorderCreatorID,
     required String technicianID,
+    required String workOrderID,
+    required String interventionID,
   }) async {
     //creating a work order notification
-    WorkorderNotification notitication = WorkorderNotification(
+    WorkorderNotification notification = WorkorderNotification(
       notificationID: notificationID,
       notificationTitle: notificationTitle,
       notificationBody: notificationBody,
       workorderCreatorID: workorderCreatorID,
       technicianID: technicianID,
       createdAt: DateTime.now(),
+      workOrderID: workOrderID,
+      interventionID: interventionID,
     );
     await firestore
         .collection(userCollectionRef)
         .doc(technicianID)
         .collection("WO_notifications")
         .doc(notificationID)
-        .set(notitication.toJson());
+        .set(notification.toJson());
   }
 
   //methode to delete intervention files notifications

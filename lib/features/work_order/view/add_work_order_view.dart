@@ -655,13 +655,16 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
                                           //adding notification about the new work order in the technician doc
                                           NotificationsModel()
                                               .sendDispatchWorkorderNotification(
+                                            interventionID:
+                                                widget.interventionID,
                                             notificationID: notificationID,
                                             notificationTitle:
                                                 "New Work Order Assigned",
                                             notificationBody:
-                                                "You have been assigned a new work order.For ${widget.equipmentTagName} for the ${widget.equipmentDiscipline} discipline.Created by ${admin.userName}.check your work order list for details.",
+                                                "You have been assigned a new work order for ${widget.equipmentTagName} discipline.Created by ${admin.userName}.",
                                             workorderCreatorID: admin.id,
                                             technicianID: selectedEngineer!.id,
+                                            workOrderID: orderID,
                                           );
                                           //sending a push notification
                                           NotificationsModel()
