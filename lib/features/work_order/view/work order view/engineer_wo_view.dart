@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pfe_gmao/features/work_order/model/constants/work_order_status.dart';
 import 'package:pfe_gmao/features/work_order/model/data_models/work_order.dart';
+import 'package:pfe_gmao/features/work_order/model/work_order_model.dart';
 import 'package:pfe_gmao/features/work_order/view/widgets/work_order_form_field.dart';
 import 'package:pfe_gmao/features/work_order/view/widgets/work_order_form_title.dart';
 import 'package:pfe_gmao/firebase/cloud_firestore_references.dart';
@@ -285,7 +286,7 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                 ),
                               ),
                             ),
-
+                          // Status handling
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             child: wo.workorderStatus == workOrderStatus[3]
@@ -326,9 +327,21 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
-                                          //
+                                          // change status to Stand By
                                           ElevatedButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              WorkOrderModel()
+                                                  .updateWorkOrderStatus(
+                                                workOrderID: wo.workorderID,
+                                                newStatus: workOrderStatus[2],
+                                                creatorID:
+                                                    wo.workorderCreatorID,
+                                                technicianID: wo.technicianID,
+                                                interventionID:
+                                                    wo.interventionID,
+                                              );
+                                              setState(() {});
+                                            },
                                             style: const ButtonStyle(
                                               backgroundColor:
                                                   MaterialStatePropertyAll(
@@ -359,9 +372,9 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                                     context: context,
                                                     builder: (context) {
                                                       return AlertDialog(
-                                                        title: Text(
+                                                        title: const Text(
                                                             'Confirmation'),
-                                                        content: Text(
+                                                        content: const Text(
                                                             'Are you sure of sending a validation request?'),
                                                         actionsAlignment:
                                                             MainAxisAlignment
@@ -377,7 +390,20 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                                           ElevatedButton(
                                                             onPressed: () {
                                                               // handle the state change to Stand By
-                                                              //..
+                                                              WorkOrderModel()
+                                                                  .updateWorkOrderStatus(
+                                                                workOrderID: wo
+                                                                    .workorderID,
+                                                                newStatus:
+                                                                    workOrderStatus[
+                                                                        3],
+                                                                creatorID: wo
+                                                                    .workorderCreatorID,
+                                                                technicianID: wo
+                                                                    .technicianID,
+                                                                interventionID:
+                                                                    wo.interventionID,
+                                                              );
                                                               //
                                                               Navigator.pop(
                                                                   context);
@@ -427,7 +453,21 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                             children: [
                                               //
                                               ElevatedButton(
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  WorkOrderModel()
+                                                      .updateWorkOrderStatus(
+                                                    workOrderID: wo.workorderID,
+                                                    newStatus:
+                                                        workOrderStatus[0],
+                                                    creatorID:
+                                                        wo.workorderCreatorID,
+                                                    technicianID:
+                                                        wo.technicianID,
+                                                    interventionID:
+                                                        wo.interventionID,
+                                                  );
+                                                  setState(() {});
+                                                },
                                                 style: const ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStatePropertyAll(
@@ -460,9 +500,9 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                                         context: context,
                                                         builder: (context) {
                                                           return AlertDialog(
-                                                            title: Text(
+                                                            title: const Text(
                                                                 'Confirmation'),
-                                                            content: Text(
+                                                            content: const Text(
                                                                 'Are you sure of sending a validation request?'),
                                                             actionsAlignment:
                                                                 MainAxisAlignment
@@ -478,7 +518,20 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                                               ElevatedButton(
                                                                 onPressed: () {
                                                                   // handle the state change to finish
-                                                                  //..
+                                                                  WorkOrderModel()
+                                                                      .updateWorkOrderStatus(
+                                                                    workOrderID:
+                                                                        wo.workorderID,
+                                                                    newStatus:
+                                                                        workOrderStatus[
+                                                                            3],
+                                                                    creatorID: wo
+                                                                        .workorderCreatorID,
+                                                                    technicianID:
+                                                                        wo.technicianID,
+                                                                    interventionID:
+                                                                        wo.interventionID,
+                                                                  );
                                                                   //
                                                                   Navigator.pop(
                                                                       context);
