@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ionicons/ionicons.dart';
@@ -7,17 +8,49 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pfe_gmao/features/notifications/model/data_models/work_order_notification.dart';
 import 'package:pfe_gmao/features/notifications/model/notification_model.dart';
 import 'package:pfe_gmao/features/notifications/view/widget/notification_widget.dart';
+import 'package:pfe_gmao/features/profile_management/model/user.dart';
+import 'package:pfe_gmao/features/work_order/view/work%20order%20view/admin_wo_view.dart';
+import 'package:pfe_gmao/features/work_order/view/work%20order%20view/engineer_wo_view.dart';
 import 'package:pfe_gmao/firebase/cloud_firestore_references.dart';
 
-class WorkorderNotificationsTab extends StatefulWidget {
-  const WorkorderNotificationsTab({super.key});
+class WorkOrderNotificationsTab extends StatefulWidget {
+  const WorkOrderNotificationsTab({super.key});
 
   @override
-  State<WorkorderNotificationsTab> createState() =>
-      _WorkorderNotificationsTabState();
+  State<WorkOrderNotificationsTab> createState() =>
+      _WorkOrderNotificationsTabState();
 }
 
-class _WorkorderNotificationsTabState extends State<WorkorderNotificationsTab> {
+class _WorkOrderNotificationsTabState extends State<WorkOrderNotificationsTab> {
+  late UserModel user;
+
+  //method to fetch the admin data
+  Future<bool> adminCheck() async {
+    await FirebaseFirestore.instance
+        .collection(userCollectionRef)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then(
+      (snapshot) {
+        user = UserModel.fromFirestore(snapshot, null);
+      },
+    );
+
+    return user.role == Roles.Administrator;
+  }
+
+  void fecthUserRole() async {
+    isAdmin = await adminCheck();
+  }
+
+  bool isAdmin = false;
+
+  @override
+  void initState() {
+    fecthUserRole();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -165,94 +198,44 @@ class _WorkorderNotificationsTabState extends State<WorkorderNotificationsTab> {
                                   ],
                                 ),
                                 child: GestureDetector(
-                                    onTap: () {
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) =>
-                                      //         InterventionFileValidationView(
-                                      //       interventionFileCreatorID:
-                                      //           notifications[index]
-                                      //               .interventionFileCreatorID,
-                                      //       interventionFileCreatorToken:
-                                      //           notifications[index]
-                                      //               .interventionFileCreatorToken,
-                                      //       equipmentTagName: notifications[index]
-                                      //           .equipmentTagName,
-                                      //       equipmentID:
-                                      //           notifications[index].equipmentID,
-                                      //       equipmentDiscipline:
-                                      //           notifications[index]
-                                      //               .equipmentDiscipline,
-                                      //       interventionType: notifications[index]
-                                      //           .interventionType,
-                                      //       interventionFileID:
-                                      //           notifications[index]
-                                      //               .interventionFileID,
-                                      //     ),
-                                      //   ),
-                                      // );
-                                    },
-                                    child: ListTile(
-                                      title: Text(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) {
+                                        return isAdmin == false
+                                            ? EngineerWorkOrderView(
+                                                workOrderID:
+                                                    notifications[index]
+                                                        .workOrderID,
+                                                interventionId:
+                                                    notifications[index]
+                                                        .interventionID,
+                                              )
+                                            : AdminWorkOrderView(
+                                                workOrderID:
+                                                    notifications[index]
+                                                        .workOrderID,
+                                                interventionId:
+                                                    notifications[index]
+                                                        .interventionID,
+                                              );
+                                      }),
+                                    );
+                                  },
+                                  child: NotificationUI(
+                                    notificationTitle:
                                         notifications[index].notificationTitle,
-                                      ),
-                                    )
-                                    // notifications[index]
-                                    //                 .notificationTitle ==
-                                    //             'Validation Update' &&
-                                    //         notifications[index]
-                                    //             .notificationBody
-                                    //             .contains('denied')
-                                    //     ? NotificationUI(
-                                    //         notificationDateOfCreation:
-                                    //             notifications[index].createdAt,
-                                    //         notificationTitle:
-                                    //             notifications[index]
-                                    //                 .notificationTitle,
-                                    //         notificationMessage:
-                                    //             notifications[index]
-                                    //                 .notificationBody,
-                                    //         notificationIcon:
-                                    //             Icons.highlight_off_rounded,
-                                    //         notificationColor: Colors.red,
-                                    //       )
-                                    //     : notifications[index]
-                                    //                     .notificationTitle ==
-                                    //                 'Validation Update' &&
-                                    //             notifications[index]
-                                    //                 .notificationBody
-                                    //                 .contains('validated')
-                                    //         ? NotificationUI(
-                                    //             notificationDateOfCreation:
-                                    //                 notifications[index]
-                                    //                     .createdAt,
-                                    //             notificationTitle:
-                                    //                 notifications[index]
-                                    //                     .notificationTitle,
-                                    //             notificationMessage:
-                                    //                 notifications[index]
-                                    //                     .notificationBody,
-                                    //             notificationIcon:
-                                    //                 Ionicons.checkmark_done_sharp,
-                                    //             notificationColor: Colors.green,
-                                    //           )
-                                    //         : NotificationUI(
-                                    //             notificationDateOfCreation:
-                                    //                 notifications[index]
-                                    //                     .createdAt,
-                                    //             notificationTitle:
-                                    //                 notifications[index]
-                                    //                     .notificationTitle,
-                                    //             notificationMessage:
-                                    //                 notifications[index]
-                                    //                     .notificationBody,
-                                    //             notificationIcon:
-                                    //                 Icons.edit_document,
-                                    //             notificationColor:
-                                    //                 Colors.orangeAccent,
-                                    //           ),
-                                    ),
+                                    notificationMessage: notifications[index]
+                                        .notificationBody
+                                        .split('.')
+                                        .first,
+                                    notificationIcon:
+                                        Icons.work_history_rounded,
+                                    notificationColor: Colors.lightBlueAccent,
+                                    notificationDateOfCreation:
+                                        notifications[index].createdAt,
+                                  ),
+                                ),
                               ),
                             );
                           }),
