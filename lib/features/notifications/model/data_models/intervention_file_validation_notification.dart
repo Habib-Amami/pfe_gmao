@@ -2,13 +2,16 @@ class InterventionFileValidationNotification {
   final String notificationID;
   final String notificationTitle;
   final String notificationBody;
+
+  final String equipmentID;
+  final String equipmentTagName;
+  final String equipmentDiscipline;
+
   final String interventionFileCreatorID;
   final String interventionFileCreatorToken;
   final String interventionFileID;
   final String interventionType;
-  final String equipmentID;
-  final String equipmentTagName;
-  final String equipmentDiscipline;
+
   final DateTime createdAt;
 
   InterventionFileValidationNotification({

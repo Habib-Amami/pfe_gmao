@@ -654,7 +654,7 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
                                               .sendNotificationToDevice(
                                             deviceToken:
                                                 selectedEngineer!.FCMtoken,
-                                            notificationTitle: "NEw Work Order",
+                                            notificationTitle: "New Work Order",
                                             notificationBody:
                                                 "you have a new work order for ${widget.equipmentTagName}",
                                           );
