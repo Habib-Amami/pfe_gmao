@@ -384,15 +384,30 @@ class _AdminWorkOrderViewState extends State<AdminWorkOrderView> {
                                     // steps
                                     const WorkOrderFormTitle(
                                         title: 'Intervention Steps'),
-                                    const WorkOrderFormField(
-                                      initialValue:
-                                          '7ot steps hnneee o bar9achhom xD',
-                                      readOnly: true,
-                                      prefixIcon: Icon(
-                                        Icons.calendar_month_outlined,
+                                    for (var step in wo.steps)
+                                      Padding(
+                                        padding: step == wo.steps.last
+                                            ? const EdgeInsets.only(
+                                                bottom: 16.0)
+                                            : const EdgeInsets.only(bottom: 0),
+                                        child: Card(
+                                          child: ListTile(
+                                            title: Text(
+                                              '${wo.steps.indexOf(step) + 1}- $step',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .primary,
+                                                  ),
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    // spare parts
+
                                     const WorkOrderFormTitle(
                                         title: 'Spare Parts'),
                                     for (var item in intervention.spareParts)

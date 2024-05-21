@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pfe_gmao/features/interventions/model/data_models/intervention.dart';
 import 'package:pfe_gmao/features/profile_management/model/user.dart';
+import 'package:pfe_gmao/features/work_order/model/constants/work_order_status.dart';
 import 'package:pfe_gmao/features/work_order/model/data_models/work_order.dart';
 import 'package:pfe_gmao/features/work_order/view/widgets/work_order_form_field.dart';
 import 'package:pfe_gmao/features/work_order/view/widgets/work_order_form_title.dart';
@@ -23,6 +24,14 @@ class EngineerWorkOrderView extends StatefulWidget {
 
 class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
   late Future<Intervention?> _interventionFuture;
+  List<ValueNotifier<bool>> _isCheckedList = [];
+  int numberOfChecked = 0;
+  bool? isChecked = false;
+  List workOrderStateForEngineer = [
+    workOrderStatus[0],
+    workOrderStatus[2],
+    workOrderStatus[3]
+  ];
   // intervention information query
   Future<Intervention?> getInterventionById(String interventionID) async {
     try {
@@ -73,6 +82,13 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(
+              Icons.arrow_back_outlined,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
           title: Text(
             'Work order information',
             style: TextStyle(
@@ -125,6 +141,13 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
               );
             }
             WorkOrder wo = snapshot.data!;
+            String woState = wo.workorderStatus;
+            if (_isCheckedList.isEmpty) {
+              _isCheckedList = List<ValueNotifier<bool>>.generate(
+                wo.steps.length,
+                (_) => ValueNotifier<bool>(false),
+              );
+            }
             return ListView(
               children: [
                 SingleChildScrollView(
@@ -370,6 +393,7 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                   );
                                 }
                                 Intervention intervention = snapshot.data!;
+
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -386,14 +410,56 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                     // steps
                                     const WorkOrderFormTitle(
                                         title: 'Intervention Steps'),
-                                    const WorkOrderFormField(
-                                      initialValue:
-                                          '7ot steps hnneee o bar9achhom xD',
-                                      readOnly: true,
-                                      prefixIcon: Icon(
-                                        Icons.calendar_month_outlined,
+                                    // ignore: unused_local_variable
+                                    for (int i = 0; i < wo.steps.length; i++)
+                                      Padding(
+                                        padding: i == wo.steps.length - 1
+                                            ? const EdgeInsets.only(
+                                                bottom: 16.0)
+                                            : const EdgeInsets.only(bottom: 0),
+                                        child: Card(
+                                          child: ListTile(
+                                            title: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                    '${i + 1}- ${wo.steps[i]}'),
+                                                ValueListenableBuilder<bool>(
+                                                  valueListenable:
+                                                      _isCheckedList[i],
+                                                  builder:
+                                                      (context, isChecked, _) {
+                                                    return Checkbox(
+                                                      value: isChecked,
+                                                      onChanged: (value) {
+                                                        _isCheckedList[i]
+                                                            .value = value!;
+                                                        numberOfChecked =
+                                                            _isCheckedList
+                                                                .where((notifier) =>
+                                                                    notifier
+                                                                        .value)
+                                                                .length;
+                                                      },
+                                                    );
+                                                  },
+                                                )
+                                              ],
+                                            ),
+                                            titleTextStyle: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                                ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
                                     // spare parts
                                     const WorkOrderFormTitle(
                                         title: 'Spare Parts'),
@@ -447,6 +513,241 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                           ),
                                         ),
                                       ),
+                                    const WorkOrderFormTitle(
+                                        title: 'Work order State'),
+                                    Container(
+                                      margin: const EdgeInsets.only(bottom: 16),
+                                      width: double.infinity,
+                                      height: 64,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(
+                                          color: Colors.grey,
+                                          width: 1.2,
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: DropdownButtonFormField(
+                                          padding:
+                                              const EdgeInsets.only(right: 16),
+                                          decoration: InputDecoration(
+                                            focusColor: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            prefixIcon: woState ==
+                                                    workOrderStatus[0]
+                                                ? const Icon(
+                                                    Icons.timelapse,
+                                                  )
+                                                : woState == workOrderStatus[2]
+                                                    ? const Icon(Icons
+                                                        .pause_circle_outline_sharp)
+                                                    : woState ==
+                                                            workOrderStatus[3]
+                                                        ? const Icon(Icons
+                                                            .gpp_good_outlined)
+                                                        : const SizedBox
+                                                            .shrink(),
+                                            border: InputBorder.none,
+                                          ),
+                                          value: woState,
+                                          items: workOrderStateForEngineer
+                                              .map(
+                                                (state) => DropdownMenuItem(
+                                                  value: state,
+                                                  child: Text(state),
+                                                ),
+                                              )
+                                              .toList(),
+                                          onChanged: (value) {
+                                            woState = value as String;
+                                            debugPrint(woState);
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {});
+                                            },
+                                            child: const Text('Refresh page'),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              if (woState ==
+                                                      workOrderStatus[3] &&
+                                                  numberOfChecked !=
+                                                      wo.steps.length) {
+                                                // handle the unfinished steps and finish demand
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                            'Demande is denied'),
+                                                        content: const Text(
+                                                            'Please make sure that all the steps are done and checked!'),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                    context),
+                                                            child: const Text(
+                                                                'OK'),
+                                                          )
+                                                        ],
+                                                      );
+                                                    });
+                                              } else if (woState ==
+                                                      workOrderStatus[3] &&
+                                                  numberOfChecked ==
+                                                      wo.steps.length) {
+                                                //handle the finish demand operation
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                            "Confirmation"),
+                                                        content: const Text(
+                                                            'Are you sure of sending finishing request?'),
+                                                        actionsAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceAround,
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                    context),
+                                                            child: const Text(
+                                                                'Cancel'),
+                                                          ),
+                                                          ElevatedButton(
+                                                            style: ButtonStyle(
+                                                              backgroundColor:
+                                                                  MaterialStatePropertyAll(Theme.of(
+                                                                          context)
+                                                                      .colorScheme
+                                                                      .primary),
+                                                            ),
+                                                            onPressed: () {
+                                                              // send finish request logic
+                                                              //..
+                                                              //
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: Text(
+                                                              'Confirm',
+                                                              style: TextStyle(
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .background,
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      );
+                                                    });
+                                              } else if (woState ==
+                                                  workOrderStatus[2]) {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                            'Confirmation'),
+                                                        content: const Text(
+                                                            'Are you sure of changing the work order state to Stand By?'),
+                                                        actionsAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceAround,
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                    context),
+                                                            child: const Text(
+                                                                "Cancel"),
+                                                          ),
+                                                          ElevatedButton(
+                                                            onPressed: () {
+                                                              // handle the state change to Stand By
+                                                              //..
+                                                              //
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            style: ButtonStyle(
+                                                              backgroundColor:
+                                                                  MaterialStatePropertyAll(Theme.of(
+                                                                          context)
+                                                                      .colorScheme
+                                                                      .primary),
+                                                            ),
+                                                            child: Text(
+                                                              'Confirm',
+                                                              style: TextStyle(
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .background,
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      );
+                                                    });
+                                              } else if (woState ==
+                                                  workOrderStatus[0]) {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title:
+                                                            const Text('Alert'),
+                                                        content: const Text(
+                                                            'Your work order state is still In Progress!'),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                    context),
+                                                            child: const Text(
+                                                                'OK'),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    });
+                                              }
+                                            },
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStatePropertyAll(
+                                                      Theme.of(context)
+                                                          .colorScheme
+                                                          .primary),
+                                            ),
+                                            child: Text(
+                                              'Confirm',
+                                              style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .background,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
                                   ],
                                 );
                               })),

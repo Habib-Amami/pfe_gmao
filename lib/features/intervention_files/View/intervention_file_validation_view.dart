@@ -462,146 +462,138 @@ class _InterventionFileValidationView
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                SizedBox(
-                                  width: 100,
-                                  child: FilledButton(
-                                    style: ButtonStyle(
-                                      backgroundColor: MaterialStatePropertyAll(
-                                          Theme.of(context)
-                                              .colorScheme
-                                              .primary),
-                                    ),
-                                    onPressed: () {
-                                      showDialog(
-                                        barrierDismissible: false,
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: const Text('Confirmation'),
-                                            content: const Text(
-                                              'Do you really want to validate this intervention file?',
-                                            ),
-                                            actions: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  TextButton(
-                                                    onPressed: () =>
-                                                        Navigator.pop(context),
-                                                    child: const Text('Cancel'),
-                                                  ),
-                                                  FilledButton(
-                                                    onPressed: () {
-                                                      String notificationID =
-                                                          const Uuid().v4();
-                                                      setState(
-                                                        () {
-                                                          InterventionFileModel()
-                                                              .changeInterventionFileStatus(
-                                                            equipmentID: widget
-                                                                .equipmentID,
-                                                            equipmentDiscipline:
-                                                                widget
-                                                                    .equipmentDiscipline,
-                                                            interventionFileID:
-                                                                widget
-                                                                    .interventionFileID,
-                                                            interventionType: widget
-                                                                .interventionType,
-                                                            newStatus:
-                                                                interventionFileStatus[
-                                                                    0],
-                                                          );
-                                                        },
-                                                      );
-                                                      NotificationsModel()
-                                                          .sendNotificationToDevice(
-                                                        deviceToken: widget
-                                                            .interventionFileCreatorToken,
-                                                        notificationTitle:
-                                                            "Validation Update",
-                                                        notificationBody:
-                                                            "The intervention file you created for ${widget.equipmentTagName} was validated",
-                                                      );
-                                                      NotificationsModel()
-                                                          .addValidationNotificationUpdateDB(
-                                                        notificationID:
-                                                            notificationID,
-                                                        notificationTitle:
-                                                            "Validation Update",
-                                                        notificationBody:
-                                                            "The intervention file you created for ${widget.equipmentTagName} was validated",
-                                                        interventionFileCreatorID:
-                                                            widget
-                                                                .interventionFileCreatorID,
-                                                        interventionFileCreatorToken:
-                                                            widget
-                                                                .interventionFileCreatorToken,
-                                                        interventionFileID: widget
-                                                            .interventionFileID,
-                                                        interventionType: widget
-                                                            .interventionType,
-                                                        equipmentID:
-                                                            widget.equipmentID,
-                                                        equipmentTagName: widget
-                                                            .equipmentTagName,
-                                                        equipmentDiscipline: widget
-                                                            .equipmentDiscipline,
-                                                      );
-                                                      controller
-                                                          .addPreventiveInterventions(
-                                                        startDate:
-                                                            interventionFile
-                                                                .startingDay,
-                                                        forecast:
-                                                            interventionFile
-                                                                .forecast,
-                                                        interventionFileID: widget
-                                                            .interventionFileID,
-                                                        equipmentTagName: widget
-                                                            .equipmentTagName,
-                                                        equipmentDiscipline: widget
-                                                            .equipmentDiscipline,
-                                                        mechanicalTechnician:
-                                                            interventionFile
-                                                                .mechanicalTechnician,
-                                                        electricalTechnician:
-                                                            interventionFile
-                                                                .electricalTechnician,
-                                                        instrumentTechnician:
-                                                            interventionFile
-                                                                .instrumentTechnician,
-                                                        spareParts:
-                                                            interventionFile
-                                                                .spareParts,
-                                                        tools: interventionFile
-                                                            .tools,
-                                                        interventionStatus:
-                                                            interventionFileStatus[
-                                                                0],
-                                                        interventionTask:
-                                                            interventionFile
-                                                                .interventionTask,
-                                                      );
+                                FilledButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStatePropertyAll(
+                                        Theme.of(context).colorScheme.primary),
+                                  ),
+                                  onPressed: () {
+                                    showDialog(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text('Confirmation'),
+                                          content: const Text(
+                                            'Do you really want to validate this intervention file?',
+                                          ),
+                                          actions: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                  child: const Text('Cancel'),
+                                                ),
+                                                FilledButton(
+                                                  onPressed: () {
+                                                    String notificationID =
+                                                        const Uuid().v4();
+                                                    setState(
+                                                      () {
+                                                        InterventionFileModel()
+                                                            .changeInterventionFileStatus(
+                                                          equipmentID: widget
+                                                              .equipmentID,
+                                                          equipmentDiscipline:
+                                                              widget
+                                                                  .equipmentDiscipline,
+                                                          interventionFileID: widget
+                                                              .interventionFileID,
+                                                          interventionType: widget
+                                                              .interventionType,
+                                                          newStatus:
+                                                              interventionFileStatus[
+                                                                  0],
+                                                        );
+                                                      },
+                                                    );
+                                                    NotificationsModel()
+                                                        .sendNotificationToDevice(
+                                                      deviceToken: widget
+                                                          .interventionFileCreatorToken,
+                                                      notificationTitle:
+                                                          "Validation Update",
+                                                      notificationBody:
+                                                          "The intervention file you created for ${widget.equipmentTagName} was validated",
+                                                    );
+                                                    NotificationsModel()
+                                                        .addValidationNotificationUpdateDB(
+                                                      notificationID:
+                                                          notificationID,
+                                                      notificationTitle:
+                                                          "Validation Update",
+                                                      notificationBody:
+                                                          "The intervention file you created for ${widget.equipmentTagName} was validated",
+                                                      interventionFileCreatorID:
+                                                          widget
+                                                              .interventionFileCreatorID,
+                                                      interventionFileCreatorToken:
+                                                          widget
+                                                              .interventionFileCreatorToken,
+                                                      interventionFileID: widget
+                                                          .interventionFileID,
+                                                      interventionType: widget
+                                                          .interventionType,
+                                                      equipmentID:
+                                                          widget.equipmentID,
+                                                      equipmentTagName: widget
+                                                          .equipmentTagName,
+                                                      equipmentDiscipline: widget
+                                                          .equipmentDiscipline,
+                                                    );
+                                                    controller
+                                                        .addPreventiveInterventions(
+                                                      startDate:
+                                                          interventionFile
+                                                              .startingDay,
+                                                      forecast: interventionFile
+                                                          .forecast,
+                                                      interventionFileID: widget
+                                                          .interventionFileID,
+                                                      equipmentTagName: widget
+                                                          .equipmentTagName,
+                                                      equipmentDiscipline: widget
+                                                          .equipmentDiscipline,
+                                                      mechanicalTechnician:
+                                                          interventionFile
+                                                              .mechanicalTechnician,
+                                                      electricalTechnician:
+                                                          interventionFile
+                                                              .electricalTechnician,
+                                                      instrumentTechnician:
+                                                          interventionFile
+                                                              .instrumentTechnician,
+                                                      spareParts:
+                                                          interventionFile
+                                                              .spareParts,
+                                                      tools: interventionFile
+                                                          .tools,
+                                                      interventionStatus:
+                                                          interventionFileStatus[
+                                                              0],
+                                                      interventionTask:
+                                                          interventionFile
+                                                              .interventionTask,
+                                                    );
 
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: const Text(
-                                                      'Validate',
-                                                    ),
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text(
+                                                    'Validate',
                                                   ),
-                                                ],
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    },
-                                    child: const Text(
-                                      'Validate',
-                                    ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Validate',
                                   ),
                                 ),
                                 SizedBox(
