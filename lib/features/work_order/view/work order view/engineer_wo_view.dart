@@ -561,7 +561,6 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                               .toList(),
                                           onChanged: (value) {
                                             woState = value as String;
-                                            debugPrint(woState);
                                           },
                                         ),
                                       ),
