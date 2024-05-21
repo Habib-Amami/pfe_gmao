@@ -661,7 +661,7 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
                                             notificationTitle:
                                                 "New Work Order Assigned",
                                             notificationBody:
-                                                "You have been assigned a new work order for ${widget.equipmentTagName} discipline.Created by ${admin.userName}.",
+                                                "You have been assigned a new work order for ${widget.equipmentTagName}.",
                                             workorderCreatorID: admin.id,
                                             technicianID: selectedEngineer!.id,
                                             workOrderID: orderID,
