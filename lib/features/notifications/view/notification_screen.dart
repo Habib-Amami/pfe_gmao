@@ -41,7 +41,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         body: const TabBarView(
           children: [
             InterventionFilesNotificationsTab(),
-            WorkorderNotificationsTab(),
+            WorkOrderNotificationsTab(),
           ],
         ),
 
