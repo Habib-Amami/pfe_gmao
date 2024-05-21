@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pfe_gmao/features/work_order/model/constants/work_order_status.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../../interventions/model/constants/intervention_status.dart';
@@ -7,6 +8,45 @@ import 'data_models/work_order.dart';
 
 class WorkOrderModel {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  Future<void> updateWorkOrderStatus({
+    required String workOrderID,
+    required String newStatus,
+    required String creatorID,
+    required String technicianID,
+    required String interventionID,
+  }) async {
+    // Reference to the work order in the creator's document
+    DocumentReference creatorWorkOrderRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(creatorID)
+        .collection('work_order')
+        .doc(workOrderID);
+
+    // Reference to the work order in the technician's document
+    DocumentReference technicianWorkOrderRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(technicianID)
+        .collection('work_order')
+        .doc(workOrderID);
+
+    //Use a WriteBatch to perform both updates atomically
+    WriteBatch batch = firestore.batch();
+
+    if (newStatus == workOrderStatus[4]) {
+      //Step 1 : change the intervention status to 'In Progress'
+      batch.update(
+        firestore.collection("interventions").doc(interventionID),
+        {"interventionStatus": interventionStatus[2]},
+      );
+    } else {
+      // Update the status in both documents
+      batch.update(creatorWorkOrderRef, {'workorderStatus': newStatus});
+      batch.update(technicianWorkOrderRef, {'workorderStatus': newStatus});
+    }
+
+    // Commit the batch
+    await batch.commit();
+  }
 
   Future<void> addWorkOrderDB({
     required String workorderID,
@@ -58,7 +98,7 @@ class WorkOrderModel {
       firestore.collection("interventions").doc(interventionID),
       {"interventionStatus": interventionStatus[1]},
     );
-    //Step 2 : add work order to the selecetd engineer
+    //Step 2 : add work order to the selected engineer
     batch.set(
       firestore
           .collection(userCollectionRef)
@@ -76,7 +116,7 @@ class WorkOrderModel {
           .doc(workorderID),
       order.toJson(),
     );
-    //commiting the batch
+    //committing the batch
     await batch.commit();
   }
 }
