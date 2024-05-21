@@ -603,7 +603,6 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
                                       ),
                                       FilledButton(
                                         onPressed: () async {
-                                          //Getting teh
                                           //generating a work order id
                                           String orderID = const Uuid().v4();
                                           //adding work order to database
@@ -650,6 +649,21 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
                                                       .text),
                                             ),
                                           );
+                                          //generating a notification id
+                                          String notificationID =
+                                              const Uuid().v4();
+                                          //adding notification about the new work order in the technician doc
+                                          NotificationsModel()
+                                              .sendDispatchWorkorderNotification(
+                                            notificationID: notificationID,
+                                            notificationTitle:
+                                                "New Work Order Assigned",
+                                            notificationBody:
+                                                "You have been assigned a new work order.For ${widget.equipmentTagName} for the ${widget.equipmentDiscipline} discipline.Created by ${admin.userName}.check your work order list for details.",
+                                            workorderCreatorID: admin.id,
+                                            technicianID: selectedEngineer!.id,
+                                          );
+                                          //sending a push notification
                                           NotificationsModel()
                                               .sendNotificationToDevice(
                                             deviceToken:

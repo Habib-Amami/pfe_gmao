@@ -80,7 +80,7 @@ class _InterventionFilesNotificationsTabState
                 stream: FirebaseFirestore.instance
                     .collection('users')
                     .doc(currentUser!.uid)
-                    .collection('notifications')
+                    .collection('IF_notifications')
                     .orderBy('createdAt', descending: true)
                     .snapshots(),
                 builder: (context, snapshot) {
