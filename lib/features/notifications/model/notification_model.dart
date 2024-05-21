@@ -338,8 +338,8 @@ class NotificationsModel {
         .set(notification.toJson());
   }
 
-  //methode to delete intervention files notifications
-  //TODO : make the methode delete work order notification
+  //method to delete intervention files notifications
+  //TO DO : make the methode delete work order notification
   Future<void> deleteNotification({
     required String notificationID,
   }) async {

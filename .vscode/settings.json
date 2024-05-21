@@ -19,7 +19,8 @@
         "RGBO",
         "Roboto",
         "timelapse",
-        "URLDB"
+        "URLDB",
+        "workorder"
     ],
     "java.configuration.updateBuildConfiguration": "interactive"
 }
