@@ -225,10 +225,8 @@ class _WorkOrderNotificationsTabState extends State<WorkOrderNotificationsTab> {
                                   child: NotificationUI(
                                     notificationTitle:
                                         notifications[index].notificationTitle,
-                                    notificationMessage: notifications[index]
-                                        .notificationBody
-                                        .split('.')
-                                        .first,
+                                    notificationMessage:
+                                        notifications[index].notificationBody,
                                     notificationIcon:
                                         Icons.work_history_rounded,
                                     notificationColor: Colors.lightBlueAccent,
