@@ -1,16 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pfe_gmao/features/notifications/model/notification_model.dart';
-import 'package:pfe_gmao/features/work_order/view/widgets/work_order_action_buttons/engineer/finished_view.dart';
-import 'package:pfe_gmao/features/work_order/view/widgets/work_order_action_buttons/engineer/terminated_view.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../firebase/cloud_firestore_references.dart';
+import '../../../notifications/model/notification_model.dart';
 import '../../model/constants/work_order_status.dart';
 import '../../model/data_models/work_order.dart';
 import '../../model/work_order_model.dart';
+import '../widgets/work_order_action_buttons/engineer/finished_view.dart';
 import '../widgets/work_order_action_buttons/engineer/in_progress_view.dart';
+import '../widgets/work_order_action_buttons/engineer/stand_by_view.dart';
+import '../widgets/work_order_action_buttons/engineer/terminated_view.dart';
 import '../widgets/work_order_form_field.dart';
 import '../widgets/work_order_form_title.dart';
 
@@ -516,7 +517,7 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                                       notificationTitle:
                                                           "Work Order Put On Stand By",
                                                       notificationBody:
-                                                          "A work order for ${wo.equipmentTagName} in put in stand by. By ${wo.technicianUserName}. Stand by reason : $standByReason",
+                                                          "A work order for ${wo.equipmentTagName} was put in stand by state. By ${wo.technicianUserName}.Reason : $standByReason",
                                                       workorderCreatorID:
                                                           wo.workorderCreatorID,
                                                       technicianID:
@@ -543,136 +544,85 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                   )
                                 //If the work order is in Stand By
                                 : wo.workorderStatus == workOrderStatus[1]
-                                    ? Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          //
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              WorkOrderModel()
-                                                  .updateWorkOrderStatus(
-                                                workOrderID: wo.workorderID,
-                                                newStatus: workOrderStatus[0],
-                                                creatorID:
-                                                    wo.workorderCreatorID,
-                                                technicianID: wo.technicianID,
-                                                interventionID:
-                                                    wo.interventionID,
-                                              );
-                                              setState(() {});
-                                            },
-                                            style: const ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStatePropertyAll(
-                                                Color.fromRGBO(
-                                                  25,
-                                                  118,
-                                                  210,
-                                                  1,
-                                                ),
+                                    ? StandByView(
+                                        onProgress: () {
+                                          showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (context) => AlertDialog(
+                                              title: const Text("Confirmation"),
+                                              content: const Text(
+                                                "Are you sure you want to resume this work order ?",
                                               ),
-                                            ),
-                                            child: Text(
-                                              'In Progress',
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .background,
-                                              ),
-                                            ),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              if (numberOfChecked !=
-                                                  wo.steps.length) {
-                                                const snackBar = SnackBar(
-                                                  content: Center(
-                                                      child: Text(
-                                                          'Please make sure that all the steps are done')),
-                                                );
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(snackBar);
-                                              } else {
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return AlertDialog(
-                                                      title: const Text(
-                                                        'Confirmation',
-                                                      ),
-                                                      content: const Text(
-                                                          'Are you sure of sending a validation request?'),
-                                                      actionsAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () =>
-                                                              Navigator.pop(
-                                                                  context),
-                                                          child: const Text(
-                                                            "Cancel",
-                                                          ),
-                                                        ),
-                                                        ElevatedButton(
-                                                          onPressed: () {
-                                                            // handle the state change to finish
-                                                            WorkOrderModel()
-                                                                .updateWorkOrderStatus(
-                                                              workOrderID: wo
-                                                                  .workorderID,
-                                                              newStatus:
-                                                                  workOrderStatus[
-                                                                      3],
-                                                              creatorID: wo
-                                                                  .workorderCreatorID,
-                                                              technicianID: wo
-                                                                  .technicianID,
-                                                              interventionID: wo
-                                                                  .interventionID,
-                                                            );
-                                                            //
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          style: ButtonStyle(
-                                                            backgroundColor:
-                                                                MaterialStatePropertyAll(
-                                                              Theme.of(
-                                                                context,
-                                                              )
-                                                                  .colorScheme
-                                                                  .primary,
-                                                            ),
-                                                          ),
-                                                          child: Text(
-                                                            'Confirm',
-                                                            style: TextStyle(
-                                                              color: Theme.of(
-                                                                context,
-                                                              )
-                                                                  .colorScheme
-                                                                  .background,
-                                                            ),
-                                                          ),
-                                                        )
-                                                      ],
-                                                    );
+                                              actionsAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
                                                   },
-                                                );
-                                              }
-                                            },
-                                            child: Text(
-                                              'Finish',
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .background,
-                                              ),
+                                                  child: const Text("Cancel"),
+                                                ),
+                                                FilledButton(
+                                                  onPressed: () {
+                                                    //Updating the work order state to
+                                                    //'Finished'
+                                                    WorkOrderModel()
+                                                        .updateWorkOrderStatus(
+                                                      workOrderID:
+                                                          wo.workorderID,
+                                                      //'In Progress'
+                                                      newStatus:
+                                                          workOrderStatus[0],
+                                                      creatorID:
+                                                          wo.workorderCreatorID,
+                                                      technicianID:
+                                                          wo.technicianID,
+                                                      interventionID:
+                                                          wo.interventionID,
+                                                    );
+                                                    //sending a push notification
+                                                    NotificationsModel()
+                                                        .sendNotificationToDevice(
+                                                      deviceToken: wo
+                                                          .workorderCreatorToken,
+                                                      notificationTitle:
+                                                          "Work Resumption Notification",
+                                                      notificationBody:
+                                                          "A work order for ${wo.equipmentTagName} was resumed",
+                                                    );
+                                                    //creating a notification id
+                                                    String notificationID =
+                                                        const Uuid().v4();
+                                                    //adding a notification to the admin who created the work order
+                                                    //to request validation
+                                                    NotificationsModel()
+                                                        .sendWorkorderValidationRequestorStandByNotification(
+                                                      notificationID:
+                                                          notificationID,
+                                                      notificationTitle:
+                                                          "Work Resumption Notification",
+                                                      notificationBody:
+                                                          "A work order for ${wo.equipmentTagName} was resumed by ${wo.technicianUserName}",
+                                                      workorderCreatorID:
+                                                          wo.workorderCreatorID,
+                                                      technicianID:
+                                                          wo.technicianID,
+                                                      workOrderID:
+                                                          wo.workorderID,
+                                                      interventionID:
+                                                          wo.interventionID,
+                                                    );
+                                                    setState(() {
+                                                      Navigator.pop(context);
+                                                    });
+                                                  },
+                                                  child: const Text("Resume"),
+                                                )
+                                              ],
                                             ),
-                                          ),
-                                        ],
+                                          );
+                                        },
                                       )
                                     //If the work order is Finished
                                     : wo.workorderStatus == workOrderStatus[2]
