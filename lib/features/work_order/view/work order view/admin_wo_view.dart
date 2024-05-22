@@ -77,253 +77,97 @@ class _AdminWorkOrderViewState extends State<AdminWorkOrderView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Work order information',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
-            ),
+      appBar: AppBar(
+        title: Text(
+          'Work order information',
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        body: FutureBuilder(
-          future: fetchWorkOrderDetails(widget.workOrderID),
-          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            if (snapshot.connectionState == ConnectionState.none) {
-              return const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      color: Colors.red,
-                      size: 50.0,
-                    ),
-                    SizedBox(height: 10.0),
-                    Text("Lost connection"),
-                  ],
-                ),
-              );
-            }
-            // Handle loading state
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    Text("Loading Intervention File ...")
-                  ],
-                ),
-              );
-            }
-            // Show error message if an error occurs
-            if (snapshot.hasError) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    ),
-                  ],
-                ),
-              );
-            }
-            WorkOrder wo = snapshot.data!;
-            return ListView(
-              children: [
-                SingleChildScrollView(
-                  child: Form(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // information
-                          const WorkOrderFormTitle(title: "Equipment Tag name"),
-                          WorkOrderFormField(
-                            readOnly: true,
-                            prefixIcon: const Icon(
-                              Icons.local_offer_outlined,
-                            ),
-                            initialValue: wo.equipmentTagName,
+      ),
+      body: FutureBuilder(
+        future: fetchWorkOrderDetails(widget.workOrderID),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.connectionState == ConnectionState.none) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 50.0,
+                  ),
+                  SizedBox(height: 10.0),
+                  Text("Lost connection"),
+                ],
+              ),
+            );
+          }
+          // Handle loading state
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  Text("Loading Intervention File ...")
+                ],
+              ),
+            );
+          }
+          // Show error message if an error occurs
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  ),
+                ],
+              ),
+            );
+          }
+          WorkOrder wo = snapshot.data!;
+          return ListView(
+            children: [
+              SingleChildScrollView(
+                child: Form(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // information
+                        const WorkOrderFormTitle(title: "Equipment Tag name"),
+                        WorkOrderFormField(
+                          readOnly: true,
+                          prefixIcon: const Icon(
+                            Icons.local_offer_outlined,
                           ),
-                          // information
-                          const WorkOrderFormTitle(title: "Discipline"),
-                          WorkOrderFormField(
-                            readOnly: true,
-                            prefixIcon: const Icon(
-                              Icons.construction_rounded,
-                            ),
-                            initialValue: wo.equipmentDiscipline,
+                          initialValue: wo.equipmentTagName,
+                        ),
+                        // information
+                        const WorkOrderFormTitle(title: "Discipline"),
+                        WorkOrderFormField(
+                          readOnly: true,
+                          prefixIcon: const Icon(
+                            Icons.construction_rounded,
                           ),
-                          // information
-                          const WorkOrderFormTitle(title: "Technician"),
-                          // technician information
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: FutureBuilder(
-                                future: FirebaseFirestore.instance
-                                    .collection(userCollectionRef)
-                                    .doc(wo.technicianID)
-                                    .get(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.none) {
-                                    return const Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.error_outline,
-                                            color: Colors.red,
-                                            size: 50.0,
-                                          ),
-                                          SizedBox(height: 10.0),
-                                          Text("Lost connection"),
-                                        ],
-                                      ),
-                                    );
-                                  }
-                                  if (snapshot.hasError) {
-                                    return Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Center(
-                                            child: Text(
-                                                'Error: ${snapshot.error}'),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const Center(
-                                      child: Column(
-                                        children: [
-                                          CircularProgressIndicator(),
-                                          Text("loading.."),
-                                        ],
-                                      ),
-                                    );
-                                  }
-                                  UserModel technicianInfo =
-                                      UserModel.fromFirestore(
-                                          snapshot.data!, null);
-
-                                  return Card(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primaryContainer,
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8),
-                                          child: CircleAvatar(
-                                            backgroundColor: Theme.of(context)
-                                                .colorScheme
-                                                .primary,
-                                            radius: 40,
-                                            child: CircleAvatar(
-                                              radius: 40,
-                                              backgroundImage: NetworkImage(
-                                                technicianInfo.photoURL,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 12, horizontal: 8.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 2.0),
-                                                child: Text(
-                                                  '${technicianInfo.userName} - ${technicianInfo.serialNumber}',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleLarge,
-                                                ),
-                                              ),
-                                              Text(
-                                                'Email: ${technicianInfo.email}',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium,
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  );
-                                }),
-                          ),
-                          // the rest of work order info
-                          const WorkOrderFormTitle(title: 'Execution Date'),
-                          WorkOrderFormField(
-                            readOnly: true,
-                            prefixIcon: const Icon(
-                              Icons.calendar_month_outlined,
-                            ),
-                            initialValue: wo.executionDay
-                                .toIso8601String()
-                                .split('T')
-                                .first,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Column(
-                                children: [
-                                  const WorkOrderFormTitle(
-                                      title: 'Starting Time'),
-                                  SizedBox(
-                                    width: MediaQuery.sizeOf(context).width / 3,
-                                    child: WorkOrderFormField(
-                                      readOnly: true,
-                                      prefixIcon: const Icon(Icons.timer),
-                                      initialValue:
-                                          formatTimeOfDay(wo.startTime),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  const WorkOrderFormTitle(
-                                      title: 'Finishing Time'),
-                                  SizedBox(
-                                    width: MediaQuery.sizeOf(context).width / 3,
-                                    child: WorkOrderFormField(
-                                      readOnly: true,
-                                      prefixIcon: const Icon(Icons.timer_off),
-                                      initialValue:
-                                          formatTimeOfDay(wo.finishTime),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          FutureBuilder<Intervention?>(
-                              future: _interventionFuture,
-                              builder: ((context, snapshot) {
-                                if (!snapshot.hasData ||
-                                    snapshot.data == null) {
-                                  return const Center(
-                                      child: Text('No intervention found.'));
-                                }
+                          initialValue: wo.equipmentDiscipline,
+                        ),
+                        // information
+                        const WorkOrderFormTitle(title: "Technician"),
+                        // technician information
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: FutureBuilder(
+                              future: FirebaseFirestore.instance
+                                  .collection(userCollectionRef)
+                                  .doc(wo.technicianID)
+                                  .get(),
+                              builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.none) {
                                   return const Center(
@@ -367,378 +211,389 @@ class _AdminWorkOrderViewState extends State<AdminWorkOrderView> {
                                     ),
                                   );
                                 }
-                                Intervention intervention = snapshot.data!;
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const WorkOrderFormTitle(
-                                        title: 'Main task'),
-                                    WorkOrderFormField(
-                                      initialValue:
-                                          intervention.interventionTask,
-                                      readOnly: true,
-                                      prefixIcon: const Icon(
-                                        Icons.calendar_month_outlined,
-                                      ),
-                                    ),
-                                    // steps
-                                    const WorkOrderFormTitle(
-                                        title: 'Intervention Steps'),
-                                    for (var step in wo.steps)
-                                      Padding(
-                                        padding: step == wo.steps.last
-                                            ? const EdgeInsets.only(
-                                                bottom: 16.0)
-                                            : const EdgeInsets.only(bottom: 0),
-                                        child: Card(
-                                          child: ListTile(
-                                            title: Text(
-                                              '${wo.steps.indexOf(step) + 1}- $step',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyLarge!
-                                                  .copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .primary,
-                                                  ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                UserModel technicianInfo =
+                                    UserModel.fromFirestore(
+                                        snapshot.data!, null);
 
-                                    const WorkOrderFormTitle(
-                                        title: 'Spare Parts'),
-                                    for (var item in intervention.spareParts)
+                                return Card(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
+                                  child: Row(
+                                    children: [
                                       Padding(
-                                        padding: item ==
-                                                intervention.spareParts.last
-                                            ? const EdgeInsets.only(
-                                                bottom: 16.0)
-                                            : const EdgeInsets.only(bottom: 0),
-                                        child: Card(
-                                          child: ListTile(
-                                            title: Text(
-                                              '- $item',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyLarge!
-                                                  .copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .primary,
-                                                  ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-
-                                    // tools
-                                    const WorkOrderFormTitle(title: 'Tools'),
-                                    for (var item in intervention.tools)
-                                      Padding(
-                                        padding: item == intervention.tools.last
-                                            ? const EdgeInsets.only(
-                                                bottom: 16.0)
-                                            : const EdgeInsets.only(bottom: 0),
-                                        child: Card(
-                                          child: ListTile(
-                                            title: Text(
-                                              '- $item',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyLarge!
-                                                  .copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .primary,
-                                                  ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                );
-                              })),
-
-                          wo.workorderStatus == workOrderStatus[3]
-                              ? Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    ElevatedButton(
-                                      style: const ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStatePropertyAll(
-                                                Color(0xffba1a1a)),
-                                      ),
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title:
-                                                    const Text('Confirmation'),
-                                                content: const Text(
-                                                    'Are you sure about denying this work order?'),
-                                                actionsAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: const Text('Cancel'),
-                                                  ),
-                                                  ElevatedButton(
-                                                    style: ButtonStyle(
-                                                      backgroundColor:
-                                                          MaterialStatePropertyAll(
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .primary),
-                                                    ),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: const Text(
-                                                      'Confirm',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              );
-                                            });
-                                      },
-                                      child: const Text(
-                                        'Deny',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStatePropertyAll(
-                                                Theme.of(context)
-                                                    .colorScheme
-                                                    .primary),
-                                      ),
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title:
-                                                    const Text('Confirmation'),
-                                                content: const Text(
-                                                    'Are you sure about validating this work order?'),
-                                                actionsAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: const Text('Cancel'),
-                                                  ),
-                                                  ElevatedButton(
-                                                    style: ButtonStyle(
-                                                      backgroundColor:
-                                                          MaterialStatePropertyAll(
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .primary),
-                                                    ),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: const Text(
-                                                      'Confirm',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              );
-                                            });
-                                      },
-                                      child: const Text(
-                                        'Validate',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                )
-                              : wo.workorderStatus == workOrderStatus[0]
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        ElevatedButton(
-                                          style: const ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStatePropertyAll(
-                                                    Color(0xffba1a1a)),
-                                          ),
-                                          onPressed: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    title: const Text(
-                                                        'Confirmation'),
-                                                    content: const Text(
-                                                        'Are you sure about denying this work order?'),
-                                                    actionsAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: const Text(
-                                                            'Cancel'),
-                                                      ),
-                                                      ElevatedButton(
-                                                        style: ButtonStyle(
-                                                          backgroundColor:
-                                                              MaterialStatePropertyAll(
-                                                                  Theme.of(
-                                                                          context)
-                                                                      .colorScheme
-                                                                      .primary),
-                                                        ),
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: const Text(
-                                                          'Confirm',
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                });
-                                          },
-                                          child: const Text(
-                                            'Deny',
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                        ElevatedButton(
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStatePropertyAll(
-                                                    Theme.of(context)
-                                                        .colorScheme
-                                                        .primary),
-                                          ),
-                                          onPressed: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    title: const Text(
-                                                        'Confirmation'),
-                                                    content: const Text(
-                                                        'Are you sure about validating this work order?'),
-                                                    actionsAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: const Text(
-                                                            'Cancel'),
-                                                      ),
-                                                      ElevatedButton(
-                                                        style: ButtonStyle(
-                                                          backgroundColor:
-                                                              MaterialStatePropertyAll(
-                                                                  Theme.of(
-                                                                          context)
-                                                                      .colorScheme
-                                                                      .primary),
-                                                        ),
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: const Text(
-                                                          'Confirm',
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                });
-                                          },
-                                          child: const Text(
-                                            'Validate',
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  : wo.workorderStatus == workOrderStatus[1]
-                                      ? const DeniedAlert()
-                                      : wo.workorderStatus == workOrderStatus[2]
-                                          ? const StandByAlert()
-                                          : const TerminatedAlert(),
-                          wo.workorderStatus == workOrderStatus[0]
-                              ? Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Center(
-                                    child: Text(
-                                      'This work order is still In Progress',
-                                      style: TextStyle(
-                                          color: Theme.of(context)
+                                        padding: const EdgeInsets.all(8),
+                                        child: CircleAvatar(
+                                          backgroundColor: Theme.of(context)
                                               .colorScheme
-                                              .error,
-                                          fontSize: 14),
+                                              .primary,
+                                          radius: 40,
+                                          child: CircleAvatar(
+                                            radius: 40,
+                                            backgroundImage: NetworkImage(
+                                              technicianInfo.photoURL,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12, horizontal: 8.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 2.0),
+                                              child: Text(
+                                                '${technicianInfo.userName} - ${technicianInfo.serialNumber}',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleLarge,
+                                              ),
+                                            ),
+                                            Text(
+                                              'Email: ${technicianInfo.email}',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium,
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }),
+                        ),
+                        // the rest of work order info
+                        const WorkOrderFormTitle(title: 'Execution Date'),
+                        WorkOrderFormField(
+                          readOnly: true,
+                          prefixIcon: const Icon(
+                            Icons.calendar_month_outlined,
+                          ),
+                          initialValue: wo.executionDay
+                              .toIso8601String()
+                              .split('T')
+                              .first,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              children: [
+                                const WorkOrderFormTitle(
+                                    title: 'Starting Time'),
+                                SizedBox(
+                                  width: MediaQuery.sizeOf(context).width / 3,
+                                  child: WorkOrderFormField(
+                                    readOnly: true,
+                                    prefixIcon: const Icon(Icons.timer),
+                                    initialValue: formatTimeOfDay(wo.startTime),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                const WorkOrderFormTitle(
+                                    title: 'Finishing Time'),
+                                SizedBox(
+                                  width: MediaQuery.sizeOf(context).width / 3,
+                                  child: WorkOrderFormField(
+                                    readOnly: true,
+                                    prefixIcon: const Icon(Icons.timer_off),
+                                    initialValue:
+                                        formatTimeOfDay(wo.finishTime),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        FutureBuilder<Intervention?>(
+                            future: _interventionFuture,
+                            builder: ((context, snapshot) {
+                              if (!snapshot.hasData || snapshot.data == null) {
+                                return const Center(
+                                    child: Text('No intervention found.'));
+                              }
+                              if (snapshot.connectionState ==
+                                  ConnectionState.none) {
+                                return const Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.error_outline,
+                                        color: Colors.red,
+                                        size: 50.0,
+                                      ),
+                                      SizedBox(height: 10.0),
+                                      Text("Lost connection"),
+                                    ],
+                                  ),
+                                );
+                              }
+                              if (snapshot.hasError) {
+                                return Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Center(
+                                        child: Text('Error: ${snapshot.error}'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: Column(
+                                    children: [
+                                      CircularProgressIndicator(),
+                                      Text("loading.."),
+                                    ],
+                                  ),
+                                );
+                              }
+                              Intervention intervention = snapshot.data!;
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const WorkOrderFormTitle(title: 'Main task'),
+                                  WorkOrderFormField(
+                                    initialValue: intervention.interventionTask,
+                                    readOnly: true,
+                                    prefixIcon: const Icon(
+                                      Icons.calendar_month_outlined,
                                     ),
                                   ),
-                                )
-                              : const SizedBox.shrink(),
-                        ],
-                      ),
+                                  // steps
+                                  const WorkOrderFormTitle(
+                                      title: 'Intervention Steps'),
+                                  for (var step in wo.steps)
+                                    Padding(
+                                      padding: step == wo.steps.last
+                                          ? const EdgeInsets.only(bottom: 16.0)
+                                          : const EdgeInsets.only(bottom: 0),
+                                      child: Card(
+                                        child: ListTile(
+                                          title: Text(
+                                            '${wo.steps.indexOf(step) + 1}- $step',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                  const WorkOrderFormTitle(
+                                      title: 'Spare Parts'),
+                                  for (var item in intervention.spareParts)
+                                    Padding(
+                                      padding: item ==
+                                              intervention.spareParts.last
+                                          ? const EdgeInsets.only(bottom: 16.0)
+                                          : const EdgeInsets.only(bottom: 0),
+                                      child: Card(
+                                        child: ListTile(
+                                          title: Text(
+                                            '- $item',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                  // tools
+                                  const WorkOrderFormTitle(title: 'Tools'),
+                                  for (var item in intervention.tools)
+                                    Padding(
+                                      padding: item == intervention.tools.last
+                                          ? const EdgeInsets.only(bottom: 16.0)
+                                          : const EdgeInsets.only(bottom: 0),
+                                      child: Card(
+                                        child: ListTile(
+                                          title: Text(
+                                            '- $item',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              );
+                            })),
+
+                        wo.workorderStatus == workOrderStatus[2]
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  ElevatedButton(
+                                    style: const ButtonStyle(
+                                      backgroundColor: MaterialStatePropertyAll(
+                                          Color(0xffba1a1a)),
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: const Text('Confirmation'),
+                                              content: const Text(
+                                                  'Are you sure about denying this work order?'),
+                                              actionsAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text('Cancel'),
+                                                ),
+                                                ElevatedButton(
+                                                  style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStatePropertyAll(
+                                                            Theme.of(context)
+                                                                .colorScheme
+                                                                .primary),
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text(
+                                                    'Confirm',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          });
+                                    },
+                                    child: const Text(
+                                      'Deny',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    style: ButtonStyle(
+                                      backgroundColor: MaterialStatePropertyAll(
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .primary),
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: const Text('Confirmation'),
+                                              content: const Text(
+                                                  'Are you sure about validating this work order?'),
+                                              actionsAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text('Cancel'),
+                                                ),
+                                                ElevatedButton(
+                                                  style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStatePropertyAll(
+                                                            Theme.of(context)
+                                                                .colorScheme
+                                                                .primary),
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text(
+                                                    'Confirm',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          });
+                                    },
+                                    child: const Text(
+                                      'Validate',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
+                            : wo.workorderStatus == workOrderStatus[2]
+                                ? const StandByAlert()
+                                : const TerminatedAlert(),
+                        wo.workorderStatus == workOrderStatus[0]
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Center(
+                                  child: Text(
+                                    'This work order is still In Progress',
+                                    style: TextStyle(
+                                        color:
+                                            Theme.of(context).colorScheme.error,
+                                        fontSize: 14),
+                                  ),
+                                ),
+                              )
+                            : const SizedBox.shrink(),
+                      ],
                     ),
                   ),
-                )
-              ],
-            );
-          },
-        ));
+                ),
+              )
+            ],
+          );
+        },
+      ),
+    );
   }
 }
