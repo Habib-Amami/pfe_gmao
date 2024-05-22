@@ -338,6 +338,35 @@ class NotificationsModel {
         .set(notification.toJson());
   }
 
+  // method to validate or deny the termination request
+  Future<void> validateOrDenyRequestNotification({
+    required String notificationID,
+    required String notificationTitle,
+    required String notificationBody,
+    required String workorderCreatorID,
+    required String technicianID,
+    required String workOrderID,
+    required String interventionID,
+  }) async {
+    //creating a work order notification
+    WorkorderNotification notification = WorkorderNotification(
+        notificationID: notificationID,
+        notificationTitle: notificationTitle,
+        notificationBody: notificationBody,
+        workorderCreatorID: workorderCreatorID,
+        technicianID: technicianID,
+        createdAt: DateTime.now(),
+        workOrderID: workOrderID,
+        interventionID: interventionID);
+    //adding a notification in the engineer side
+    await firestore
+        .collection(userCollectionRef)
+        .doc(technicianID)
+        .collection("WO_notifications")
+        .doc(notificationID)
+        .set(notification.toJson());
+  }
+
   //method to change the work order status
   Future<void> sendWorkorderValidationRequestorStandByNotification({
     required String notificationID,

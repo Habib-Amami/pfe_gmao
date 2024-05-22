@@ -108,7 +108,10 @@ class WorkOrderModel {
     WriteBatch batch = firestore.batch();
 
     if (newStatus == workOrderStatus[3]) {
-      //Step 1 : change the intervention status to 'In Progress'
+      // Update the status in both documents
+      batch.update(creatorWorkOrderRef, {'workorderStatus': newStatus});
+      batch.update(technicianWorkOrderRef, {'workorderStatus': newStatus});
+      // change the intervention status to 'In Progress'
       batch.update(
         firestore.collection("interventions").doc(interventionID),
         {"interventionStatus": interventionStatus[2]},
