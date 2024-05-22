@@ -80,7 +80,7 @@ class _InProgressViewState extends State<InProgressView> {
                               technicianID: widget.workOrder.technicianID,
                               interventionID: widget.workOrder.interventionID,
                             );
-                            //seding a push notification
+                            //sending a push notification
                             NotificationsModel().sendNotificationToDevice(
                               deviceToken:
                                   widget.workOrder.workorderCreatorToken,
@@ -94,7 +94,7 @@ class _InProgressViewState extends State<InProgressView> {
                             //adding a notification to the admin who created the work order
                             //to request validation
                             NotificationsModel()
-                                .sendWorkorderValidationRequestorStanfByNotification(
+                                .sendWorkorderValidationRequestorStandByNotification(
                               notificationID: notificationID,
                               notificationTitle:
                                   "Work Order validation Request",
@@ -121,9 +121,17 @@ class _InProgressViewState extends State<InProgressView> {
         //to Stand By
         SizedBox(
           width: 130,
-          child: FilledButton.icon(
-            icon: const Icon(Icons.pause),
-            label: const Text('Stand By'),
+          child: ElevatedButton.icon(
+            icon: Icon(
+              Icons.pause,
+              color: Theme.of(context).colorScheme.background,
+            ),
+            label: Text(
+              'Stand By',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.background,
+              ),
+            ),
             style: ButtonStyle(
               backgroundColor:
                   MaterialStatePropertyAll(Theme.of(context).colorScheme.error),
@@ -182,49 +190,47 @@ class _InProgressViewState extends State<InProgressView> {
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
                             _formkey.currentState!.save();
+
+                            //update the work order state to
+                            //'Stand By'
+                            WorkOrderModel().updateWorkOrderStatus(
+                              workOrderID: widget.workOrder.workorderID,
+                              //'Finished'
+                              newStatus: workOrderStatus[1],
+                              creatorID: widget.workOrder.workorderCreatorID,
+                              technicianID: widget.workOrder.technicianID,
+                              interventionID: widget.workOrder.interventionID,
+                            );
+                            //seding a push notification
+                            NotificationsModel().sendNotificationToDevice(
+                              deviceToken:
+                                  widget.workOrder.workorderCreatorToken,
+                              notificationTitle: "Work Order Stand by Update",
+                              notificationBody:
+                                  "A work order for ${widget.workOrder.equipmentTagName} was put on stand by",
+                            );
+
+                            //creating a notification id
+                            String notificationID = const Uuid().v4();
+                            //adding a notification to the admin who created the work order
+                            //Stand by
+                            NotificationsModel()
+                                .sendWorkorderValidationRequestorStandByNotification(
+                              notificationID: notificationID,
+                              notificationTitle: "Work Order Put On Stand By",
+                              notificationBody:
+                                  "A work order for ${widget.workOrder.equipmentTagName} in put in stand by. By ${widget.workOrder.technicianUserName}. Stand by reason : $_standByReason",
+                              workorderCreatorID:
+                                  widget.workOrder.workorderCreatorID,
+                              technicianID: widget.workOrder.technicianID,
+                              workOrderID: widget.workOrder.workorderID,
+                              interventionID: widget.workOrder.interventionID,
+                            );
                             setState(() {
-                              //update the work order state to
-                              //'Stand By'
-                              WorkOrderModel().updateWorkOrderStatus(
-                                workOrderID: widget.workOrder.workorderID,
-                                //'Finished'
-                                newStatus: workOrderStatus[1],
-                                creatorID: widget.workOrder.workorderCreatorID,
-                                technicianID: widget.workOrder.technicianID,
-                                interventionID: widget.workOrder.interventionID,
-                              );
-                              //seding a push notification
-                              NotificationsModel().sendNotificationToDevice(
-                                deviceToken:
-                                    widget.workOrder.workorderCreatorToken,
-                                notificationTitle: "Work Order Stand by Update",
-                                notificationBody:
-                                    "A work order for ${widget.workOrder.equipmentTagName} was put on stand by",
-                              );
-                              //creating a notification id
-                              String notificationID = const Uuid().v4();
-                              //adding a notification to the admin who created the work order
-                              //Stand by
-                              NotificationsModel()
-                                  .sendWorkorderValidationRequestorStanfByNotification(
-                                notificationID: notificationID,
-                                notificationTitle: "Work Order Put On Stand By",
-                                notificationBody:
-                                    "A work order for ${widget.workOrder.equipmentTagName} in put in stand by. By ${widget.workOrder.technicianUserName}. Stand by reason : $_standByReason",
-                                workorderCreatorID:
-                                    widget.workOrder.workorderCreatorID,
-                                technicianID: widget.workOrder.technicianID,
-                                workOrderID: widget.workOrder.workorderID,
-                                interventionID: widget.workOrder.interventionID,
-                              );
+                              Navigator.pop(context);
                             });
                           }
                         },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll(
-                            Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
                         child: const Text(
                           'Confirm',
                         ),

@@ -311,7 +311,7 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               //'Finished'
-                              child: wo.workorderStatus == workOrderStatus[3]
+                              child: wo.workorderStatus == workOrderStatus[2]
                                   ? const FinishedView()
                                   //'In Progress'
                                   : wo.workorderStatus == workOrderStatus[0]
@@ -451,7 +451,7 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                                     }
                                                   },
                                                   child: Text(
-                                                    'Stand By',
+                                                    'Finish',
                                                     style: TextStyle(
                                                       color: Theme.of(context)
                                                           .colorScheme

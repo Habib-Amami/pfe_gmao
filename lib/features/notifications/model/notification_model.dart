@@ -307,9 +307,9 @@ class NotificationsModel {
         .set(notification.toJson());
   }
 
-  /// work order notification methodes ///
+  /// work order notification methods ///
 
-  //Fuction to add a notification to the engineer that he got a new work order
+  //Function to add a notification to the engineer that he got a new work order
   Future<void> sendDispatchWorkorderNotification({
     required String notificationID,
     required String notificationTitle,
@@ -338,8 +338,8 @@ class NotificationsModel {
         .set(notification.toJson());
   }
 
-  //methode to change the work order status
-  Future<void> sendWorkorderValidationRequestorStanfByNotification({
+  //method to change the work order status
+  Future<void> sendWorkorderValidationRequestorStandByNotification({
     required String notificationID,
     required String notificationTitle,
     required String notificationBody,
@@ -369,7 +369,7 @@ class NotificationsModel {
   }
 
   //method to delete intervention files notifications
-  //TO DO : make the methode delete work order notification
+  //TO DO : make the method delete work order notification
   Future<void> deleteNotification({
     required String notificationID,
   }) async {
