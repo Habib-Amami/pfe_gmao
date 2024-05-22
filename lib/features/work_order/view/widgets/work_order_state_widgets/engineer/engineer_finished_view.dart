@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class FinishedView extends StatelessWidget {
-  const FinishedView({super.key});
+class EngineerFinishedView extends StatelessWidget {
+  const EngineerFinishedView({super.key});
 
   @override
   Widget build(BuildContext context) {

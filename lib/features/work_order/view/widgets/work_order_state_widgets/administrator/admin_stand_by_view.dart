@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class TerminatedView extends StatelessWidget {
-  const TerminatedView({super.key});
+class AdminStandByView extends StatelessWidget {
+  const AdminStandByView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -9,16 +9,12 @@ class TerminatedView extends StatelessWidget {
       height: 70,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.green,
+        color: Colors.orange,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Center(
+      child: const Center(
         child: Text(
-          'This work order is terminated',
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.background,
-            fontSize: 18,
-          ),
+          'This work order is in Stand by mode',
         ),
       ),
     );

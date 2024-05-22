@@ -8,12 +8,12 @@ import '../../../notifications/model/notification_model.dart';
 import '../../model/constants/work_order_status.dart';
 import '../../model/data_models/work_order.dart';
 import '../../model/work_order_model.dart';
-import '../widgets/work_order_action_buttons/engineer/finished_view.dart';
-import '../widgets/work_order_action_buttons/engineer/in_progress_view.dart';
-import '../widgets/work_order_action_buttons/engineer/stand_by_view.dart';
-import '../widgets/work_order_action_buttons/engineer/terminated_view.dart';
 import '../widgets/work_order_form_field.dart';
 import '../widgets/work_order_form_title.dart';
+import '../widgets/work_order_state_widgets/engineer/engineer_finished_view.dart';
+import '../widgets/work_order_state_widgets/engineer/engineer_in_progress_view.dart';
+import '../widgets/work_order_state_widgets/engineer/engineer_stand_by_view.dart';
+import '../widgets/work_order_state_widgets/engineer/engineer_terminated_view.dart';
 
 class EngineerWorkOrderView extends StatefulWidget {
   const EngineerWorkOrderView({
@@ -315,7 +315,7 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                             //
                             //If the work order is In Progress
                             wo.workorderStatus == workOrderStatus[0]
-                                ? InProgressView(
+                                ? EngineerInProgressView(
                                     onFinished: () {
                                       //if all the steps were not checked
                                       if (numberOfChecked < wo.steps.length) {
@@ -544,7 +544,7 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                   )
                                 //If the work order is in Stand By
                                 : wo.workorderStatus == workOrderStatus[1]
-                                    ? StandByView(
+                                    ? EngineerStandByView(
                                         onProgress: () {
                                           showDialog(
                                             context: context,
@@ -626,11 +626,11 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                       )
                                     //If the work order is Finished
                                     : wo.workorderStatus == workOrderStatus[2]
-                                        ? const FinishedView()
+                                        ? const EngineerFinishedView()
                                         //If the work order is in Terminated'
                                         : wo.workorderStatus ==
                                                 workOrderStatus[3]
-                                            ? const TerminatedView()
+                                            ? const EngineerTerminatedView()
                                             : const SizedBox.shrink()
                           ],
                         ),

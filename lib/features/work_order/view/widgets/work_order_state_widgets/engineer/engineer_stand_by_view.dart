@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class StandByView extends StatelessWidget {
+class EngineerStandByView extends StatelessWidget {
   final void Function() onProgress;
 
-  const StandByView({
+  const EngineerStandByView({
     super.key,
     required this.onProgress,
   });

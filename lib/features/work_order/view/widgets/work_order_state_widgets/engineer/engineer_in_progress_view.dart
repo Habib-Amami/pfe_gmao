@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-class InProgressView extends StatefulWidget {
+class EngineerInProgressView extends StatefulWidget {
   final void Function() onFinished;
   final void Function() onStrandBy;
-  const InProgressView({
+  const EngineerInProgressView({
     super.key,
     required this.onFinished,
     required this.onStrandBy,
   });
 
   @override
-  State<InProgressView> createState() => _InProgressViewState();
+  State<EngineerInProgressView> createState() => _EngineerInProgressViewState();
 }
 
-class _InProgressViewState extends State<InProgressView> {
+class _EngineerInProgressViewState extends State<EngineerInProgressView> {
   @override
   Widget build(BuildContext context) {
     return Row(

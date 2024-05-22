@@ -1,15 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pfe_gmao/features/notifications/model/notification_model.dart';
-import 'package:pfe_gmao/features/profile_management/model/user.dart';
-import 'package:pfe_gmao/features/work_order/model/constants/work_order_status.dart';
-import 'package:pfe_gmao/features/work_order/model/data_models/work_order.dart';
-import 'package:pfe_gmao/features/work_order/model/work_order_model.dart';
-import 'package:pfe_gmao/features/work_order/view/widgets/work_order_form_field.dart';
-import 'package:pfe_gmao/features/work_order/view/widgets/work_order_form_title.dart';
-import 'package:pfe_gmao/firebase/cloud_firestore_references.dart';
 import 'package:uuid/uuid.dart';
+
+import '../../../../firebase/cloud_firestore_references.dart';
+import '../../../notifications/model/notification_model.dart';
+import '../../../profile_management/model/user.dart';
+import '../../model/constants/work_order_status.dart';
+import '../../model/data_models/work_order.dart';
+import '../../model/work_order_model.dart';
+import '../widgets/work_order_form_field.dart';
+import '../widgets/work_order_form_title.dart';
+import '../widgets/work_order_state_widgets/administrator/admin_finished_view.dart';
+import '../widgets/work_order_state_widgets/administrator/admin_in_progress_view.dart';
+import '../widgets/work_order_state_widgets/administrator/admin_stand_by_view.dart';
+import '../widgets/work_order_state_widgets/administrator/admin_terminated_view.dart';
 
 class AdminWorkOrderView extends StatefulWidget {
   const AdminWorkOrderView({
@@ -370,326 +375,260 @@ class _AdminWorkOrderViewState extends State<AdminWorkOrderView> {
                                 ),
                               ),
                             ),
-
+                          //Row of button that depends on the state of the work order
+                          // Status handling
+                          //
+                          //if the work order is In Progress
                           wo.workorderStatus == workOrderStatus[0]
-                              ? Container(
-                                  height: 65,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: Colors.yellow,
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: const Center(
-                                    child: Text(
-                                        'This work order is still In Progress'),
-                                  ),
-                                )
-                              : wo.workorderStatus == workOrderStatus[3]
-                                  ? Container(
-                                      height: 65,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                            'This work order is Terminated'),
-                                      ),
-                                    )
-                                  : wo.workorderStatus == workOrderStatus[1]
-                                      ? Container(
-                                          height: 65,
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            color: Colors.orange,
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                          ),
-                                          child: const Center(
-                                            child: Text(
-                                                'This work order is in Stand by mode'),
-                                          ),
-                                        )
-                                      : wo.workorderStatus == workOrderStatus[2]
-                                          ? Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                ElevatedButton(
-                                                  style: ButtonStyle(
-                                                      backgroundColor:
-                                                          MaterialStatePropertyAll(
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .error)),
-                                                  onPressed: () {
-                                                    showDialog(
-                                                      context: context,
-                                                      barrierDismissible: false,
-                                                      builder: (context) {
-                                                        return AlertDialog(
-                                                          title: const Text(
-                                                            'Confirmation',
-                                                          ),
-                                                          content: SizedBox(
-                                                            height: MediaQuery
-                                                                        .sizeOf(
-                                                                            context)
-                                                                    .height /
-                                                                6,
-                                                            child: Column(
-                                                              children: [
-                                                                const Padding(
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          bottom:
-                                                                              16.0),
-                                                                  child: Text(
-                                                                      'Are you sure you want to deny this work order?'),
-                                                                ),
-                                                                Form(
-                                                                  key: _formkey,
-                                                                  child:
-                                                                      TextFormField(
-                                                                    keyboardType:
-                                                                        TextInputType
-                                                                            .text,
-                                                                    textInputAction:
-                                                                        TextInputAction
-                                                                            .done,
-                                                                    decoration:
-                                                                        const InputDecoration(
-                                                                      hintText:
-                                                                          "Provide a reason",
-                                                                      prefixIcon:
-                                                                          Icon(Icons
-                                                                              .mode_standby_rounded),
-                                                                    ),
-                                                                    validator:
-                                                                        (value) {
-                                                                      if (value ==
-                                                                              null ||
-                                                                          value
-                                                                              .isEmpty) {
-                                                                        return "please provide your reason";
-                                                                      }
-                                                                      return null;
-                                                                    },
-                                                                    onSaved: (newEmail) =>
-                                                                        _denyReason =
-                                                                            newEmail!.trim(),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          actionsAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceAround,
-                                                          actions: [
-                                                            TextButton(
-                                                              onPressed: () =>
-                                                                  Navigator.pop(
-                                                                context,
-                                                              ),
-                                                              child: const Text(
-                                                                "Cancel",
-                                                              ),
-                                                            ),
-                                                            //confirmation button
-                                                            ElevatedButton(
-                                                              onPressed: () {
-                                                                if (_formkey
-                                                                    .currentState!
-                                                                    .validate()) {
-                                                                  _formkey
-                                                                      .currentState!
-                                                                      .save();
-
-                                                                  //update the work order state to'in progress'
-                                                                  WorkOrderModel()
-                                                                      .updateWorkOrderStatus(
-                                                                    workOrderID:
-                                                                        wo.workorderID,
-                                                                    //'Finished'
-                                                                    newStatus:
-                                                                        workOrderStatus[
-                                                                            0],
-                                                                    creatorID: wo
-                                                                        .workorderCreatorID,
-                                                                    technicianID:
-                                                                        wo.technicianID,
-                                                                    interventionID:
-                                                                        wo.interventionID,
-                                                                  );
-                                                                  //sending a push notification
-                                                                  NotificationsModel()
-                                                                      .sendNotificationToDevice(
-                                                                    deviceToken:
-                                                                        wo.technicianToken,
-                                                                    notificationTitle:
-                                                                        "Termination Response",
-                                                                    notificationBody:
-                                                                        "A work order for ${wo.equipmentTagName} was denied due to $_denyReason",
-                                                                  );
-
-                                                                  //creating a notification id
-                                                                  String
-                                                                      notificationID =
-                                                                      const Uuid()
-                                                                          .v4();
-                                                                  NotificationsModel()
-                                                                      .validateOrDenyRequestNotification(
-                                                                    interventionID:
-                                                                        wo.interventionID,
-                                                                    notificationBody:
-                                                                        "A work order for ${wo.equipmentTagName} was denied due to $_denyReason",
-                                                                    notificationID:
-                                                                        notificationID,
-                                                                    notificationTitle:
-                                                                        "Termination Response",
-                                                                    technicianID:
-                                                                        wo.technicianID,
-                                                                    workOrderID:
-                                                                        wo.workorderID,
-                                                                    workorderCreatorID:
-                                                                        wo.workorderCreatorID,
-                                                                  );
-
-                                                                  setState(() {
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                  });
-                                                                }
-                                                              },
-                                                              child: const Text(
-                                                                'Confirm',
-                                                              ),
-                                                            )
-                                                          ],
-                                                        );
-                                                      },
-                                                    );
-                                                  },
-                                                  child: Text(
-                                                    'Deny',
-                                                    style: TextStyle(
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .background),
-                                                  ),
-                                                ),
-                                                ElevatedButton(
-                                                  style: ButtonStyle(
-                                                      backgroundColor:
-                                                          MaterialStatePropertyAll(
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .primary)),
-                                                  onPressed: () {
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (context) {
-                                                          return AlertDialog(
-                                                            title: const Text(
-                                                                'Confirmation'),
-                                                            content: const Text(
-                                                                'Are you sure you want to terminate this work order?'),
-                                                            actionsAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceAround,
-                                                            actions: [
-                                                              TextButton(
-                                                                onPressed: () =>
-                                                                    Navigator.pop(
-                                                                        context),
-                                                                child: const Text(
-                                                                    'Cancel'),
-                                                              ),
-                                                              ElevatedButton(
-                                                                onPressed: () {
-                                                                  //sending a push notification
-                                                                  NotificationsModel()
-                                                                      .sendNotificationToDevice(
-                                                                    deviceToken:
-                                                                        wo.technicianToken,
-                                                                    notificationTitle:
-                                                                        "Termination Response",
-                                                                    notificationBody:
-                                                                        "A work order for ${wo.equipmentTagName} was approved. Work order is terminated",
-                                                                  );
-                                                                  WorkOrderModel()
-                                                                      .updateWorkOrderStatus(
-                                                                    workOrderID:
-                                                                        wo.workorderID,
-                                                                    //'Finished'
-                                                                    newStatus:
-                                                                        'Terminated',
-                                                                    creatorID: wo
-                                                                        .workorderCreatorID,
-                                                                    technicianID:
-                                                                        wo.technicianID,
-                                                                    interventionID:
-                                                                        wo.interventionID,
-                                                                  );
-
-                                                                  //creating a notification id
-                                                                  String
-                                                                      notificationID =
-                                                                      const Uuid()
-                                                                          .v4();
-                                                                  NotificationsModel()
-                                                                      .validateOrDenyRequestNotification(
-                                                                    interventionID:
-                                                                        wo.interventionID,
-                                                                    notificationBody:
-                                                                        "A work order for ${wo.equipmentTagName} was approved. Work order is terminated",
-                                                                    notificationID:
-                                                                        notificationID,
-                                                                    notificationTitle:
-                                                                        "Termination Response",
-                                                                    technicianID:
-                                                                        wo.technicianID,
-                                                                    workOrderID:
-                                                                        wo.workorderID,
-                                                                    workorderCreatorID:
-                                                                        wo.workorderCreatorID,
-                                                                  );
-                                                                  setState(() {
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                  });
-                                                                },
-                                                                style: ButtonStyle(
-                                                                    backgroundColor: MaterialStatePropertyAll(Theme.of(
-                                                                            context)
-                                                                        .colorScheme
-                                                                        .primary)),
-                                                                child: Text(
-                                                                  'Terminate',
-                                                                  style: TextStyle(
-                                                                      color: Theme.of(
-                                                                              context)
-                                                                          .colorScheme
-                                                                          .background),
-                                                                ),
-                                                              )
-                                                            ],
+                              ? const AdminInProgressView()
+                              //if the work order is Stand By
+                              : wo.workorderStatus == workOrderStatus[1]
+                                  ? const AdminStandByView()
+                                  //if the work order is Finished
+                                  : wo.workorderStatus == workOrderStatus[2]
+                                      ? AdminFinishedView(
+                                          onTerminate: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    title: const Text(
+                                                      'Confirmation',
+                                                    ),
+                                                    content: const Text(
+                                                        'Are you sure you want to terminate this work order?'),
+                                                    actionsAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context),
+                                                        child: const Text(
+                                                            'Cancel'),
+                                                      ),
+                                                      ElevatedButton(
+                                                        onPressed: () {
+                                                          //sending a push notification
+                                                          NotificationsModel()
+                                                              .sendNotificationToDevice(
+                                                            deviceToken: wo
+                                                                .technicianToken,
+                                                            notificationTitle:
+                                                                "Termination Response",
+                                                            notificationBody:
+                                                                "A work order for ${wo.equipmentTagName} was approved. Work order is terminated",
                                                           );
-                                                        });
-                                                  },
-                                                  child: Text(
-                                                    'Terminate',
-                                                    style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .background,
+                                                          WorkOrderModel()
+                                                              .updateWorkOrderStatus(
+                                                            workOrderID:
+                                                                wo.workorderID,
+                                                            //'Finished'
+                                                            newStatus:
+                                                                'Terminated',
+                                                            creatorID: wo
+                                                                .workorderCreatorID,
+                                                            technicianID:
+                                                                wo.technicianID,
+                                                            interventionID: wo
+                                                                .interventionID,
+                                                          );
+
+                                                          //creating a notification id
+                                                          String
+                                                              notificationID =
+                                                              const Uuid().v4();
+                                                          NotificationsModel()
+                                                              .validateOrDenyRequestNotification(
+                                                            interventionID: wo
+                                                                .interventionID,
+                                                            notificationBody:
+                                                                "A work order for ${wo.equipmentTagName} was approved. Work order is terminated",
+                                                            notificationID:
+                                                                notificationID,
+                                                            notificationTitle:
+                                                                "Termination Response",
+                                                            technicianID:
+                                                                wo.technicianID,
+                                                            workOrderID:
+                                                                wo.workorderID,
+                                                            workorderCreatorID:
+                                                                wo.workorderCreatorID,
+                                                          );
+                                                          setState(() {
+                                                            Navigator.pop(
+                                                                context);
+                                                          });
+                                                        },
+                                                        style: ButtonStyle(
+                                                            backgroundColor:
+                                                                MaterialStatePropertyAll(Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .primary)),
+                                                        child: Text(
+                                                          'Terminate',
+                                                          style: TextStyle(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .colorScheme
+                                                                  .background),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  );
+                                                });
+                                          },
+                                          onDeny: () {
+                                            showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: const Text(
+                                                    'Confirmation',
+                                                  ),
+                                                  content: SizedBox(
+                                                    height: MediaQuery.sizeOf(
+                                                                context)
+                                                            .height /
+                                                        7,
+                                                    child: Column(
+                                                      children: [
+                                                        const Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                            bottom: 16.0,
+                                                          ),
+                                                          child: Text(
+                                                              'Are you sure you want to deny this work order?'),
+                                                        ),
+                                                        Form(
+                                                          key: _formkey,
+                                                          child: TextFormField(
+                                                            keyboardType:
+                                                                TextInputType
+                                                                    .text,
+                                                            textInputAction:
+                                                                TextInputAction
+                                                                    .done,
+                                                            decoration:
+                                                                const InputDecoration(
+                                                              hintText:
+                                                                  "Provide a reason",
+                                                              prefixIcon: Icon(Icons
+                                                                  .mode_standby_rounded),
+                                                            ),
+                                                            validator: (value) {
+                                                              if (value ==
+                                                                      null ||
+                                                                  value
+                                                                      .isEmpty) {
+                                                                return "please provide your reason";
+                                                              }
+                                                              return null;
+                                                            },
+                                                            onSaved: (newEmail) =>
+                                                                _denyReason =
+                                                                    newEmail!
+                                                                        .trim(),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
-                                                )
-                                              ],
-                                            )
+                                                  actionsAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                        context,
+                                                      ),
+                                                      child: const Text(
+                                                        "Cancel",
+                                                      ),
+                                                    ),
+                                                    //confirmation button
+                                                    FilledButton(
+                                                      onPressed: () {
+                                                        if (_formkey
+                                                            .currentState!
+                                                            .validate()) {
+                                                          _formkey.currentState!
+                                                              .save();
+
+                                                          //update the work order state to'in progress'
+                                                          WorkOrderModel()
+                                                              .updateWorkOrderStatus(
+                                                            workOrderID:
+                                                                wo.workorderID,
+                                                            //'Finished'
+                                                            newStatus:
+                                                                workOrderStatus[
+                                                                    0],
+                                                            creatorID: wo
+                                                                .workorderCreatorID,
+                                                            technicianID:
+                                                                wo.technicianID,
+                                                            interventionID: wo
+                                                                .interventionID,
+                                                          );
+                                                          //sending a push notification
+                                                          NotificationsModel()
+                                                              .sendNotificationToDevice(
+                                                            deviceToken: wo
+                                                                .technicianToken,
+                                                            notificationTitle:
+                                                                "Termination Response",
+                                                            notificationBody:
+                                                                "A work order for ${wo.equipmentTagName} was denied due to $_denyReason",
+                                                          );
+
+                                                          //creating a notification id
+                                                          String
+                                                              notificationID =
+                                                              const Uuid().v4();
+                                                          NotificationsModel()
+                                                              .validateOrDenyRequestNotification(
+                                                            interventionID: wo
+                                                                .interventionID,
+                                                            notificationBody:
+                                                                "A work order for ${wo.equipmentTagName} was denied due to $_denyReason",
+                                                            notificationID:
+                                                                notificationID,
+                                                            notificationTitle:
+                                                                "Termination Response",
+                                                            technicianID:
+                                                                wo.technicianID,
+                                                            workOrderID:
+                                                                wo.workorderID,
+                                                            workorderCreatorID:
+                                                                wo.workorderCreatorID,
+                                                          );
+
+                                                          setState(() {
+                                                            Navigator.pop(
+                                                                context);
+                                                          });
+                                                        }
+                                                      },
+                                                      child: const Text(
+                                                        'Confirm',
+                                                      ),
+                                                    )
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                        )
+
+                                      // if the work order
+                                      : wo.workorderStatus == workOrderStatus[3]
+                                          ? const AdminTerminatedView()
                                           : const SizedBox.shrink()
                         ]),
                   ),
