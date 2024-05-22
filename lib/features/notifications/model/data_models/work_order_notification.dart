@@ -25,14 +25,14 @@ class WorkorderNotification {
   // Factory constructor to create an instance from JSON
   factory WorkorderNotification.fromJson(Map<String, dynamic> json) {
     return WorkorderNotification(
-      notificationID: json['notificationID'] ?? '',
-      notificationTitle: json['notificationTitle'] ?? '',
-      notificationBody: json['notificationBody'] ?? '',
-      workorderCreatorID: json['workorderCreatorID'] ?? '',
-      technicianID: json['technicianID'] ?? '',
-      createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now()),
-      workOrderID: json['workOrderID'] ?? '',
-      interventionID: json['interventionID'] ?? '',
+      notificationID: json['notificationID'],
+      notificationTitle: json['notificationTitle'],
+      notificationBody: json['notificationBody'],
+      workorderCreatorID: json['workorderCreatorID'],
+      technicianID: json['technicianID'],
+      createdAt: DateTime.parse(json['createdAt']),
+      workOrderID: json['workOrderID'],
+      interventionID: json['interventionID'],
     );
   }
 

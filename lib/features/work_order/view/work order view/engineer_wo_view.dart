@@ -1,12 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pfe_gmao/features/work_order/model/constants/work_order_status.dart';
-import 'package:pfe_gmao/features/work_order/model/data_models/work_order.dart';
-import 'package:pfe_gmao/features/work_order/model/work_order_model.dart';
-import 'package:pfe_gmao/features/work_order/view/widgets/work_order_form_field.dart';
-import 'package:pfe_gmao/features/work_order/view/widgets/work_order_form_title.dart';
-import 'package:pfe_gmao/firebase/cloud_firestore_references.dart';
+import 'package:pfe_gmao/features/work_order/view/widgets/work_order_action_buttons/engineer/finished_view.dart';
+import 'package:pfe_gmao/features/work_order/view/widgets/work_order_action_buttons/engineer/terminated_view.dart';
+
+import '../../../../firebase/cloud_firestore_references.dart';
+import '../../model/constants/work_order_status.dart';
+import '../../model/data_models/work_order.dart';
+import '../../model/work_order_model.dart';
+import '../widgets/work_order_action_buttons/engineer/in_progress_view.dart';
+import '../widgets/work_order_form_field.dart';
+import '../widgets/work_order_form_title.dart';
 
 class EngineerWorkOrderView extends StatefulWidget {
   const EngineerWorkOrderView({
@@ -123,385 +127,263 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
               (_) => ValueNotifier<bool>(false),
             );
           }
-          return ListView(children: [
-            SingleChildScrollView(
-              child: Form(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // information
-                      const WorkOrderFormTitle(title: "Equipment Tag name"),
-                      WorkOrderFormField(
-                        readOnly: true,
-                        prefixIcon: const Icon(
-                          Icons.local_offer_outlined,
-                        ),
-                        initialValue: wo.equipmentTagName,
-                      ),
-                      // information
-                      const WorkOrderFormTitle(title: "Discipline"),
-                      WorkOrderFormField(
-                        readOnly: true,
-                        prefixIcon: const Icon(
-                          Icons.construction_rounded,
-                        ),
-                        initialValue: wo.equipmentDiscipline,
-                      ),
-                      // the rest of work order info
-                      const WorkOrderFormTitle(title: 'Execution Date'),
-                      WorkOrderFormField(
-                        readOnly: true,
-                        prefixIcon: const Icon(
-                          Icons.calendar_month_outlined,
-                        ),
-                        initialValue:
-                            wo.executionDay.toIso8601String().split('T').first,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            children: [
-                              const WorkOrderFormTitle(title: 'Starting Time'),
-                              SizedBox(
-                                width: MediaQuery.sizeOf(context).width / 3,
-                                child: WorkOrderFormField(
-                                  readOnly: true,
-                                  prefixIcon: const Icon(Icons.timer),
-                                  initialValue: formatTimeOfDay(wo.startTime),
-                                ),
-                              ),
-                            ],
+          return ListView(
+            children: [
+              SingleChildScrollView(
+                child: Form(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // information
+                        const WorkOrderFormTitle(title: "Equipment Tag name"),
+                        WorkOrderFormField(
+                          readOnly: true,
+                          prefixIcon: const Icon(
+                            Icons.local_offer_outlined,
                           ),
-                          Column(
-                            children: [
-                              const WorkOrderFormTitle(title: 'Finishing Time'),
-                              SizedBox(
-                                width: MediaQuery.sizeOf(context).width / 3,
-                                child: WorkOrderFormField(
-                                  readOnly: true,
-                                  prefixIcon: const Icon(Icons.timer_off),
-                                  initialValue: formatTimeOfDay(wo.finishTime),
-                                ),
-                              ),
-                            ],
+                          initialValue: wo.equipmentTagName,
+                        ),
+                        // information
+                        const WorkOrderFormTitle(title: "Discipline"),
+                        WorkOrderFormField(
+                          readOnly: true,
+                          prefixIcon: const Icon(
+                            Icons.construction_rounded,
                           ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // steps
-                          const WorkOrderFormTitle(title: 'Intervention Steps'),
-                          // ignore: unused_local_variable
-                          for (int i = 0; i < wo.steps.length; i++)
-                            Padding(
-                              padding: i == wo.steps.length - 1
-                                  ? const EdgeInsets.only(bottom: 16.0)
-                                  : const EdgeInsets.only(bottom: 0),
-                              child: Card(
-                                child: ListTile(
-                                  title: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text('${i + 1}- ${wo.steps[i]}'),
-                                      ValueListenableBuilder<bool>(
-                                        valueListenable: _isCheckedList[i],
-                                        builder: (context, isChecked, _) {
-                                          return Checkbox(
-                                            value: isChecked,
-                                            onChanged: (value) {
-                                              _isCheckedList[i].value = value!;
-                                              numberOfChecked = _isCheckedList
-                                                  .where((notifier) =>
-                                                      notifier.value)
-                                                  .length;
-                                            },
-                                          );
-                                        },
-                                      )
-                                    ],
-                                  ),
-                                  titleTextStyle: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                      ),
+                          initialValue: wo.equipmentDiscipline,
+                        ),
+                        // the rest of work order info
+                        const WorkOrderFormTitle(title: 'Execution Date'),
+                        WorkOrderFormField(
+                          readOnly: true,
+                          prefixIcon: const Icon(
+                            Icons.calendar_month_outlined,
+                          ),
+                          initialValue: wo.executionDay
+                              .toIso8601String()
+                              .split('T')
+                              .first,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              children: [
+                                const WorkOrderFormTitle(
+                                  title: 'Starting Time',
                                 ),
-                              ),
-                            ),
-                          // spare parts
-                          const WorkOrderFormTitle(title: 'Spare Parts'),
-                          for (var item in wo.spareParts)
-                            Padding(
-                              padding: item == wo.spareParts.last
-                                  ? const EdgeInsets.only(bottom: 16.0)
-                                  : const EdgeInsets.only(bottom: 0),
-                              child: Card(
-                                child: ListTile(
-                                  title: Text(
-                                    '- $item',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge!
-                                        .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                        ),
+                                SizedBox(
+                                  width: MediaQuery.sizeOf(context).width / 3,
+                                  child: WorkOrderFormField(
+                                    readOnly: true,
+                                    prefixIcon: const Icon(Icons.timer),
+                                    initialValue: formatTimeOfDay(wo.startTime),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-
-                          // tools
-                          const WorkOrderFormTitle(title: 'Tools'),
-                          for (var item in wo.tools)
-                            Padding(
-                              padding: item == wo.tools.last
-                                  ? const EdgeInsets.only(bottom: 16.0)
-                                  : const EdgeInsets.only(bottom: 0),
-                              child: Card(
-                                child: ListTile(
-                                  title: Text(
-                                    '- $item',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge!
-                                        .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                        ),
+                            Column(
+                              children: [
+                                const WorkOrderFormTitle(
+                                  title: 'Finishing Time',
+                                ),
+                                SizedBox(
+                                  width: MediaQuery.sizeOf(context).width / 3,
+                                  child: WorkOrderFormField(
+                                    readOnly: true,
+                                    prefixIcon: const Icon(Icons.timer_off),
+                                    initialValue:
+                                        formatTimeOfDay(wo.finishTime),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          // Status handling
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            child: wo.workorderStatus == workOrderStatus[3]
-                                ? Container(
-                                    height: 70,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.deepOrange,
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: Column(
+                          ],
+                        ),
+                        //Steps
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // steps
+                            const WorkOrderFormTitle(
+                              title: 'Intervention Steps',
+                            ),
+                            // ignore: unused_local_variable
+                            for (int i = 0; i < wo.steps.length; i++)
+                              Padding(
+                                padding: i == wo.steps.length - 1
+                                    ? const EdgeInsets.only(bottom: 16.0)
+                                    : const EdgeInsets.only(bottom: 0),
+                                child: Card(
+                                  child: ListTile(
+                                    title: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          'Work order verification request is sent',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .background,
-                                          ),
-                                        ),
-                                        Text(
-                                          'please wait for response',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .background,
-                                          ),
+                                        Text('${i + 1}- ${wo.steps[i]}'),
+                                        ValueListenableBuilder<bool>(
+                                          valueListenable: _isCheckedList[i],
+                                          builder: (context, isChecked, _) {
+                                            return Checkbox(
+                                              value: isChecked,
+                                              onChanged: (value) {
+                                                _isCheckedList[i].value =
+                                                    value!;
+                                                numberOfChecked = _isCheckedList
+                                                    .where((notifier) =>
+                                                        notifier.value)
+                                                    .length;
+                                              },
+                                            );
+                                          },
                                         )
                                       ],
                                     ),
-                                  )
-                                : wo.workorderStatus == workOrderStatus[0]
-                                    ? Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          // change status to Stand By
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              WorkOrderModel()
-                                                  .updateWorkOrderStatus(
-                                                workOrderID: wo.workorderID,
-                                                newStatus: workOrderStatus[2],
-                                                creatorID:
-                                                    wo.workorderCreatorID,
-                                                technicianID: wo.technicianID,
-                                                interventionID:
-                                                    wo.interventionID,
-                                              );
-                                              setState(() {});
-                                            },
-                                            style: const ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStatePropertyAll(
-                                                      Colors.yellow),
-                                            ),
-                                            child: Text(
-                                              'Stand By',
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .background,
-                                              ),
-                                            ),
+                                    titleTextStyle: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                            // spare parts
+                            const WorkOrderFormTitle(title: 'Spare Parts'),
+                            for (var item in wo.spareParts)
+                              Padding(
+                                padding: item == wo.spareParts.last
+                                    ? const EdgeInsets.only(bottom: 16.0)
+                                    : const EdgeInsets.only(bottom: 0),
+                                child: Card(
+                                  child: ListTile(
+                                    title: Text(
+                                      '- $item',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
                                           ),
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              if (numberOfChecked !=
-                                                  wo.steps.length) {
-                                                const snackBar = SnackBar(
-                                                  content: Center(
-                                                      child: Text(
-                                                          'Please make sure that all the steps are done')),
-                                                );
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(snackBar);
-                                              } else {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return AlertDialog(
-                                                        title: const Text(
-                                                            'Confirmation'),
-                                                        content: const Text(
-                                                            'Are you sure of sending a validation request?'),
-                                                        actionsAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceAround,
-                                                        actions: [
-                                                          TextButton(
-                                                            onPressed: () =>
-                                                                Navigator.pop(
-                                                                    context),
-                                                            child: const Text(
-                                                                "Cancel"),
-                                                          ),
-                                                          ElevatedButton(
-                                                            onPressed: () {
-                                                              // handle the state change to Stand By
-                                                              WorkOrderModel()
-                                                                  .updateWorkOrderStatus(
-                                                                workOrderID: wo
-                                                                    .workorderID,
-                                                                newStatus:
-                                                                    workOrderStatus[
-                                                                        3],
-                                                                creatorID: wo
-                                                                    .workorderCreatorID,
-                                                                technicianID: wo
-                                                                    .technicianID,
-                                                                interventionID:
-                                                                    wo.interventionID,
-                                                              );
-                                                              //
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                            style: ButtonStyle(
-                                                              backgroundColor:
-                                                                  MaterialStatePropertyAll(Theme.of(
-                                                                          context)
-                                                                      .colorScheme
-                                                                      .primary),
-                                                            ),
-                                                            child: Text(
-                                                              'Confirm',
-                                                              style: TextStyle(
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .colorScheme
-                                                                    .background,
-                                                              ),
-                                                            ),
-                                                          )
-                                                        ],
-                                                      );
-                                                    });
-                                              }
-                                            },
-                                            style: const ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStatePropertyAll(
-                                                      Colors.green),
-                                            ),
-                                            child: Text(
-                                              'Finish',
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .background,
-                                              ),
-                                            ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                            // tools
+                            const WorkOrderFormTitle(title: 'Tools'),
+                            for (var item in wo.tools)
+                              Padding(
+                                padding: item == wo.tools.last
+                                    ? const EdgeInsets.only(bottom: 16.0)
+                                    : const EdgeInsets.only(bottom: 0),
+                                child: Card(
+                                  child: ListTile(
+                                    title: Text(
+                                      '- $item',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
                                           ),
-                                        ],
-                                      )
-                                    : wo.workorderStatus == workOrderStatus[2]
-                                        ? Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              //
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  WorkOrderModel()
-                                                      .updateWorkOrderStatus(
-                                                    workOrderID: wo.workorderID,
-                                                    newStatus:
-                                                        workOrderStatus[0],
-                                                    creatorID:
-                                                        wo.workorderCreatorID,
-                                                    technicianID:
-                                                        wo.technicianID,
-                                                    interventionID:
-                                                        wo.interventionID,
-                                                  );
-                                                  setState(() {});
-                                                },
-                                                style: const ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStatePropertyAll(
-                                                          Color.fromRGBO(
-                                                              25, 118, 210, 1)),
-                                                ),
-                                                child: Text(
-                                                  'In Progress',
-                                                  style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .background,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            //Row of button that depends on the state of the work order
+//                             Padding(
+//   padding: const EdgeInsets.symmetric(vertical: 16),
+//   child: _buildWorkOrderStatusWidget(context: context,workOrder: wo,workorderStatus: wo.workorderStatus,),
+// );
+                            // Status handling
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              //'Finished'
+                              child: wo.workorderStatus == workOrderStatus[3]
+                                  ? const FinishedView()
+                                  //'In Progress'
+                                  : wo.workorderStatus == workOrderStatus[0]
+                                      ? InProgressView(
+                                          workOrder: wo,
+                                          numberOfChecked: numberOfChecked,
+                                        )
+                                      //'Stand By'
+                                      : wo.workorderStatus == workOrderStatus[1]
+                                          ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                //
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    WorkOrderModel()
+                                                        .updateWorkOrderStatus(
+                                                      workOrderID:
+                                                          wo.workorderID,
+                                                      newStatus:
+                                                          workOrderStatus[0],
+                                                      creatorID:
+                                                          wo.workorderCreatorID,
+                                                      technicianID:
+                                                          wo.technicianID,
+                                                      interventionID:
+                                                          wo.interventionID,
+                                                    );
+                                                    setState(() {});
+                                                  },
+                                                  style: const ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStatePropertyAll(
+                                                      Color.fromRGBO(
+                                                        25,
+                                                        118,
+                                                        210,
+                                                        1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  child: Text(
+                                                    'In Progress',
+                                                    style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .background,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  if (numberOfChecked !=
-                                                      wo.steps.length) {
-                                                    const snackBar = SnackBar(
-                                                      content: Center(
-                                                          child: Text(
-                                                              'Please make sure that all the steps are done')),
-                                                    );
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(snackBar);
-                                                  } else {
-                                                    showDialog(
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    if (numberOfChecked !=
+                                                        wo.steps.length) {
+                                                      const snackBar = SnackBar(
+                                                        content: Center(
+                                                            child: Text(
+                                                                'Please make sure that all the steps are done')),
+                                                      );
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                              snackBar);
+                                                    } else {
+                                                      showDialog(
                                                         context: context,
                                                         builder: (context) {
                                                           return AlertDialog(
                                                             title: const Text(
-                                                                'Confirmation'),
+                                                              'Confirmation',
+                                                            ),
                                                             content: const Text(
                                                                 'Are you sure of sending a validation request?'),
                                                             actionsAlignment:
@@ -512,8 +394,10 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                                                 onPressed: () =>
                                                                     Navigator.pop(
                                                                         context),
-                                                                child: const Text(
-                                                                    "Cancel"),
+                                                                child:
+                                                                    const Text(
+                                                                  "Cancel",
+                                                                ),
                                                               ),
                                                               ElevatedButton(
                                                                 onPressed: () {
@@ -538,17 +422,23 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                                                 },
                                                                 style:
                                                                     ButtonStyle(
-                                                                  backgroundColor: MaterialStatePropertyAll(Theme.of(
-                                                                          context)
-                                                                      .colorScheme
-                                                                      .primary),
+                                                                  backgroundColor:
+                                                                      MaterialStatePropertyAll(
+                                                                    Theme.of(
+                                                                      context,
+                                                                    )
+                                                                        .colorScheme
+                                                                        .primary,
+                                                                  ),
                                                                 ),
                                                                 child: Text(
                                                                   'Confirm',
                                                                   style:
                                                                       TextStyle(
-                                                                    color: Theme.of(
-                                                                            context)
+                                                                    color: Theme
+                                                                            .of(
+                                                                      context,
+                                                                    )
                                                                         .colorScheme
                                                                         .background,
                                                                   ),
@@ -556,58 +446,53 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                                               )
                                                             ],
                                                           );
-                                                        });
-                                                  }
-                                                },
-                                                style: const ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStatePropertyAll(
-                                                          Colors.green),
-                                                ),
-                                                child: Text(
-                                                  'Finish',
-                                                  style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .background,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        : wo.workorderStatus ==
-                                                workOrderStatus[4]
-                                            ? Container(
-                                                height: 65,
-                                                width: double.infinity,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.green,
-                                                  borderRadius:
-                                                      BorderRadius.circular(16),
-                                                ),
-                                                child: Center(
+                                                        },
+                                                      );
+                                                    }
+                                                  },
                                                   child: Text(
-                                                    'This work order is terminated',
+                                                    'Stand By',
                                                     style: TextStyle(
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .background,
-                                                        fontSize: 18),
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .background,
+                                                    ),
                                                   ),
                                                 ),
-                                              )
-                                            : const SizedBox.shrink(),
-                          )
-                        ],
-                      ),
-                    ],
+                                              ],
+                                            )
+                                          //'Terminated'
+                                          : wo.workorderStatus ==
+                                                  workOrderStatus[3]
+                                              ? const TerminatedView()
+                                              : const SizedBox.shrink(),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ]);
+            ],
+          );
         },
       ),
     );
   }
+
+//   Widget _buildWorkOrderStatusWidget({required String workorderStatus,required WorkOrder workOrder,required BuildContext context,}) {
+//   switch (workorderStatus) {
+//     case 'In Progress':
+//       return ;
+//     case 'Stand By':
+//       return ;
+//     case 'Finished':
+//       return ;
+//     case 'Terminated':
+//       return ;
+//     default:
+//       return const SizedBox.shrink();
+//   }
+// }
 }

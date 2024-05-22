@@ -8,46 +8,8 @@ import 'data_models/work_order.dart';
 
 class WorkOrderModel {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  Future<void> updateWorkOrderStatus({
-    required String workOrderID,
-    required String newStatus,
-    required String creatorID,
-    required String technicianID,
-    required String interventionID,
-  }) async {
-    // Reference to the work order in the creator's document
-    DocumentReference creatorWorkOrderRef = FirebaseFirestore.instance
-        .collection('users')
-        .doc(creatorID)
-        .collection('work_order')
-        .doc(workOrderID);
 
-    // Reference to the work order in the technician's document
-    DocumentReference technicianWorkOrderRef = FirebaseFirestore.instance
-        .collection('users')
-        .doc(technicianID)
-        .collection('work_order')
-        .doc(workOrderID);
-
-    //Use a WriteBatch to perform both updates atomically
-    WriteBatch batch = firestore.batch();
-
-    if (newStatus == workOrderStatus[4]) {
-      //Step 1 : change the intervention status to 'In Progress'
-      batch.update(
-        firestore.collection("interventions").doc(interventionID),
-        {"interventionStatus": interventionStatus[2]},
-      );
-    } else {
-      // Update the status in both documents
-      batch.update(creatorWorkOrderRef, {'workorderStatus': newStatus});
-      batch.update(technicianWorkOrderRef, {'workorderStatus': newStatus});
-    }
-
-    // Commit the batch
-    await batch.commit();
-  }
-
+  //methode to add a work order to database
   Future<void> addWorkOrderDB({
     required String workorderID,
     required String workorderStatus,
@@ -117,6 +79,47 @@ class WorkOrderModel {
       order.toJson(),
     );
     //committing the batch
+    await batch.commit();
+  }
+
+  //Methode to update the work order status depending on the case
+  Future<void> updateWorkOrderStatus({
+    required String workOrderID,
+    required String newStatus,
+    required String creatorID,
+    required String technicianID,
+    required String interventionID,
+  }) async {
+    // Reference to the work order in the creator's document
+    DocumentReference creatorWorkOrderRef = firestore
+        .collection('users')
+        .doc(creatorID)
+        .collection('work_order')
+        .doc(workOrderID);
+
+    // Reference to the work order in the technician's document
+    DocumentReference technicianWorkOrderRef = firestore
+        .collection('users')
+        .doc(technicianID)
+        .collection('work_order')
+        .doc(workOrderID);
+
+    //Use a WriteBatch to perform both updates atomically
+    WriteBatch batch = firestore.batch();
+
+    if (newStatus == workOrderStatus[3]) {
+      //Step 1 : change the intervention status to 'In Progress'
+      batch.update(
+        firestore.collection("interventions").doc(interventionID),
+        {"interventionStatus": interventionStatus[2]},
+      );
+    } else {
+      // Update the status in both documents
+      batch.update(creatorWorkOrderRef, {'workorderStatus': newStatus});
+      batch.update(technicianWorkOrderRef, {'workorderStatus': newStatus});
+    }
+
+    // Commit the batch
     await batch.commit();
   }
 }

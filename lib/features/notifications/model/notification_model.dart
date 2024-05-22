@@ -338,6 +338,36 @@ class NotificationsModel {
         .set(notification.toJson());
   }
 
+  //methode to change the work order status
+  Future<void> sendWorkorderValidationRequestorStanfByNotification({
+    required String notificationID,
+    required String notificationTitle,
+    required String notificationBody,
+    required String workorderCreatorID,
+    required String technicianID,
+    required String workOrderID,
+    required String interventionID,
+  }) async {
+    //creating a work order notification
+    WorkorderNotification notification = WorkorderNotification(
+      notificationID: notificationID,
+      notificationTitle: notificationTitle,
+      notificationBody: notificationBody,
+      workorderCreatorID: workorderCreatorID,
+      technicianID: technicianID,
+      createdAt: DateTime.now(),
+      workOrderID: workOrderID,
+      interventionID: interventionID,
+    );
+    //adding a notification in the admin side
+    await firestore
+        .collection(userCollectionRef)
+        .doc(workorderCreatorID)
+        .collection("WO_notifications")
+        .doc(notificationID)
+        .set(notification.toJson());
+  }
+
   //method to delete intervention files notifications
   //TO DO : make the methode delete work order notification
   Future<void> deleteNotification({
