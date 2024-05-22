@@ -531,7 +531,7 @@ class _AdminWorkOrderViewState extends State<AdminWorkOrderView> {
                                                                     notificationTitle:
                                                                         "Termination Response",
                                                                     notificationBody:
-                                                                        "A work order for ${wo.equipmentTagName} was was denied due to $_denyReason",
+                                                                        "A work order for ${wo.equipmentTagName} was denied due to $_denyReason",
                                                                   );
 
                                                                   //creating a notification id
@@ -544,7 +544,7 @@ class _AdminWorkOrderViewState extends State<AdminWorkOrderView> {
                                                                     interventionID:
                                                                         wo.interventionID,
                                                                     notificationBody:
-                                                                        "A work order for ${wo.equipmentTagName} was was denied due to $_denyReason",
+                                                                        "A work order for ${wo.equipmentTagName} was denied due to $_denyReason",
                                                                     notificationID:
                                                                         notificationID,
                                                                     notificationTitle:
@@ -617,7 +617,7 @@ class _AdminWorkOrderViewState extends State<AdminWorkOrderView> {
                                                                     notificationTitle:
                                                                         "Termination Response",
                                                                     notificationBody:
-                                                                        "A work order for ${wo.equipmentTagName} was was approved. Work order is terminated",
+                                                                        "A work order for ${wo.equipmentTagName} was approved. Work order is terminated",
                                                                   );
                                                                   WorkOrderModel()
                                                                       .updateWorkOrderStatus(
@@ -644,7 +644,7 @@ class _AdminWorkOrderViewState extends State<AdminWorkOrderView> {
                                                                     interventionID:
                                                                         wo.interventionID,
                                                                     notificationBody:
-                                                                        "A work order for ${wo.equipmentTagName} was was approved. Work order is terminated",
+                                                                        "A work order for ${wo.equipmentTagName} was approved. Work order is terminated",
                                                                     notificationID:
                                                                         notificationID,
                                                                     notificationTitle:
