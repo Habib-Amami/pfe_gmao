@@ -177,7 +177,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
                             isAdmin
                                 ? Slidable(
                                     endActionPane: ActionPane(
-                                      extentRatio: 0.4,
+                                      extentRatio: 0.5,
                                       motion: const StretchMotion(),
                                       children: [
                                         SlidableAction(
