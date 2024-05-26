@@ -227,9 +227,26 @@ class _WorkOrderNotificationsTabState extends State<WorkOrderNotificationsTab> {
                                         notifications[index].notificationTitle,
                                     notificationMessage:
                                         notifications[index].notificationBody,
-                                    notificationIcon:
-                                        Icons.work_history_rounded,
-                                    notificationColor: Colors.lightBlueAccent,
+                                    notificationIcon: notifications[index]
+                                            .notificationBody
+                                            .contains('Denied'.toLowerCase())
+                                        ? Icons.report
+                                        : notifications[index]
+                                                .notificationBody
+                                                .contains(
+                                                    'Approved'.toLowerCase())
+                                            ? Ionicons.shield_checkmark_sharp
+                                            : Icons.work_history_rounded,
+                                    notificationColor: notifications[index]
+                                            .notificationBody
+                                            .contains('Denied'.toLowerCase())
+                                        ? Colors.red
+                                        : notifications[index]
+                                                .notificationBody
+                                                .contains(
+                                                    'Approved'.toLowerCase())
+                                            ? Colors.green
+                                            : Colors.lightBlueAccent,
                                     notificationDateOfCreation:
                                         notifications[index].createdAt,
                                   ),
