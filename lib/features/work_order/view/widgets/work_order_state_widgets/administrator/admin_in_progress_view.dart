@@ -13,7 +13,10 @@ class AdminInProgressView extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
       ),
       child: const Center(
-        child: Text('This work order is still In Progress'),
+        child: Text(
+          'This work order is still In Progress',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
     );
   }
