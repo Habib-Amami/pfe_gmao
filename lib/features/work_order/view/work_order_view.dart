@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pfe_gmao/features/profile_management/model/user.dart';
-import 'package:pfe_gmao/features/work_order/model/data_models/work_order.dart';
-import 'package:pfe_gmao/features/work_order/view/widgets/work_order_card.dart';
-import 'package:pfe_gmao/features/work_order/view/work%20order%20view/admin_wo_view.dart';
-import 'package:pfe_gmao/features/work_order/view/work%20order%20view/engineer_wo_view.dart';
-import 'package:pfe_gmao/firebase/cloud_firestore_references.dart';
+import 'package:lottie/lottie.dart';
+
+import '../../../firebase/cloud_firestore_references.dart';
+import '../../profile_management/model/user.dart';
+import '../model/data_models/work_order.dart';
+import 'widgets/work_order_card.dart';
+import 'work%20order%20view/admin_wo_view.dart';
+import 'work%20order%20view/engineer_wo_view.dart';
 
 class WorkOrderView extends StatefulWidget {
   const WorkOrderView({super.key});
@@ -108,11 +110,47 @@ class _WorkOrderViewState extends State<WorkOrderView> {
               .toList();
           //if their is no work orders
           if (workOrders.isEmpty) {
-            //build a ui when is their is not work orders
-            return const Center(
-              child: Text("no work orders"),
-            );
+            if (Theme.of(context).brightness == Brightness.light) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset(
+                      "assets/animations/no_work_order_light.json",
+                      width: 150,
+                      height: 150,
+                      repeat: false,
+                    ),
+                    Text(
+                      "You Don't Have any Work Orders Yet !",
+                      style: Theme.of(context).textTheme.bodySmall,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset(
+                      "assets/animations/no_work_order_dark.json",
+                      repeat: false,
+                      width: 150,
+                      height: 150,
+                    ),
+                    Text(
+                      "You Don't Have any Work Orders Yet !",
+                      style: Theme.of(context).textTheme.bodySmall,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              );
+            }
           }
+
           return ListView.builder(
             itemCount: workOrders.length,
             itemBuilder: (context, index) => ListTile(
