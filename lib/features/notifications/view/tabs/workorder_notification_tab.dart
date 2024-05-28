@@ -229,24 +229,49 @@ class _WorkOrderNotificationsTabState extends State<WorkOrderNotificationsTab> {
                                         notifications[index].notificationBody,
                                     notificationIcon: notifications[index]
                                             .notificationBody
-                                            .contains('Denied'.toLowerCase())
+                                            .contains('denied')
                                         ? Icons.report
                                         : notifications[index]
                                                 .notificationBody
-                                                .contains(
-                                                    'Approved'.toLowerCase())
+                                                .contains('approved')
                                             ? Ionicons.shield_checkmark_sharp
-                                            : Icons.work_history_rounded,
+                                            : notifications[index]
+                                                    .notificationBody
+                                                    .contains('resumed')
+                                                ? Ionicons.play_forward
+                                                : notifications[index]
+                                                        .notificationBody
+                                                        .contains('stand by')
+                                                    ? Ionicons.warning
+                                                    : notifications[index]
+                                                            .notificationTitle
+                                                            .contains("Request")
+                                                        ? Icons.edit_document
+                                                        : Icons
+                                                            .work_history_rounded,
                                     notificationColor: notifications[index]
-                                            .notificationBody
-                                            .contains('Denied'.toLowerCase())
-                                        ? Colors.red
+                                            .notificationTitle
+                                            .contains("Request")
+                                        ? Colors.teal
                                         : notifications[index]
                                                 .notificationBody
-                                                .contains(
-                                                    'Approved'.toLowerCase())
-                                            ? Colors.green
-                                            : Colors.lightBlueAccent,
+                                                .contains('denied')
+                                            ? Colors.red
+                                            : notifications[index]
+                                                    .notificationBody
+                                                    .contains('approved')
+                                                ? Colors.green
+                                                : notifications[index]
+                                                        .notificationBody
+                                                        .contains('resumed')
+                                                    ? Colors.deepPurpleAccent
+                                                    : notifications[index]
+                                                            .notificationBody
+                                                            .contains(
+                                                                'stand by')
+                                                        ? Colors.orangeAccent
+                                                        : Colors
+                                                            .lightBlueAccent,
                                     notificationDateOfCreation:
                                         notifications[index].createdAt,
                                   ),
