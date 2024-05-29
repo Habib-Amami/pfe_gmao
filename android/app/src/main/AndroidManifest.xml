@@ -12,10 +12,10 @@
     <!-- Permissions options enable vibration permission -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <application
-        android:label="pfe_gmao"
+        android:label="MobileORB"
         android:name="${applicationName}"
         android:enableOnBackInvokedCallback="true"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"
