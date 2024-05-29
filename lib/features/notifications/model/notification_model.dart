@@ -398,8 +398,7 @@ class NotificationsModel {
   }
 
   //method to delete intervention files notifications
-  //TO DO : make the method delete work order notification
-  Future<void> deleteNotification({
+  Future<void> deleteIFNotification({
     required String notificationID,
   }) async {
     // Retrieve the current user ID
@@ -409,6 +408,21 @@ class NotificationsModel {
         .collection(userCollectionRef)
         .doc(currentUserID)
         .collection("IF_notifications")
+        .doc(notificationID)
+        .delete();
+  }
+
+  //method to delete work order notifications
+  Future<void> deleteWONotification({
+    required String notificationID,
+  }) async {
+    // Retrieve the current user ID
+    String currentUserID = FirebaseAuth.instance.currentUser!.uid;
+    //
+    await firestore
+        .collection(userCollectionRef)
+        .doc(currentUserID)
+        .collection("WO_notifications")
         .doc(notificationID)
         .delete();
   }

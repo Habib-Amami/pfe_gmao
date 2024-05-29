@@ -153,7 +153,8 @@ class _InterventionFilesNotificationsTabState
                                   children: [
                                     SlidableAction(
                                       onPressed: (context) => setState(() {
-                                        NotificationsModel().deleteNotification(
+                                        NotificationsModel()
+                                            .deleteIFNotification(
                                           notificationID: notifications[index]
                                               .notificationID,
                                         );

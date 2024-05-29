@@ -183,7 +183,8 @@ class _WorkOrderNotificationsTabState extends State<WorkOrderNotificationsTab> {
                                   children: [
                                     SlidableAction(
                                       onPressed: (context) => setState(() {
-                                        NotificationsModel().deleteNotification(
+                                        NotificationsModel()
+                                            .deleteWONotification(
                                           notificationID: notifications[index]
                                               .notificationID,
                                         );
