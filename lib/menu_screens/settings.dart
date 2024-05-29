@@ -259,7 +259,7 @@ class _SettingsState extends State<Setting> {
                                   height: 60,
                                   width: 60,
                                   decoration: BoxDecoration(
-                                    color: Colors.grey.shade200,
+                                    color: Color(0xFFEEEEEE),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: themeProvider.themeData == lightTheme
