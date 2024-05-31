@@ -1,4 +1,4 @@
-import 'package:pfe_gmao/features/interventions/model/intervention_model.dart';
+import '../model/intervention_model.dart';
 
 class InterventionsController {
   final InterventionModel model = InterventionModel();
@@ -36,7 +36,7 @@ class InterventionsController {
     }
   }
 
-  Future<void> addCurativeIvention({
+  Future<void> addCurativeIntervention({
     required String startDate,
     required String interventionFileID,
     required String equipmentTagName,
@@ -50,7 +50,7 @@ class InterventionsController {
     required String interventionTask,
   }) async {
     try {
-      model.addCurativeIventionDB(
+      model.addCurativeInterventionDB(
           startDate: startDate,
           interventionFileID: interventionFileID,
           equipmentTagName: equipmentTagName,

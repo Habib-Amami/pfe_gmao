@@ -5,11 +5,11 @@ import 'package:uuid/uuid.dart';
 import '../../interventions/controller/interventions_controller.dart';
 import '../../interventions/model/constants/intervention_status.dart';
 import '../../notifications/model/notification_model.dart';
+import '../controller/intervention_file_controller.dart';
 import '../model/constants/intervention_types_list.dart';
 import '../model/data_models/curative_intervention_file.dart';
 import '../model/data_models/intervention_file_status.dart';
 import '../model/data_models/preventive_intervention_file.dart';
-import '../model/intervention_file_model.dart';
 import 'widgets/file_status_rectangular_widgets/confirmed_status.dart';
 import 'widgets/file_status_rectangular_widgets/denied_status.dart';
 import 'widgets/intervention_file_widgets/curative_file_widget.dart';
@@ -42,7 +42,12 @@ class InterventionFileValidationView extends StatefulWidget {
 
 class _InterventionFileValidationView
     extends State<InterventionFileValidationView> {
-  final InterventionsController controller = InterventionsController();
+  final InterventionFileController interventionFileController =
+      InterventionFileController();
+
+  final InterventionsController interventionController =
+      InterventionsController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -193,7 +198,7 @@ class _InterventionFileValidationView
                                                           const Uuid().v4();
                                                       setState(
                                                         () {
-                                                          InterventionFileModel()
+                                                          interventionFileController
                                                               .changeInterventionFileStatus(
                                                             equipmentID: widget
                                                                 .equipmentID,
@@ -245,8 +250,8 @@ class _InterventionFileValidationView
                                                         equipmentDiscipline: widget
                                                             .equipmentDiscipline,
                                                       );
-                                                      controller
-                                                          .addCurativeIvention(
+                                                      interventionController
+                                                          .addCurativeIntervention(
                                                         startDate:
                                                             interventionFile
                                                                 .startingDay,
@@ -331,7 +336,7 @@ class _InterventionFileValidationView
                                                           const Uuid().v4();
                                                       setState(
                                                         () {
-                                                          InterventionFileModel()
+                                                          interventionFileController
                                                               .changeInterventionFileStatus(
                                                             equipmentID: widget
                                                                 .equipmentID,
@@ -493,7 +498,7 @@ class _InterventionFileValidationView
                                                         const Uuid().v4();
                                                     setState(
                                                       () {
-                                                        InterventionFileModel()
+                                                        interventionFileController
                                                             .changeInterventionFileStatus(
                                                           equipmentID: widget
                                                               .equipmentID,
@@ -544,7 +549,7 @@ class _InterventionFileValidationView
                                                       equipmentDiscipline: widget
                                                           .equipmentDiscipline,
                                                     );
-                                                    controller
+                                                    interventionController
                                                         .addPreventiveInterventions(
                                                       startDate:
                                                           interventionFile
@@ -631,7 +636,7 @@ class _InterventionFileValidationView
                                                           const Uuid().v4();
                                                       setState(
                                                         () {
-                                                          InterventionFileModel()
+                                                          interventionFileController
                                                               .changeInterventionFileStatus(
                                                             equipmentID: widget
                                                                 .equipmentID,

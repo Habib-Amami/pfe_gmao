@@ -56,7 +56,7 @@ class _InProgressStateState extends State<InProgressState> {
                               setState(
                                 () {
                                   InterventionFileModel()
-                                      .changeInterventionFileStatus(
+                                      .changeInterventionFileStatusDB(
                                     equipmentID: widget.equipmentID,
                                     equipmentDiscipline:
                                         widget.equipmentDiscipline,

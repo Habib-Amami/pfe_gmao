@@ -64,4 +64,25 @@ class InterventionFileController {
       rethrow;
     }
   }
+
+  //change intervention file status
+  Future<void> changeInterventionFileStatus({
+    required String equipmentID,
+    required String equipmentDiscipline,
+    required String interventionFileID,
+    required String interventionType,
+    required String newStatus,
+  }) async {
+    try {
+      _interventionFileModel.changeInterventionFileStatusDB(
+        equipmentID: equipmentID,
+        equipmentDiscipline: equipmentDiscipline,
+        interventionFileID: interventionFileID,
+        interventionType: interventionType,
+        newStatus: newStatus,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

@@ -146,7 +146,7 @@ class InterventionFileModel {
   }
 
   //change intervention file status
-  Future<void> changeInterventionFileStatus({
+  Future<void> changeInterventionFileStatusDB({
     required String equipmentID,
     required String equipmentDiscipline,
     required String interventionFileID,

@@ -68,7 +68,7 @@ class InterventionModel {
     await batch.commit();
   }
 
-  Future<void> addCurativeIventionDB({
+  Future<void> addCurativeInterventionDB({
     required String startDate,
     required String interventionFileID,
     required String equipmentTagName,
