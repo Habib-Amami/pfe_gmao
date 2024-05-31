@@ -314,7 +314,7 @@ class NotificationsModel {
   }
 
   //method to delete intervention files notifications
-  Future<void> deleteIFNotification({
+  Future<void> deleteIFNotificationDB({
     required String notificationID,
   }) async {
     // Retrieve the current user ID

@@ -7,8 +7,8 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../firebase/cloud_firestore_references.dart';
 import '../../../intervention_files/View/intervention_file_validation_view.dart';
+import '../../controller/notification_controller.dart';
 import '../../model/data_models/intervention_file_validation_notification.dart';
-import '../../model/notification_model.dart';
 import '../widget/notification_widget.dart';
 
 class InterventionFilesNotificationsTab extends StatefulWidget {
@@ -21,6 +21,9 @@ class InterventionFilesNotificationsTab extends StatefulWidget {
 
 class _InterventionFilesNotificationsTabState
     extends State<InterventionFilesNotificationsTab> {
+  final NotificationController notificationController =
+      NotificationController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -153,7 +156,7 @@ class _InterventionFilesNotificationsTabState
                                   children: [
                                     SlidableAction(
                                       onPressed: (context) => setState(() {
-                                        NotificationsModel()
+                                        notificationController
                                             .deleteIFNotification(
                                           notificationID: notifications[index]
                                               .notificationID,

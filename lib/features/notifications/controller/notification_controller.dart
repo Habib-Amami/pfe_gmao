@@ -64,4 +64,83 @@ class NotificationController {
       rethrow;
     }
   }
+
+  ///
+  /// intervention file notification methodes
+  ///
+
+  //add a intervention files notification the the admins documents
+  Future<void> addInterventionFileValidationNotification({
+    required String notificationID,
+    required String notificationTitle,
+    required String notificationBody,
+    required String interventionFileCreatorID,
+    required String interventionFileCreatorToken,
+    required String interventionFileID,
+    required String interventionType,
+    required String equipmentID,
+    required String equipmentTagName,
+    required String equipmentDiscipline,
+  }) async {
+    try {
+      model.addInterventionFileValidationNotificationDB(
+        notificationID: notificationID,
+        notificationTitle: notificationTitle,
+        notificationBody: notificationBody,
+        interventionFileCreatorID: interventionFileCreatorID,
+        interventionFileCreatorToken: interventionFileCreatorToken,
+        interventionFileID: interventionFileID,
+        interventionType: interventionType,
+        equipmentID: equipmentID,
+        equipmentTagName: equipmentTagName,
+        equipmentDiscipline: equipmentDiscipline,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  //add a notification validation update to the file creator using this FCM token
+  Future<void> addValidationNotificationUpdateDB({
+    required String notificationID,
+    required String notificationTitle,
+    required String notificationBody,
+    required String interventionFileCreatorID,
+    required String interventionFileCreatorToken,
+    required String interventionFileID,
+    required String interventionType,
+    required String equipmentID,
+    required String equipmentTagName,
+    required String equipmentDiscipline,
+  }) async {
+    try {
+      model.addValidationNotificationUpdateDB(
+        notificationID: notificationID,
+        notificationTitle: notificationTitle,
+        notificationBody: notificationBody,
+        interventionFileCreatorID: interventionFileCreatorID,
+        interventionFileCreatorToken: interventionFileCreatorToken,
+        interventionFileID: interventionFileID,
+        interventionType: interventionType,
+        equipmentID: equipmentID,
+        equipmentTagName: equipmentTagName,
+        equipmentDiscipline: equipmentDiscipline,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  //method to delete intervention files notifications
+  Future<void> deleteIFNotification({
+    required String notificationID,
+  }) async {
+    try {
+      model.deleteIFNotificationDB(
+        notificationID: notificationID,
+      );
+    } catch (e) {
+      return;
+    }
+  }
 }

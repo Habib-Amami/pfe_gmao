@@ -528,7 +528,7 @@ class _InterventionFileValidationView
                                                       notificationBody:
                                                           "The intervention file you created for ${widget.equipmentTagName} was validated",
                                                     );
-                                                    NotificationsModel()
+                                                    notificationController
                                                         .addValidationNotificationUpdateDB(
                                                       notificationID:
                                                           notificationID,

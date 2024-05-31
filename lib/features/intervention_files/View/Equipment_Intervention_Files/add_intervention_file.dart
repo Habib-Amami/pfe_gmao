@@ -8,7 +8,6 @@ import 'package:ionicons/ionicons.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../notifications/controller/notification_controller.dart';
-import '../../../notifications/model/notification_model.dart';
 import '../../controller/intervention_file_controller.dart';
 import '../../model/constants/breakdown_types.dart';
 import '../../model/constants/criticality_levels_list.dart';
@@ -1021,8 +1020,8 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                             //adding a notification document to
                                             //admins of that discipline
                                             //notifications sub collection
-                                            NotificationsModel()
-                                                .addInterventionFileValidationNotificationDB(
+                                            notificationController
+                                                .addInterventionFileValidationNotification(
                                               notificationID: notificationID,
                                               notificationTitle: notifTitle,
                                               notificationBody: notifBody,

@@ -5,13 +5,14 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pfe_gmao/features/notifications/model/data_models/work_order_notification.dart';
-import 'package:pfe_gmao/features/notifications/model/notification_model.dart';
-import 'package:pfe_gmao/features/notifications/view/widget/notification_widget.dart';
-import 'package:pfe_gmao/features/profile_management/model/user.dart';
-import 'package:pfe_gmao/features/work_order/view/work%20order%20view/admin_wo_view.dart';
-import 'package:pfe_gmao/features/work_order/view/work%20order%20view/engineer_wo_view.dart';
-import 'package:pfe_gmao/firebase/cloud_firestore_references.dart';
+
+import '../../../../firebase/cloud_firestore_references.dart';
+import '../../../profile_management/model/user.dart';
+import '../../../work_order/view/work%20order%20view/admin_wo_view.dart';
+import '../../../work_order/view/work%20order%20view/engineer_wo_view.dart';
+import '../../model/data_models/work_order_notification.dart';
+import '../../model/notification_model.dart';
+import '../widget/notification_widget.dart';
 
 class WorkOrderNotificationsTab extends StatefulWidget {
   const WorkOrderNotificationsTab({super.key});
