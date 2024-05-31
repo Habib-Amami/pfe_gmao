@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pfe_gmao/features/notifications/controller/notification_controller.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../interventions/controller/interventions_controller.dart';
@@ -47,6 +48,9 @@ class _InterventionFileValidationView
 
   final InterventionsController interventionController =
       InterventionsController();
+
+  final NotificationController notificationController =
+      NotificationController();
 
   @override
   Widget build(BuildContext context) {
@@ -216,7 +220,7 @@ class _InterventionFileValidationView
                                                           );
                                                         },
                                                       );
-                                                      NotificationsModel()
+                                                      notificationController
                                                           .sendNotificationToDevice(
                                                         deviceToken: widget
                                                             .interventionFileCreatorToken,
@@ -352,7 +356,7 @@ class _InterventionFileValidationView
                                                                 interventionFileStatus[
                                                                     1],
                                                           );
-                                                          NotificationsModel()
+                                                          notificationController
                                                               .sendNotificationToDevice(
                                                             deviceToken: widget
                                                                 .interventionFileCreatorToken,
@@ -515,7 +519,7 @@ class _InterventionFileValidationView
                                                         );
                                                       },
                                                     );
-                                                    NotificationsModel()
+                                                    notificationController
                                                         .sendNotificationToDevice(
                                                       deviceToken: widget
                                                           .interventionFileCreatorToken,
@@ -652,7 +656,7 @@ class _InterventionFileValidationView
                                                                 interventionFileStatus[
                                                                     1],
                                                           );
-                                                          NotificationsModel()
+                                                          notificationController
                                                               .sendNotificationToDevice(
                                                             deviceToken: widget
                                                                 .interventionFileCreatorToken,

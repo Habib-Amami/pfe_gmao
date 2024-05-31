@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../notifications/controller/notification_controller.dart';
 import '../../../notifications/model/notification_model.dart';
 import '../../controller/intervention_file_controller.dart';
 import '../../model/constants/breakdown_types.dart';
@@ -19,8 +20,8 @@ import '../../model/data_models/spare_part.dart';
 import '../../model/data_models/tool.dart';
 import '../widgets/add_file_form/empty_selection_container.dart';
 import '../widgets/add_file_form/intervention_file_drop_down_menu.dart';
-import '../widgets/add_file_form/intervention_file_form_title.dart';
 import '../widgets/add_file_form/intervention_file_form_files.dart';
+import '../widgets/add_file_form/intervention_file_form_title.dart';
 import '../widgets/add_file_form/list_header.dart';
 import '../widgets/add_file_form/spare_part_card.dart';
 import '../widgets/add_file_form/technician_card.dart';
@@ -47,6 +48,10 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
   //Creating an instance of the intervention file controller
   final InterventionFileController _interventionFileController =
       InterventionFileController();
+
+  //Creating an instance of notification controller
+  final NotificationController notificationController =
+      NotificationController();
 
   // Form key for managing the state of the intervention file form
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
@@ -979,7 +984,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                             );
                                             //getting the list of admins that will be notified
                                             List<String> adminsTokens =
-                                                await NotificationsModel()
+                                                await notificationController
                                                     .getAdminsTokens(
                                               equipmentDiscipline:
                                                   widget.equipmentDiscipline,
@@ -994,7 +999,7 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                                 "an new intervention file for ${widget.equipmentTagName} was created";
                                             //getting the stored token
                                             String? currentUserToken =
-                                                await NotificationsModel()
+                                                await notificationController
                                                     .getCurrentUserToken();
 
                                             //getting current user id
@@ -1004,8 +1009,8 @@ class _AddInterventionFileState extends State<AddInterventionFile> {
                                               print(
                                                   "current user id: $currentUserID");
                                             }
-                                            //sending psu notification to admins of that didcipline
-                                            NotificationsModel()
+                                            //sending push notification to admins of that didcipline
+                                            notificationController
                                                 .sendIFValidationRequestNotification(
                                               adminsTokens: adminsTokens,
                                               equipmentDiscipline:

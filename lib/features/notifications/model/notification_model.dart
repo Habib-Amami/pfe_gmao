@@ -7,12 +7,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
-import 'package:pfe_gmao/features/notifications/model/data_models/work_order_notification.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../../profile_management/model/user.dart';
 import 'data_models/intervention_file_validation_notification.dart';
+import 'data_models/work_order_notification.dart';
 
 class NotificationsModel {
   //firestore intace
@@ -49,6 +49,10 @@ class NotificationsModel {
       print('A Background message just showed up :  ${message.messageId}');
     }
   }
+
+  ///
+  ///Push notification methodes
+  ///
 
   // Function to send a push notification to a specific device
   Future<void> sendNotificationToDevice({
@@ -178,7 +182,9 @@ class NotificationsModel {
     }
   }
 
-  /// intervention file notification methodes ///
+  ///
+  /// intervention file notification methodes
+  ///
 
   //add a intervention files notification the the admins documents
   Future<void> addInterventionFileValidationNotificationDB({
@@ -307,7 +313,24 @@ class NotificationsModel {
         .set(notification.toJson());
   }
 
-  /// work order notification methods ///
+  //method to delete intervention files notifications
+  Future<void> deleteIFNotification({
+    required String notificationID,
+  }) async {
+    // Retrieve the current user ID
+    String currentUserID = FirebaseAuth.instance.currentUser!.uid;
+    //
+    await firestore
+        .collection(userCollectionRef)
+        .doc(currentUserID)
+        .collection("IF_notifications")
+        .doc(notificationID)
+        .delete();
+  }
+
+  ///
+  /// work order notification methods
+  ///
 
   //Function to add a notification to the engineer that he got a new work order
   Future<void> sendDispatchWorkorderNotification({
@@ -395,21 +418,6 @@ class NotificationsModel {
         .collection("WO_notifications")
         .doc(notificationID)
         .set(notification.toJson());
-  }
-
-  //method to delete intervention files notifications
-  Future<void> deleteIFNotification({
-    required String notificationID,
-  }) async {
-    // Retrieve the current user ID
-    String currentUserID = FirebaseAuth.instance.currentUser!.uid;
-    //
-    await firestore
-        .collection(userCollectionRef)
-        .doc(currentUserID)
-        .collection("IF_notifications")
-        .doc(notificationID)
-        .delete();
   }
 
   //method to delete work order notifications
