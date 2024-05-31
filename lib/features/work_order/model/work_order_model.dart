@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:pfe_gmao/features/work_order/model/constants/work_order_status.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
 import '../../interventions/model/constants/intervention_status.dart';
+import 'constants/work_order_status.dart';
 import 'data_models/work_order.dart';
 
 class WorkOrderModel {
@@ -83,7 +83,7 @@ class WorkOrderModel {
   }
 
   //Methode to update the work order status depending on the case
-  Future<void> updateWorkOrderStatus({
+  Future<void> updateWorkOrderStatusDB({
     required String workOrderID,
     required String newStatus,
     required String creatorID,

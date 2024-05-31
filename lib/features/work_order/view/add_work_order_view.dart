@@ -1,18 +1,16 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:pfe_gmao/features/notifications/model/notification_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
+import '../../notifications/model/notification_model.dart';
 import '../../profile_management/model/user.dart';
+import '../controller/work_order_controller.dart';
 import '../model/constants/work_order_status.dart';
-import '../model/work_order_model.dart';
 import 'widgets/timer.dart';
 import 'widgets/work_order_form_field.dart';
 import 'widgets/work_order_form_title.dart';
@@ -52,6 +50,8 @@ class AddWorkOrderView extends StatefulWidget {
 }
 
 class _AddWorkOrderViewState extends State<AddWorkOrderView> {
+  //work order controller
+  WorkorderController controller = WorkorderController();
   //ADMINISTRATOR INFORMATION
   late UserModel admin;
   //variable for the execution date
@@ -569,11 +569,13 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
                         //check if teh starting time is earlier then the finishing time
 
                         if (startingTime >= finishingTime) {
+                          // ignore: prefer_interpolation_to_compose_strings
                           snackBarContent = snackBarContent +
                               "- Please ensure the start time is before the finish time\n";
                         }
                         //check if the user provided steps for the work order
                         if (stepsList.isEmpty) {
+                          // ignore: prefer_interpolation_to_compose_strings
                           snackBarContent = snackBarContent +
                               "- Please provide steps for the work order\n";
                         }
@@ -606,7 +608,7 @@ class _AddWorkOrderViewState extends State<AddWorkOrderView> {
                                           //generating a work order id
                                           String orderID = const Uuid().v4();
                                           //adding work order to database
-                                          await WorkOrderModel().addWorkOrderDB(
+                                          await controller.addWorkOrder(
                                             workorderID: orderID,
                                             workorderStatus: workOrderStatus[0],
                                             workorderCreatorID: admin.id,

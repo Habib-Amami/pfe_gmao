@@ -5,9 +5,9 @@ import 'package:uuid/uuid.dart';
 
 import '../../../../firebase/cloud_firestore_references.dart';
 import '../../../notifications/model/notification_model.dart';
+import '../../controller/work_order_controller.dart';
 import '../../model/constants/work_order_status.dart';
 import '../../model/data_models/work_order.dart';
-import '../../model/work_order_model.dart';
 import '../widgets/work_order_form_field.dart';
 import '../widgets/work_order_form_title.dart';
 import '../widgets/work_order_state_widgets/engineer/engineer_finished_view.dart';
@@ -29,8 +29,12 @@ class EngineerWorkOrderView extends StatefulWidget {
 }
 
 class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
+  //work order controller
+  WorkorderController workorderController = WorkorderController();
+
   // Form key for managing the state of the stand by reason  update form
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+
   // Variables to store stand by reason
   String standByReason = "";
 
@@ -352,7 +356,7 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                                 onPressed: () {
                                                   //Updating the work order state to
                                                   //'Finished'
-                                                  WorkOrderModel()
+                                                  workorderController
                                                       .updateWorkOrderStatus(
                                                     workOrderID: wo.workorderID,
                                                     //'Finished'
@@ -480,7 +484,7 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
 
                                                     //update the work order state to
                                                     //'Stand By'
-                                                    WorkOrderModel()
+                                                    workorderController
                                                         .updateWorkOrderStatus(
                                                       workOrderID:
                                                           wo.workorderID,
@@ -567,7 +571,7 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                                   onPressed: () {
                                                     //Updating the work order state to
                                                     //'Finished'
-                                                    WorkOrderModel()
+                                                    workorderController
                                                         .updateWorkOrderStatus(
                                                       workOrderID:
                                                           wo.workorderID,

@@ -6,9 +6,9 @@ import 'package:uuid/uuid.dart';
 import '../../../../firebase/cloud_firestore_references.dart';
 import '../../../notifications/model/notification_model.dart';
 import '../../../profile_management/model/user.dart';
+import '../../controller/work_order_controller.dart';
 import '../../model/constants/work_order_status.dart';
 import '../../model/data_models/work_order.dart';
-import '../../model/work_order_model.dart';
 import '../widgets/work_order_form_field.dart';
 import '../widgets/work_order_form_title.dart';
 import '../widgets/work_order_state_widgets/administrator/admin_finished_view.dart';
@@ -31,9 +31,16 @@ class AdminWorkOrderView extends StatefulWidget {
 }
 
 class _AdminWorkOrderViewState extends State<AdminWorkOrderView> {
+  //work order controller
+  WorkorderController workorderController = WorkorderController();
+
+  //form key for validating the deny reason form field
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+
+  //variable for the deny reason
   String _denyReason = "";
-// work order information query
+
+  // work order information query
   Future<WorkOrder> fetchWorkOrderDetails(String id) async {
     DocumentSnapshot doc = await FirebaseFirestore.instance
         .collection(userCollectionRef)
@@ -420,7 +427,7 @@ class _AdminWorkOrderViewState extends State<AdminWorkOrderView> {
                                                             notificationBody:
                                                                 "A work order for ${wo.equipmentTagName} was approved. Work order is terminated",
                                                           );
-                                                          WorkOrderModel()
+                                                          workorderController
                                                               .updateWorkOrderStatus(
                                                             workOrderID:
                                                                 wo.workorderID,
@@ -561,7 +568,7 @@ class _AdminWorkOrderViewState extends State<AdminWorkOrderView> {
                                                               .save();
 
                                                           //update the work order state to'in progress'
-                                                          WorkOrderModel()
+                                                          workorderController
                                                               .updateWorkOrderStatus(
                                                             workOrderID:
                                                                 wo.workorderID,
