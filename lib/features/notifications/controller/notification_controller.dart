@@ -143,4 +143,94 @@ class NotificationController {
       return;
     }
   }
+
+  ///
+  /// work order notification methods
+  ///
+
+  //Function to add a notification to the engineer that he got a new work order
+  Future<void> sendDispatchWorkorderNotification({
+    required String notificationID,
+    required String notificationTitle,
+    required String notificationBody,
+    required String workorderCreatorID,
+    required String technicianID,
+    required String workOrderID,
+    required String interventionID,
+  }) async {
+    try {
+      model.sendDispatchWorkorderNotificationDB(
+        notificationID: notificationID,
+        notificationTitle: notificationTitle,
+        notificationBody: notificationBody,
+        workorderCreatorID: workorderCreatorID,
+        technicianID: technicianID,
+        workOrderID: workOrderID,
+        interventionID: interventionID,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // method to validate or deny the termination request
+  Future<void> validateOrDenyRequestNotification({
+    required String notificationID,
+    required String notificationTitle,
+    required String notificationBody,
+    required String workorderCreatorID,
+    required String technicianID,
+    required String workOrderID,
+    required String interventionID,
+  }) async {
+    try {
+      model.validateOrDenyRequestNotificationDB(
+        notificationID: notificationID,
+        notificationTitle: notificationTitle,
+        notificationBody: notificationBody,
+        workorderCreatorID: workorderCreatorID,
+        technicianID: technicianID,
+        workOrderID: workOrderID,
+        interventionID: interventionID,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  //method to change the work order status
+  Future<void> sendWorkorderValidationRequestorStandByNotification({
+    required String notificationID,
+    required String notificationTitle,
+    required String notificationBody,
+    required String workorderCreatorID,
+    required String technicianID,
+    required String workOrderID,
+    required String interventionID,
+  }) async {
+    try {
+      model.sendWorkorderValidationRequestorStandByNotificationDB(
+        notificationID: notificationID,
+        notificationTitle: notificationTitle,
+        notificationBody: notificationBody,
+        workorderCreatorID: workorderCreatorID,
+        technicianID: technicianID,
+        workOrderID: workOrderID,
+        interventionID: interventionID,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  //method to delete work order notifications
+  Future<void> deleteWONotification({
+    required String notificationID,
+  }) async {
+    try {
+      model.deleteWONotificationDB(notificationID: notificationID);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

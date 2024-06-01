@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pfe_gmao/features/notifications/controller/notification_controller.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../firebase/cloud_firestore_references.dart';
@@ -31,6 +32,9 @@ class EngineerWorkOrderView extends StatefulWidget {
 class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
   //work order controller
   WorkorderController workorderController = WorkorderController();
+
+  //notification controller
+  NotificationController notificationController = NotificationController();
 
   // Form key for managing the state of the stand by reason  update form
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
@@ -384,7 +388,7 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                                       const Uuid().v4();
                                                   //adding a notification to the admin who created the work order
                                                   //to request validation
-                                                  NotificationsModel()
+                                                  notificationController
                                                       .sendWorkorderValidationRequestorStandByNotification(
                                                     notificationID:
                                                         notificationID,
@@ -514,7 +518,7 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                                         const Uuid().v4();
                                                     //adding a notification to the admin who created the work order
                                                     //Stand by
-                                                    NotificationsModel()
+                                                    notificationController
                                                         .sendWorkorderValidationRequestorStandByNotification(
                                                       notificationID:
                                                           notificationID,
@@ -600,7 +604,7 @@ class _EngineerWorkOrderViewState extends State<EngineerWorkOrderView> {
                                                         const Uuid().v4();
                                                     //adding a notification to the admin who created the work order
                                                     //to request validation
-                                                    NotificationsModel()
+                                                    notificationController
                                                         .sendWorkorderValidationRequestorStandByNotification(
                                                       notificationID:
                                                           notificationID,

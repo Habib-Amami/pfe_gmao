@@ -10,8 +10,8 @@ import '../../../../firebase/cloud_firestore_references.dart';
 import '../../../profile_management/model/user.dart';
 import '../../../work_order/view/work%20order%20view/admin_wo_view.dart';
 import '../../../work_order/view/work%20order%20view/engineer_wo_view.dart';
+import '../../controller/notification_controller.dart';
 import '../../model/data_models/work_order_notification.dart';
-import '../../model/notification_model.dart';
 import '../widget/notification_widget.dart';
 
 class WorkOrderNotificationsTab extends StatefulWidget {
@@ -23,6 +23,9 @@ class WorkOrderNotificationsTab extends StatefulWidget {
 }
 
 class _WorkOrderNotificationsTabState extends State<WorkOrderNotificationsTab> {
+  //notification controller;
+  NotificationController notificationController = NotificationController();
+
   late UserModel user;
 
   //method to fetch the admin data
@@ -184,7 +187,7 @@ class _WorkOrderNotificationsTabState extends State<WorkOrderNotificationsTab> {
                                   children: [
                                     SlidableAction(
                                       onPressed: (context) => setState(() {
-                                        NotificationsModel()
+                                        notificationController
                                             .deleteWONotification(
                                           notificationID: notifications[index]
                                               .notificationID,

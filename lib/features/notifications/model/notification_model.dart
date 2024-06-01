@@ -333,7 +333,7 @@ class NotificationsModel {
   ///
 
   //Function to add a notification to the engineer that he got a new work order
-  Future<void> sendDispatchWorkorderNotification({
+  Future<void> sendDispatchWorkorderNotificationDB({
     required String notificationID,
     required String notificationTitle,
     required String notificationBody,
@@ -362,7 +362,7 @@ class NotificationsModel {
   }
 
   // method to validate or deny the termination request
-  Future<void> validateOrDenyRequestNotification({
+  Future<void> validateOrDenyRequestNotificationDB({
     required String notificationID,
     required String notificationTitle,
     required String notificationBody,
@@ -391,7 +391,7 @@ class NotificationsModel {
   }
 
   //method to change the work order status
-  Future<void> sendWorkorderValidationRequestorStandByNotification({
+  Future<void> sendWorkorderValidationRequestorStandByNotificationDB({
     required String notificationID,
     required String notificationTitle,
     required String notificationBody,
@@ -421,7 +421,7 @@ class NotificationsModel {
   }
 
   //method to delete work order notifications
-  Future<void> deleteWONotification({
+  Future<void> deleteWONotificationDB({
     required String notificationID,
   }) async {
     // Retrieve the current user ID

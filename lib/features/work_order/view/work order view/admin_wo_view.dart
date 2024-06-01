@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../firebase/cloud_firestore_references.dart';
+import '../../../notifications/controller/notification_controller.dart';
 import '../../../notifications/model/notification_model.dart';
 import '../../../profile_management/model/user.dart';
 import '../../controller/work_order_controller.dart';
@@ -33,6 +34,9 @@ class AdminWorkOrderView extends StatefulWidget {
 class _AdminWorkOrderViewState extends State<AdminWorkOrderView> {
   //work order controller
   WorkorderController workorderController = WorkorderController();
+
+  //Notification controller
+  NotificationController notificationController = NotificationController();
 
   //form key for validating the deny reason form field
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
@@ -446,7 +450,7 @@ class _AdminWorkOrderViewState extends State<AdminWorkOrderView> {
                                                           String
                                                               notificationID =
                                                               const Uuid().v4();
-                                                          NotificationsModel()
+                                                          notificationController
                                                               .validateOrDenyRequestNotification(
                                                             interventionID: wo
                                                                 .interventionID,
@@ -598,7 +602,7 @@ class _AdminWorkOrderViewState extends State<AdminWorkOrderView> {
                                                           String
                                                               notificationID =
                                                               const Uuid().v4();
-                                                          NotificationsModel()
+                                                          notificationController
                                                               .validateOrDenyRequestNotification(
                                                             interventionID: wo
                                                                 .interventionID,
