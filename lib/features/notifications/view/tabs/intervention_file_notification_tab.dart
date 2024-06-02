@@ -172,7 +172,19 @@ class _InterventionFilesNotificationsTabState
                                   ],
                                 ),
                                 child: GestureDetector(
-                                  onTap: () {
+                                  onTap: () async {
+                                    try {
+                                      await FirebaseFirestore.instance
+                                          .collection('users')
+                                          .doc(currentUser!.uid)
+                                          .collection('IF_notifications')
+                                          .doc(notifications[index]
+                                              .notificationID)
+                                          .update({'isRead': true});
+                                    } catch (e) {
+                                      debugPrint(
+                                          'Error updating notification status: $e');
+                                    }
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(

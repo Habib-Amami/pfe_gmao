@@ -43,7 +43,7 @@ class _WorkOrderNotificationsTabState extends State<WorkOrderNotificationsTab> {
     return user.role == Roles.Administrator;
   }
 
-  void fecthUserRole() async {
+  void fetchUserRole() async {
     isAdmin = await adminCheck();
   }
 
@@ -51,7 +51,7 @@ class _WorkOrderNotificationsTabState extends State<WorkOrderNotificationsTab> {
 
   @override
   void initState() {
-    fecthUserRole();
+    fetchUserRole();
     super.initState();
   }
 
@@ -203,7 +203,20 @@ class _WorkOrderNotificationsTabState extends State<WorkOrderNotificationsTab> {
                                   ],
                                 ),
                                 child: GestureDetector(
-                                  onTap: () {
+                                  onTap: () async {
+                                    try {
+                                      await FirebaseFirestore.instance
+                                          .collection('users')
+                                          .doc(currentUser!.uid)
+                                          .collection('WO_notifications')
+                                          .doc(notifications[index]
+                                              .notificationID)
+                                          .update({'isRead': true});
+                                    } catch (e) {
+                                      debugPrint(
+                                          'Error updating notification status: $e');
+                                    }
+
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(builder: (context) {
