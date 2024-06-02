@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -81,16 +82,23 @@ class EquipmentScreenState extends State<EquipmentScreen> {
       ),
       resizeToAvoidBottomInset: true,
       floatingActionButton: isAdmin
-          ? FloatingActionButton.extended(
-              label: const Text("Add"),
-              icon: const Icon(Icons.library_add),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AddEquipmentPage(),
-                  ),
+          ? OpenContainer(
+              transitionType: ContainerTransitionType.fadeThrough,
+              transitionDuration: const Duration(milliseconds: 600),
+              closedElevation: 6.0,
+              closedShape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(16.0)),
+              ),
+              closedColor: Theme.of(context).primaryColor,
+              closedBuilder: (BuildContext _, VoidCallback openContainer) {
+                return FloatingActionButton.extended(
+                  label: const Text("Add"),
+                  icon: const Icon(Icons.library_add),
+                  onPressed: openContainer,
                 );
+              },
+              openBuilder: (BuildContext _, VoidCallback __) {
+                return const AddEquipmentPage();
               },
             )
           : null,
