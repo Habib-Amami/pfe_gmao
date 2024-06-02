@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:pfe_gmao/features/intervention_files/View/intervention_file_view.dart';
 
@@ -97,17 +98,27 @@ class CurativeInterventionFileCard extends StatelessWidget {
             ),
           ),
           Center(
-            child: TextButton(
-              child: const Text('See more'),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => InterventionFileViewPage(
-                          interventionFileID: fileID,
-                          interventionType: interventionType,
-                          equipmentDiscipline: equipmentDiscipline),
-                    ));
+            child: OpenContainer(
+              closedColor: Colors.transparent,
+              closedElevation: 0.0,
+              closedShape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(0)),
+              ),
+              transitionType: ContainerTransitionType.fadeThrough,
+              transitionDuration: const Duration(milliseconds: 400),
+              closedBuilder: (BuildContext _, VoidCallback openContainer) {
+                return TextButton.icon(
+                  onPressed: openContainer,
+                  label: const Text('See more'),
+                  icon: const Icon(Icons.add),
+                );
+              },
+              openBuilder: (BuildContext _, VoidCallback __) {
+                return InterventionFileViewPage(
+                  interventionFileID: fileID,
+                  interventionType: interventionType,
+                  equipmentDiscipline: equipmentDiscipline,
+                );
               },
             ),
           )

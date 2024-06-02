@@ -57,7 +57,7 @@ class _InterventionFileMenuState extends State<InterventionFileMenu> {
         ],
       ),
       body: PageTransitionSwitcher(
-        duration: const Duration(milliseconds: 600),
+        duration: const Duration(milliseconds: 400),
         transitionBuilder: (
           child,
           primaryAnimation,

@@ -93,7 +93,7 @@ class _HomeState extends State<Home> {
             ),
             closedColor: Colors.transparent,
             transitionType: ContainerTransitionType.fadeThrough,
-            transitionDuration: const Duration(milliseconds: 600),
+            transitionDuration: const Duration(milliseconds: 400),
             closedBuilder: (BuildContext _, VoidCallback openContainer) {
               return IconButton(
                   icon: const Icon(

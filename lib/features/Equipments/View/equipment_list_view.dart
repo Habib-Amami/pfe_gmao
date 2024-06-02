@@ -84,7 +84,7 @@ class EquipmentScreenState extends State<EquipmentScreen> {
       floatingActionButton: isAdmin
           ? OpenContainer(
               transitionType: ContainerTransitionType.fadeThrough,
-              transitionDuration: const Duration(milliseconds: 600),
+              transitionDuration: const Duration(milliseconds: 400),
               closedElevation: 6.0,
               closedShape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(16.0)),
