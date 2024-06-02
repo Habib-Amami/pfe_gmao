@@ -26,7 +26,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int currentPageIndex = 2;
+  int currentPageIndex = 0;
   bool isDarkMode = false;
   final List<Widget> menuScreens = const [
     EquipmentScreen(),
