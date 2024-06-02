@@ -22,8 +22,7 @@ class _EquipmentLocationPermissionDeniedAlertState
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration:
-          const Duration(milliseconds: 600), // Adjust the duration as needed
+      duration: const Duration(milliseconds: 600),
     );
     _animation = CurvedAnimation(
       parent: _controller,
