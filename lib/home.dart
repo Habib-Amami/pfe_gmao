@@ -96,10 +96,11 @@ class _HomeState extends State<Home> {
             transitionDuration: const Duration(milliseconds: 400),
             closedBuilder: (BuildContext _, VoidCallback openContainer) {
               return IconButton(
-                  icon: const Icon(
-                    Icons.settings_rounded,
-                  ),
-                  onPressed: openContainer);
+                icon: const Icon(
+                  Icons.settings_rounded,
+                ),
+                onPressed: openContainer,
+              );
             },
             openBuilder: (BuildContext _, VoidCallback __) {
               return const Setting();

@@ -48,17 +48,19 @@ class EquipmentPictureButton extends StatelessWidget {
             );
           }
         }).onGrantedCallback(() async {
-          CroppedFile? pickedImge = await pickImage(
-            imageSource: imageSource,
-          );
-          if (pickedImge != null) {
-            imageFile = File(pickedImge.path); // Convert picked image to file
-          } else {
-            imageFile = null;
+          if (context.mounted) {
+            CroppedFile? pickedImge = await pickImage(
+              imageSource: imageSource,
+            );
+            if (pickedImge != null) {
+              imageFile = File(pickedImge.path); // Convert picked image to file
+            } else {
+              imageFile = null;
+            }
+            onImageSelected(
+              imageFile, // Call the callback function with the selected image file
+            );
           }
-          onImageSelected(
-            imageFile, // Call the callback function with the selected image file
-          );
         }).onPermanentlyDeniedCallback(() {
           if (context.mounted) {
             showDialog(
