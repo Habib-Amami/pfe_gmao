@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:ionicons/ionicons.dart';
-
+import 'package:rxdart/rxdart.dart';
 import 'features/Equipments/View/equipment_list_view.dart';
 import 'features/intervention_files/View/Global_Intervention_Files/global_intervention_files_list.dart';
 import 'features/interventions/view/calender_screen.dart';
@@ -26,7 +26,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int currentPageIndex = 0;
+  int currentPageIndex = 2;
   bool isDarkMode = false;
   final List<Widget> menuScreens = const [
     EquipmentScreen(),
@@ -35,9 +35,36 @@ class _HomeState extends State<Home> {
     WorkOrderView(),
   ];
 
+  Stream<int> _unreadNotificationCount() {
+    final interventionFileUnreadNotificationStream = FirebaseFirestore.instance
+        .collection(userCollectionRef)
+        .doc(currentUser!.uid)
+        .collection('IF_notifications')
+        .where('isRead', isEqualTo: false)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.length;
+    });
+
+    final workOrderUnreadNotificationStream = FirebaseFirestore.instance
+        .collection(userCollectionRef)
+        .doc(currentUser!.uid)
+        .collection('WO_notifications')
+        .where('isRead', isEqualTo: false)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.length;
+    });
+    return Rx.combineLatest2(interventionFileUnreadNotificationStream,
+        workOrderUnreadNotificationStream, (int ifCount, int woCount) {
+      return ifCount + woCount;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+
     getFCMtoken();
     // setupInteractedMessage();
     FirebaseMessaging.onMessage.listen(
@@ -64,7 +91,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    String userID = currentUser!.uid;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mobile ORM'),
@@ -78,15 +104,60 @@ class _HomeState extends State<Home> {
             transitionType: ContainerTransitionType.fadeThrough,
             transitionDuration: const Duration(milliseconds: 600),
             closedBuilder: (BuildContext _, VoidCallback openContainer) {
-              return IconButton(
-                onPressed: openContainer,
-                icon: const Icon(Ionicons.notifications),
+              return StreamBuilder<int>(
+                stream: _unreadNotificationCount(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    IconButton(
+                      icon: const Icon(Icons.notifications),
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const NotificationScreen())),
+                    );
+                  }
+                  int unreadNotificationCount = snapshot.data ?? 0;
+                  return Stack(
+                    children: [
+                      IconButton(
+                        onPressed: openContainer,
+                        icon: const Icon(Ionicons.notifications),
+                      ),
+                      unreadNotificationCount > 0
+                          ? Positioned(
+                              right: 10,
+                              top: 5,
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 14,
+                                  minHeight: 14,
+                                ),
+                                child: Text(
+                                  '$unreadNotificationCount',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .background,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                    ],
+                  );
+                },
               );
             },
             openBuilder: (BuildContext _, VoidCallback __) {
-              return NotificationScreen(
-                userId: userID,
-              );
+              return const NotificationScreen();
             },
           ),
           OpenContainer(
@@ -201,37 +272,6 @@ class _HomeState extends State<Home> {
           .update({
         "FCMtoken": FCMtoken,
       });
-
-      if (kDebugMode) {
-        print("Token updated for user $userId: $FCMtoken");
-      }
     }
   }
-
-  // void setupInteractedMessage() async {
-  //   // Get any messages which caused the application to open from
-  //   // a terminated state.
-  //   RemoteMessage? initialMessage =
-  //       await FirebaseMessaging.instance.getInitialMessage();
-
-  //   // the app was opened from terminated state via a notification
-  //   // navigate to a notifications screen
-  //   if (initialMessage != null) {
-  //     _handleMessage(initialMessage);
-  //   }
-
-  //   // Also handle any interaction when the app is in the background via a
-  //   // Stream listener to navigate to the notifications screen
-  //   FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
-  // }
-
-  // //this methode will display the notification
-  // void _handleMessage(RemoteMessage message) {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => const NotificationScreen(),
-  //     ),
-  //   );
-  // }
 }

@@ -13,6 +13,7 @@ class InterventionFileValidationNotification {
   final String interventionType;
 
   final DateTime createdAt;
+  final bool isRead;
 
   InterventionFileValidationNotification({
     required this.notificationID,
@@ -26,6 +27,7 @@ class InterventionFileValidationNotification {
     required this.equipmentTagName,
     required this.equipmentDiscipline,
     required this.createdAt,
+    required this.isRead,
   });
 
   // toJson method to convert the object to a JSON format
@@ -41,6 +43,7 @@ class InterventionFileValidationNotification {
       'equipmentID': equipmentID,
       'equipmentTagName': equipmentTagName,
       'equipmentDiscipline': equipmentDiscipline,
+      'isRead': isRead,
       'createdAt': createdAt.toIso8601String(),
     };
   }
@@ -61,6 +64,7 @@ class InterventionFileValidationNotification {
       equipmentTagName: json['equipmentTagName'],
       equipmentDiscipline: json['equipmentDiscipline'],
       createdAt: DateTime.parse(json['createdAt']),
+      isRead: json['isRead'],
     );
   }
 }
