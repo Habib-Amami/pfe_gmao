@@ -64,6 +64,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    String userID = currentUser!.uid;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mobile ORM'),
@@ -83,7 +84,9 @@ class _HomeState extends State<Home> {
               );
             },
             openBuilder: (BuildContext _, VoidCallback __) {
-              return const NotificationScreen();
+              return NotificationScreen(
+                userId: userID,
+              );
             },
           ),
           OpenContainer(
