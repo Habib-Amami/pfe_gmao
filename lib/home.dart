@@ -68,29 +68,42 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text('Mobile ORM'),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const NotificationScreen(),
-                ),
-              );
-            },
-            icon: const Icon(Ionicons.notifications),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Setting(),
-                ),
-              );
-            },
-            icon: const Icon(
-              Icons.settings_rounded,
+          OpenContainer(
+            closedElevation: 0.0,
+            closedShape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(0)),
             ),
+            closedColor: Colors.transparent,
+            transitionType: ContainerTransitionType.fadeThrough,
+            transitionDuration: const Duration(milliseconds: 600),
+            closedBuilder: (BuildContext _, VoidCallback openContainer) {
+              return IconButton(
+                onPressed: openContainer,
+                icon: const Icon(Ionicons.notifications),
+              );
+            },
+            openBuilder: (BuildContext _, VoidCallback __) {
+              return const NotificationScreen();
+            },
+          ),
+          OpenContainer(
+            closedElevation: 0.0,
+            closedShape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(0)),
+            ),
+            closedColor: Colors.transparent,
+            transitionType: ContainerTransitionType.fadeThrough,
+            transitionDuration: const Duration(milliseconds: 600),
+            closedBuilder: (BuildContext _, VoidCallback openContainer) {
+              return IconButton(
+                  icon: const Icon(
+                    Icons.settings_rounded,
+                  ),
+                  onPressed: openContainer);
+            },
+            openBuilder: (BuildContext _, VoidCallback __) {
+              return const Setting();
+            },
           ),
         ],
       ),
