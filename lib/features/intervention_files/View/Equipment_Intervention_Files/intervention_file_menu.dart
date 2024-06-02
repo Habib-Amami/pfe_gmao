@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'intervention_files_list.dart';
 import 'add_intervention_file.dart';
@@ -55,17 +56,31 @@ class _InterventionFileMenuState extends State<InterventionFileMenu> {
           ),
         ],
       ),
-      body: [
-        AddInterventionFile(
-          equipmentStatus: widget.equipmentStatus,
-          equipmentTagName: widget.equipmentTagName,
-          equipmentDiscipline: widget.equipmentDiscipline,
-          equipmentID: widget.equipmentID,
-        ),
-        InterventionFilesList(
-          equipmentID: widget.equipmentID,
-        ),
-      ][currentPageIndex],
+      body: PageTransitionSwitcher(
+        duration: const Duration(milliseconds: 600),
+        transitionBuilder: (
+          child,
+          primaryAnimation,
+          secondaryAnimation,
+        ) {
+          return FadeThroughTransition(
+            animation: primaryAnimation,
+            secondaryAnimation: secondaryAnimation,
+            child: child,
+          );
+        },
+        child: [
+          AddInterventionFile(
+            equipmentStatus: widget.equipmentStatus,
+            equipmentTagName: widget.equipmentTagName,
+            equipmentDiscipline: widget.equipmentDiscipline,
+            equipmentID: widget.equipmentID,
+          ),
+          InterventionFilesList(
+            equipmentID: widget.equipmentID,
+          ),
+        ][currentPageIndex],
+      ),
     );
   }
 }

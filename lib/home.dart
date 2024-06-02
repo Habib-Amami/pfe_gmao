@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -10,13 +11,13 @@ import 'package:ionicons/ionicons.dart';
 
 import 'features/Equipments/View/equipment_list_view.dart';
 import 'features/intervention_files/View/Global_Intervention_Files/global_intervention_files_list.dart';
+import 'features/interventions/view/calender_screen.dart';
 import 'features/notifications/model/notification_model.dart';
 import 'features/notifications/view/notification_screen.dart';
+import 'features/work_order/view/work_order_view.dart';
 import 'firebase/cloud_firestore_references.dart';
 import 'main.dart';
-import 'features/interventions/view/calender_screen.dart';
 import 'menu_screens/settings.dart';
-import 'features/work_order/view/work_order_view.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -149,7 +150,21 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-      body: menuScreens[currentPageIndex],
+      body: PageTransitionSwitcher(
+        duration: const Duration(milliseconds: 600),
+        transitionBuilder: (
+          child,
+          primaryAnimation,
+          secondaryAnimation,
+        ) {
+          return FadeThroughTransition(
+            animation: primaryAnimation,
+            secondaryAnimation: secondaryAnimation,
+            child: child,
+          );
+        },
+        child: menuScreens[currentPageIndex],
+      ),
     );
   }
 
