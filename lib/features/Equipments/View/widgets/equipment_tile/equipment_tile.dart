@@ -145,7 +145,7 @@ class EquipmentTile extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(0)),
           ),
           transitionType: ContainerTransitionType.fadeThrough,
-          transitionDuration: const Duration(milliseconds: 800),
+          transitionDuration: const Duration(milliseconds: 400),
           closedBuilder: (BuildContext _, VoidCallback openContainer) {
             return TextButton.icon(
               onPressed: openContainer,
