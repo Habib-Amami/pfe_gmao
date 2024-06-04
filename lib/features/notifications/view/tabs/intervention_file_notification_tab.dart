@@ -9,7 +9,7 @@ import '../../../../firebase/cloud_firestore_references.dart';
 import '../../../intervention_files/View/intervention_file_validation_view.dart';
 import '../../controller/notification_controller.dart';
 import '../../model/data_models/intervention_file_validation_notification.dart';
-import '../widget/notification_widget.dart';
+import '../widget/notificationUI.dart';
 
 class InterventionFilesNotificationsTab extends StatefulWidget {
   const InterventionFilesNotificationsTab({super.key});
@@ -219,6 +219,7 @@ class _InterventionFilesNotificationsTabState
                                               .notificationBody
                                               .contains('denied')
                                       ? NotificationUI(
+                                          isRead: notifications[index].isRead,
                                           notificationDateOfCreation:
                                               notifications[index].createdAt,
                                           notificationTitle:
@@ -238,6 +239,8 @@ class _InterventionFilesNotificationsTabState
                                                   .notificationBody
                                                   .contains('validated')
                                           ? NotificationUI(
+                                              isRead:
+                                                  notifications[index].isRead,
                                               notificationDateOfCreation:
                                                   notifications[index]
                                                       .createdAt,
@@ -252,6 +255,8 @@ class _InterventionFilesNotificationsTabState
                                               notificationColor: Colors.green,
                                             )
                                           : NotificationUI(
+                                              isRead:
+                                                  notifications[index].isRead,
                                               notificationDateOfCreation:
                                                   notifications[index]
                                                       .createdAt,
