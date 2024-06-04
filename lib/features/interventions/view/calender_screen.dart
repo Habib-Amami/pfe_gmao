@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -42,9 +41,6 @@ class _CalenderScreenState extends State<CalenderScreen> {
         user = UserModel.fromFirestore(snapshot, null);
       },
     );
-    if (kDebugMode) {
-      print(user);
-    }
     return user.role == Roles.Administrator;
   }
 
