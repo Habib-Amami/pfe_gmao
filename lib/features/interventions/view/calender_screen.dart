@@ -48,7 +48,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
     return user.role == Roles.Administrator;
   }
 
-  void fecthUserRole() async {
+  void fetchUserRole() async {
     isAdmin = await adminCheck();
   }
 
@@ -59,7 +59,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
 
   @override
   void initState() {
-    fecthUserRole();
+    fetchUserRole();
     super.initState();
   }
 
