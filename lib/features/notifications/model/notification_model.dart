@@ -218,7 +218,7 @@ class NotificationsModel {
         .get();
 
     //if the current user is an admin
-    //user his fcm token to element him from the admins who will receieve the notification
+    //user his fcm token to element him from the admins who will receive the notification
     if (currentUserRole == Roles.Administrator.toShortString()) {
       // Query admins specific discipline
       usersSnapshot = await firestore
@@ -229,7 +229,7 @@ class NotificationsModel {
           .get();
     } else {
       //if the user is not an admin make a query for all admins
-      // with thta discipline
+      // with that discipline
       usersSnapshot = await firestore
           .collection(userCollectionRef)
           .where('role', isEqualTo: Roles.Administrator.toShortString())
@@ -237,7 +237,7 @@ class NotificationsModel {
           .get();
     }
 
-    //creating a batch to write in mutiple documents
+    //creating a batch to write in multiple documents
     WriteBatch batch = firestore.batch();
 
     // Iterate over the query snapshot to get each user's document ID
@@ -261,6 +261,7 @@ class NotificationsModel {
         equipmentTagName: equipmentTagName,
         equipmentDiscipline: equipmentDiscipline,
         createdAt: DateTime.now(),
+        isRead: false,
       );
       // Add a subcollection called 'notifications' and write the desired data to it
       batch.set(
@@ -292,18 +293,18 @@ class NotificationsModel {
     //creating an instance of validation notification
     InterventionFileValidationNotification notification =
         InterventionFileValidationNotification(
-      notificationID: notificationID,
-      notificationTitle: notificationTitle,
-      notificationBody: notificationBody,
-      interventionFileCreatorID: interventionFileCreatorID,
-      interventionFileCreatorToken: interventionFileCreatorToken,
-      interventionFileID: interventionFileID,
-      interventionType: interventionType,
-      equipmentID: equipmentID,
-      equipmentTagName: equipmentTagName,
-      equipmentDiscipline: equipmentDiscipline,
-      createdAt: DateTime.now(),
-    );
+            notificationID: notificationID,
+            notificationTitle: notificationTitle,
+            notificationBody: notificationBody,
+            interventionFileCreatorID: interventionFileCreatorID,
+            interventionFileCreatorToken: interventionFileCreatorToken,
+            interventionFileID: interventionFileID,
+            interventionType: interventionType,
+            equipmentID: equipmentID,
+            equipmentTagName: equipmentTagName,
+            equipmentDiscipline: equipmentDiscipline,
+            createdAt: DateTime.now(),
+            isRead: false);
     //adding notification to the file creator document using this fcm token
     await firestore
         .collection(userCollectionRef)
@@ -344,15 +345,15 @@ class NotificationsModel {
   }) async {
     //creating a work order notification
     WorkorderNotification notification = WorkorderNotification(
-      notificationID: notificationID,
-      notificationTitle: notificationTitle,
-      notificationBody: notificationBody,
-      workorderCreatorID: workorderCreatorID,
-      technicianID: technicianID,
-      createdAt: DateTime.now(),
-      workOrderID: workOrderID,
-      interventionID: interventionID,
-    );
+        notificationID: notificationID,
+        notificationTitle: notificationTitle,
+        notificationBody: notificationBody,
+        workorderCreatorID: workorderCreatorID,
+        technicianID: technicianID,
+        createdAt: DateTime.now(),
+        workOrderID: workOrderID,
+        interventionID: interventionID,
+        isRead: false);
     await firestore
         .collection(userCollectionRef)
         .doc(technicianID)
@@ -373,14 +374,16 @@ class NotificationsModel {
   }) async {
     //creating a work order notification
     WorkorderNotification notification = WorkorderNotification(
-        notificationID: notificationID,
-        notificationTitle: notificationTitle,
-        notificationBody: notificationBody,
-        workorderCreatorID: workorderCreatorID,
-        technicianID: technicianID,
-        createdAt: DateTime.now(),
-        workOrderID: workOrderID,
-        interventionID: interventionID);
+      notificationID: notificationID,
+      notificationTitle: notificationTitle,
+      notificationBody: notificationBody,
+      workorderCreatorID: workorderCreatorID,
+      technicianID: technicianID,
+      createdAt: DateTime.now(),
+      workOrderID: workOrderID,
+      interventionID: interventionID,
+      isRead: false,
+    );
     //adding a notification in the engineer side
     await firestore
         .collection(userCollectionRef)
@@ -410,6 +413,7 @@ class NotificationsModel {
       createdAt: DateTime.now(),
       workOrderID: workOrderID,
       interventionID: interventionID,
+      isRead: false,
     );
     //adding a notification in the admin side
     await firestore

@@ -12,7 +12,7 @@ import '../../../work_order/view/work%20order%20view/admin_wo_view.dart';
 import '../../../work_order/view/work%20order%20view/engineer_wo_view.dart';
 import '../../controller/notification_controller.dart';
 import '../../model/data_models/work_order_notification.dart';
-import '../widget/notification_widget.dart';
+import '../widget/notificationUI.dart';
 
 class WorkOrderNotificationsTab extends StatefulWidget {
   const WorkOrderNotificationsTab({super.key});
@@ -43,7 +43,7 @@ class _WorkOrderNotificationsTabState extends State<WorkOrderNotificationsTab> {
     return user.role == Roles.Administrator;
   }
 
-  void fecthUserRole() async {
+  void fetchUserRole() async {
     isAdmin = await adminCheck();
   }
 
@@ -51,7 +51,7 @@ class _WorkOrderNotificationsTabState extends State<WorkOrderNotificationsTab> {
 
   @override
   void initState() {
-    fecthUserRole();
+    fetchUserRole();
     super.initState();
   }
 
@@ -203,8 +203,22 @@ class _WorkOrderNotificationsTabState extends State<WorkOrderNotificationsTab> {
                                   ],
                                 ),
                                 child: GestureDetector(
-                                  onTap: () {
+                                  onTap: () async {
+                                    try {
+                                      await FirebaseFirestore.instance
+                                          .collection('users')
+                                          .doc(currentUser!.uid)
+                                          .collection('WO_notifications')
+                                          .doc(notifications[index]
+                                              .notificationID)
+                                          .update({'isRead': true});
+                                    } catch (e) {
+                                      debugPrint(
+                                          'Error updating notification status: $e');
+                                    }
+
                                     Navigator.push(
+                                      // ignore: use_build_context_synchronously
                                       context,
                                       MaterialPageRoute(builder: (context) {
                                         return isAdmin == false
@@ -228,6 +242,7 @@ class _WorkOrderNotificationsTabState extends State<WorkOrderNotificationsTab> {
                                     );
                                   },
                                   child: NotificationUI(
+                                    isRead: notifications[index].isRead,
                                     notificationTitle:
                                         notifications[index].notificationTitle,
                                     notificationMessage:

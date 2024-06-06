@@ -10,6 +10,7 @@ class WorkorderNotification {
   final String technicianID;
 
   final DateTime createdAt;
+  final bool isRead;
 
   WorkorderNotification({
     required this.notificationID,
@@ -20,6 +21,7 @@ class WorkorderNotification {
     required this.createdAt,
     required this.workOrderID,
     required this.interventionID,
+    required this.isRead,
   });
 
   // Factory constructor to create an instance from JSON
@@ -33,6 +35,7 @@ class WorkorderNotification {
       createdAt: DateTime.parse(json['createdAt']),
       workOrderID: json['workOrderID'],
       interventionID: json['interventionID'],
+      isRead: json['isRead'],
     );
   }
 
@@ -47,6 +50,7 @@ class WorkorderNotification {
       'createdAt': createdAt.toIso8601String(),
       'workOrderID': workOrderID,
       'interventionID': interventionID,
+      'isRead': isRead
     };
   }
 }

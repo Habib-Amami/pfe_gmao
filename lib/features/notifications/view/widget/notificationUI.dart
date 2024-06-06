@@ -7,6 +7,7 @@ class NotificationUI extends StatelessWidget {
   final String notificationMessage;
   final IconData notificationIcon;
   final Color notificationColor;
+  final bool isRead;
 
   const NotificationUI({
     super.key,
@@ -15,6 +16,7 @@ class NotificationUI extends StatelessWidget {
     required this.notificationMessage,
     required this.notificationIcon,
     required this.notificationColor,
+    required this.isRead,
   });
 
   @override
@@ -31,7 +33,9 @@ class NotificationUI extends StatelessWidget {
           ),
         ),
         Card(
-          // color: Theme.of(context).colorScheme.tertiaryContainer,
+          color: isRead
+              ? Theme.of(context).colorScheme.surface
+              : Theme.of(context).colorScheme.surfaceVariant,
           child: Padding(
             padding: const EdgeInsets.all(6.0),
             child: Row(
