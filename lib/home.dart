@@ -142,6 +142,7 @@ class _HomeState extends State<Home> {
                                   '$unreadNotificationCount',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
+                                    fontWeight: FontWeight.bold,
                                     color: Theme.of(context)
                                         .colorScheme
                                         .background,
@@ -150,7 +151,34 @@ class _HomeState extends State<Home> {
                                 ),
                               ),
                             )
-                          : const SizedBox.shrink(),
+                          : unreadNotificationCount > 9
+                              ? Positioned(
+                                  right: 10,
+                                  top: 5,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    constraints: const BoxConstraints(
+                                      minWidth: 14,
+                                      minHeight: 14,
+                                    ),
+                                    child: Text(
+                                      '+9',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background,
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
                     ],
                   );
                 },
