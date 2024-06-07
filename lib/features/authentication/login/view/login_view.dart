@@ -86,7 +86,7 @@ class _LoginViewState extends State<LoginView> {
                             if (states.contains(MaterialState.error)) {
                               return Theme.of(context).colorScheme.error;
                             }
-                            return Colors.black54;
+                            return Colors.grey;
                           },
                         ),
                         border: const OutlineInputBorder(
@@ -139,7 +139,7 @@ class _LoginViewState extends State<LoginView> {
                             if (states.contains(MaterialState.error)) {
                               return Theme.of(context).colorScheme.error;
                             }
-                            return Colors.black54;
+                            return Colors.grey;
                           },
                         ),
                         suffixIcon: IconButton(
