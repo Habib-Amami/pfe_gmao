@@ -84,6 +84,11 @@ class EquipmentTile extends StatelessWidget {
           ),
         ),
         OpenContainer(
+          closedElevation: 0.0,
+          closedShape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(0)),
+          ),
+          closedColor: Colors.transparent,
           transitionDuration: const Duration(milliseconds: 800),
           transitionType: ContainerTransitionType.fadeThrough,
           openBuilder: (BuildContext context, VoidCallback _) {
@@ -144,6 +149,7 @@ class EquipmentTile extends StatelessWidget {
           closedShape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(0)),
           ),
+          closedColor: Colors.transparent,
           transitionType: ContainerTransitionType.fadeThrough,
           transitionDuration: const Duration(milliseconds: 400),
           closedBuilder: (BuildContext _, VoidCallback openContainer) {
