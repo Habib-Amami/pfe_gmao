@@ -57,43 +57,6 @@ class Equipment {
           contract: json['contract'] != null ? json['contract'] as String : '',
         );
 
-  Equipment copyWith({
-    String? id,
-    String? TagName,
-    String? Description,
-    String? Status,
-    String? Priority,
-    String? Area,
-    Timestamp? CreatedOn,
-    Timestamp? UpdatedOn,
-    String? Discipline,
-    String? Workshop,
-    String? Photo,
-    String? Longitude,
-    String? Latitude,
-    String? userManual,
-    String? contract,
-    List<String>? otherFiles,
-  }) {
-    return Equipment(
-      id: id ?? this.id,
-      TagName: TagName ?? this.TagName,
-      Description: Description ?? this.Description,
-      Status: Status ?? this.Status,
-      Priority: Priority ?? this.Priority,
-      Area: Area ?? this.Area,
-      CreatedOn: CreatedOn ?? this.CreatedOn,
-      UpdatedOn: UpdatedOn ?? this.UpdatedOn,
-      Discipline: Discipline ?? this.Discipline,
-      Workshop: Workshop ?? this.Workshop,
-      Photo: Photo ?? this.Photo,
-      Longitude: Longitude ?? this.Longitude,
-      Latitude: Latitude ?? this.Latitude,
-      userManual: userManual ?? this.userManual,
-      contract: contract ?? this.contract,
-    );
-  }
-
   Map<String, Object> toJson() {
     return {
       'id': id,
