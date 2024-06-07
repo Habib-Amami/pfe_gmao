@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:pfe_gmao/features/intervention_files/View/intervention_file_view.dart';
-import 'package:pfe_gmao/features/intervention_files/View/widgets/add_file_form/intervention_file_status.dart';
+
 import '../../model/constants/intervention_types_list.dart';
 import '../../model/data_models/curative_intervention_file.dart';
 import '../../model/data_models/preventive_intervention_file.dart';
+import '../intervention_file_view.dart';
+import '../widgets/add_file_form/intervention_file_status.dart';
 
 class InterventionFilesStream extends StatelessWidget {
   final String interventionType;
