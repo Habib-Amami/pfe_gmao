@@ -484,6 +484,11 @@ class _AddEquipmentPageState extends State<AddEquipmentPage> {
                                       TextButton(
                                         onPressed: () async {
                                           if (_formkey.currentState!
+                                                  .validate() ==
+                                              false) {
+                                            Navigator.pop(context);
+                                          }
+                                          if (_formkey.currentState!
                                               .validate()) {
                                             _formkey.currentState!.save();
                                             _isTagNameUnique =
