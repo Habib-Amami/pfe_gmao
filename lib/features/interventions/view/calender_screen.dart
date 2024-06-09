@@ -170,7 +170,9 @@ class _CalenderScreenState extends State<CalenderScreen> {
                       itemBuilder: (context, index) {
                         return Column(
                           children: [
-                            isAdmin
+                            isAdmin &&
+                                    interventions[index].interventionStatus !=
+                                        "Terminated"
                                 ? Slidable(
                                     endActionPane: ActionPane(
                                       extentRatio: 0.5,
