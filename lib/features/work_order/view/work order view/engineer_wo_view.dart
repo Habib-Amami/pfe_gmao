@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pfe_gmao/features/notifications/controller/notification_controller.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../firebase/cloud_firestore_references.dart';
+import '../../../notifications/controller/notification_controller.dart';
 import '../../../notifications/model/notification_model.dart';
 import '../../controller/work_order_controller.dart';
 import '../../model/constants/work_order_status.dart';

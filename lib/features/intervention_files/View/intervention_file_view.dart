@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+
 import '../model/data_models/intervention_file_status.dart';
 import 'widgets/file_status_rectangular_widgets/confirmed_status.dart';
 import 'widgets/file_status_rectangular_widgets/denied_status.dart';

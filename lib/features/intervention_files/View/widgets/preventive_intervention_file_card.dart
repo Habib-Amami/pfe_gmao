@@ -1,6 +1,6 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:pfe_gmao/features/intervention_files/View/intervention_file_view.dart';
+
+import '../intervention_file_view.dart';
 import 'add_file_form/intervention_file_status.dart';
 
 class PreventiveInterventionFileCard extends StatelessWidget {
@@ -86,28 +86,19 @@ class PreventiveInterventionFileCard extends StatelessWidget {
             ),
           ),
           Center(
-            child: OpenContainer(
-              closedColor: Colors.transparent,
-              closedElevation: 0.0,
-              closedShape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(0)),
+            child: TextButton.icon(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => InterventionFileViewPage(
+                    interventionFileID: fileID,
+                    interventionType: interventionType,
+                    equipmentDiscipline: equipmentDiscipline,
+                  ),
+                ),
               ),
-              transitionType: ContainerTransitionType.fadeThrough,
-              transitionDuration: const Duration(milliseconds: 400),
-              closedBuilder: (BuildContext _, VoidCallback openContainer) {
-                return TextButton.icon(
-                  onPressed: openContainer,
-                  label: const Text('See more'),
-                  icon: const Icon(Icons.add),
-                );
-              },
-              openBuilder: (BuildContext _, VoidCallback __) {
-                return InterventionFileViewPage(
-                  interventionFileID: fileID,
-                  interventionType: interventionType,
-                  equipmentDiscipline: equipmentDiscipline,
-                );
-              },
+              label: const Text('See more'),
+              icon: const Icon(Icons.add),
             ),
           )
         ],

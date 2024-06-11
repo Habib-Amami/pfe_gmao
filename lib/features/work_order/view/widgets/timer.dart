@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pfe_gmao/features/work_order/view/widgets/work_order_form_field.dart';
+
+import 'work_order_form_field.dart';
 
 class Timer extends StatefulWidget {
   final TextEditingController hourController;

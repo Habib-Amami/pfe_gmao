@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:pfe_gmao/features/notifications/controller/notification_controller.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../interventions/controller/interventions_controller.dart';
 import '../../interventions/model/constants/intervention_status.dart';
+import '../../notifications/controller/notification_controller.dart';
 import '../../notifications/model/notification_model.dart';
 import '../controller/intervention_file_controller.dart';
 import '../model/constants/intervention_types_list.dart';

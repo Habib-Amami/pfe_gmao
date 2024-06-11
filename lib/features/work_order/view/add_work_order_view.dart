@@ -2,13 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:pfe_gmao/features/notifications/controller/notification_controller.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../firebase/cloud_firestore_references.dart';
+import '../../notifications/controller/notification_controller.dart';
 import '../../notifications/model/notification_model.dart';
 import '../../profile_management/model/user.dart';
 import '../controller/work_order_controller.dart';

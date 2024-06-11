@@ -1,6 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -250,21 +249,7 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-      body: PageTransitionSwitcher(
-        duration: const Duration(milliseconds: 600),
-        transitionBuilder: (
-          child,
-          primaryAnimation,
-          secondaryAnimation,
-        ) {
-          return FadeThroughTransition(
-            animation: primaryAnimation,
-            secondaryAnimation: secondaryAnimation,
-            child: child,
-          );
-        },
-        child: menuScreens[currentPageIndex],
-      ),
+      body: menuScreens[currentPageIndex],
     );
   }
 
