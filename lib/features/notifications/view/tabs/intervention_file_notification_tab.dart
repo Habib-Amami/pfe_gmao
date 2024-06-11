@@ -185,32 +185,36 @@ class _InterventionFilesNotificationsTabState
                                       debugPrint(
                                           'Error updating notification status: $e');
                                     }
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            InterventionFileValidationView(
-                                          interventionFileCreatorID:
-                                              notifications[index]
-                                                  .interventionFileCreatorID,
-                                          interventionFileCreatorToken:
-                                              notifications[index]
-                                                  .interventionFileCreatorToken,
-                                          equipmentTagName: notifications[index]
-                                              .equipmentTagName,
-                                          equipmentID:
-                                              notifications[index].equipmentID,
-                                          equipmentDiscipline:
-                                              notifications[index]
-                                                  .equipmentDiscipline,
-                                          interventionType: notifications[index]
-                                              .interventionType,
-                                          interventionFileID:
-                                              notifications[index]
-                                                  .interventionFileID,
+                                    if (context.mounted) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              InterventionFileValidationView(
+                                            interventionFileCreatorID:
+                                                notifications[index]
+                                                    .interventionFileCreatorID,
+                                            interventionFileCreatorToken:
+                                                notifications[index]
+                                                    .interventionFileCreatorToken,
+                                            equipmentTagName:
+                                                notifications[index]
+                                                    .equipmentTagName,
+                                            equipmentID: notifications[index]
+                                                .equipmentID,
+                                            equipmentDiscipline:
+                                                notifications[index]
+                                                    .equipmentDiscipline,
+                                            interventionType:
+                                                notifications[index]
+                                                    .interventionType,
+                                            interventionFileID:
+                                                notifications[index]
+                                                    .interventionFileID,
+                                          ),
                                         ),
-                                      ),
-                                    );
+                                      );
+                                    }
                                   },
                                   child: notifications[index]
                                                   .notificationTitle ==

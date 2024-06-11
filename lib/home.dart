@@ -4,11 +4,11 @@ import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:rxdart/rxdart.dart';
+
 import 'features/Equipments/View/equipment_list_view.dart';
 import 'features/intervention_files/View/Global_Intervention_Files/global_intervention_files_list.dart';
 import 'features/interventions/view/calender_screen.dart';
@@ -95,117 +95,101 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text('Mobile ORM'),
         actions: [
-          OpenContainer(
-            closedElevation: 0.0,
-            closedShape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(0)),
+          IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const NotificationScreen(),
+              ),
             ),
-            closedColor: Colors.transparent,
-            transitionType: ContainerTransitionType.fadeThrough,
-            transitionDuration: const Duration(milliseconds: 600),
-            closedBuilder: (BuildContext _, VoidCallback openContainer) {
-              return StreamBuilder<int>(
-                stream: _unreadNotificationCount(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    IconButton(
-                      icon: const Icon(Icons.notifications),
-                      onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const NotificationScreen())),
-                    );
-                  }
-                  int unreadNotificationCount = snapshot.data ?? 0;
-                  return Stack(
-                    children: [
-                      IconButton(
-                        onPressed: openContainer,
-                        icon: const Icon(Ionicons.notifications),
-                      ),
-                      unreadNotificationCount > 0
-                          ? Positioned(
-                              right: 10,
-                              top: 5,
-                              child: Container(
-                                padding: const EdgeInsets.all(2),
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                constraints: const BoxConstraints(
-                                  minWidth: 14,
-                                  minHeight: 14,
-                                ),
-                                child: Text(
-                                  '$unreadNotificationCount',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .background,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ),
-                            )
-                          : unreadNotificationCount > 9
-                              ? Positioned(
-                                  right: 10,
-                                  top: 5,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(2),
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    constraints: const BoxConstraints(
-                                      minWidth: 14,
-                                      minHeight: 14,
-                                    ),
-                                    child: Text(
-                                      '+9',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .background,
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : const SizedBox.shrink(),
-                    ],
-                  );
-                },
-              );
-            },
-            openBuilder: (BuildContext _, VoidCallback __) {
-              return const NotificationScreen();
-            },
           ),
-          OpenContainer(
-            closedElevation: 0.0,
-            closedShape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(0)),
+          // StreamBuilder<int>(
+          //   stream: _unreadNotificationCount(),
+          //   builder: (context, snapshot) {
+          //     if (snapshot.hasError) {}
+          //     int unreadNotificationCount = snapshot.data ?? 0;
+          //     return Stack(
+          //       children: [
+          //         IconButton(
+          //           onPressed: () => Navigator.push(
+          //             context,
+          //             MaterialPageRoute(
+          //               builder: (context) {
+          //                 return const NotificationScreen();
+          //               },
+          //             ),
+          //           ),
+          //           icon: const Icon(Ionicons.notifications),
+          //         ),
+          //         unreadNotificationCount > 0
+          //             ? Positioned(
+          //                 right: 10,
+          //                 top: 5,
+          //                 child: Container(
+          //                   padding: const EdgeInsets.all(2),
+          //                   decoration: BoxDecoration(
+          //                     color: Colors.red,
+          //                     borderRadius: BorderRadius.circular(6),
+          //                   ),
+          //                   constraints: const BoxConstraints(
+          //                     minWidth: 14,
+          //                     minHeight: 14,
+          //                   ),
+          //                   child: Text(
+          //                     '$unreadNotificationCount',
+          //                     textAlign: TextAlign.center,
+          //                     style: TextStyle(
+          //                       fontWeight: FontWeight.bold,
+          //                       color: Theme.of(context).colorScheme.background,
+          //                       fontSize: 10,
+          //                     ),
+          //                   ),
+          //                 ),
+          //               )
+          //             : unreadNotificationCount > 9
+          //                 ? Positioned(
+          //                     right: 10,
+          //                     top: 5,
+          //                     child: Container(
+          //                       padding: const EdgeInsets.all(2),
+          //                       decoration: BoxDecoration(
+          //                         color: Colors.red,
+          //                         borderRadius: BorderRadius.circular(6),
+          //                       ),
+          //                       constraints: const BoxConstraints(
+          //                         minWidth: 14,
+          //                         minHeight: 14,
+          //                       ),
+          //                       child: Text(
+          //                         '+9',
+          //                         textAlign: TextAlign.center,
+          //                         style: TextStyle(
+          //                           fontWeight: FontWeight.bold,
+          //                           color: Theme.of(context)
+          //                               .colorScheme
+          //                               .background,
+          //                           fontSize: 10,
+          //                         ),
+          //                       ),
+          //                     ),
+          //                   )
+          //                 : const SizedBox.shrink(),
+          //       ],
+          //     );
+          //   },
+          // ),
+          IconButton(
+            icon: const Icon(
+              Icons.settings_rounded,
             ),
-            closedColor: Colors.transparent,
-            transitionType: ContainerTransitionType.fadeThrough,
-            transitionDuration: const Duration(milliseconds: 400),
-            closedBuilder: (BuildContext _, VoidCallback openContainer) {
-              return IconButton(
-                icon: const Icon(
-                  Icons.settings_rounded,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Setting(),
                 ),
-                onPressed: openContainer,
               );
-            },
-            openBuilder: (BuildContext _, VoidCallback __) {
-              return const Setting();
             },
           ),
         ],

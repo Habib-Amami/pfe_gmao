@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
@@ -83,90 +82,74 @@ class EquipmentTile extends StatelessWidget {
             ],
           ),
         ),
-        OpenContainer(
-          closedElevation: 0.0,
-          closedShape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(0)),
-          ),
-          closedColor: Colors.transparent,
-          transitionDuration: const Duration(milliseconds: 800),
-          transitionType: ContainerTransitionType.fadeThrough,
-          openBuilder: (BuildContext context, VoidCallback _) {
-            return EquipmentMap(
-              equipmentLatitude: double.parse(equipment.Latitude),
-              equipmentLongitude: double.parse(equipment.Longitude),
-            );
-          },
-          closedBuilder: (BuildContext context, VoidCallback openContainer) {
-            return TextButton.icon(
-              icon: const Icon(Icons.location_on_rounded),
-              label: const Text("Show equipment location"),
-              onPressed: () async {
-                await Permission.location.onDeniedCallback(
-                  () {
-                    if (context.mounted) {
-                      showDialog(
-                        context: context,
-                        builder: (context) =>
-                            const EquipmentLocationPermissionDeniedAlert(),
-                      );
-                    }
-                  },
-                ).onGrantedCallback(
-                  () async {
-                    bool serviceEnabled =
-                        await Geolocator.isLocationServiceEnabled();
-                    if (serviceEnabled) {
-                      openContainer(); // Open the container when permission is granted
-                    } else {
-                      if (context.mounted) {
-                        showDialog(
-                          context: context,
-                          builder: (context) =>
-                              const EquipmentLocationServiceAlert(),
-                          barrierDismissible: false,
-                        );
-                      }
-                    }
-                  },
-                ).onPermanentlyDeniedCallback(
-                  () {
-                    if (context.mounted) {
-                      showDialog(
-                        context: context,
-                        builder: (context) =>
-                            const EquipmentLocationPermissionDeniedAlert(),
-                      );
-                    }
-                  },
-                ).request();
+        TextButton.icon(
+          icon: const Icon(Icons.location_on_rounded),
+          label: const Text("Show equipment location"),
+          onPressed: () async {
+            await Permission.location.onDeniedCallback(
+              () {
+                if (context.mounted) {
+                  showDialog(
+                    context: context,
+                    builder: (context) =>
+                        const EquipmentLocationPermissionDeniedAlert(),
+                  );
+                }
               },
-            );
+            ).onGrantedCallback(
+              () async {
+                bool serviceEnabled =
+                    await Geolocator.isLocationServiceEnabled();
+                if (serviceEnabled) {
+                  if (context.mounted) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EquipmentMap(
+                          equipmentLatitude: double.parse(equipment.Latitude),
+                          equipmentLongitude: double.parse(equipment.Longitude),
+                        ),
+                      ),
+                    );
+                  }
+                } else {
+                  if (context.mounted) {
+                    showDialog(
+                      context: context,
+                      builder: (context) =>
+                          const EquipmentLocationServiceAlert(),
+                      barrierDismissible: false,
+                    );
+                  }
+                }
+              },
+            ).onPermanentlyDeniedCallback(
+              () {
+                if (context.mounted) {
+                  showDialog(
+                    context: context,
+                    builder: (context) =>
+                        const EquipmentLocationPermissionDeniedAlert(),
+                  );
+                }
+              },
+            ).request();
           },
         ),
-        OpenContainer(
-          closedElevation: 0.0,
-          closedShape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(0)),
+        TextButton.icon(
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => InterventionFileMenu(
+                equipmentDiscipline: equipment.Discipline,
+                equipmentStatus: equipment.Status,
+                equipmentTagName: equipment.TagName,
+                equipmentID: equipment.id,
+              ),
+            ),
           ),
-          closedColor: Colors.transparent,
-          transitionType: ContainerTransitionType.fadeThrough,
-          transitionDuration: const Duration(milliseconds: 400),
-          closedBuilder: (BuildContext _, VoidCallback openContainer) {
-            return TextButton.icon(
-              onPressed: openContainer,
-              icon: const Icon(Icons.file_open_rounded),
-              label: const Text("Open intervention files"),
-            );
-          },
-          openBuilder: (BuildContext _, VoidCallback __) {
-            return InterventionFileMenu(
-              equipmentDiscipline: equipment.Discipline,
-              equipmentStatus: equipment.Status,
-              equipmentTagName: equipment.TagName,
-              equipmentID: equipment.id,
-            );
-          },
+          icon: const Icon(Icons.file_open_rounded),
+          label: const Text("Open intervention files"),
         ),
       ],
     );

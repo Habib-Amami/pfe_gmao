@@ -125,9 +125,7 @@ class _EquipmentMapState extends State<EquipmentMap> {
                       ),
                     ],
                   ),
-                  appBar: AppBar(
-                    backgroundColor: Colors.transparent,
-                  ),
+                  appBar: AppBar(),
                   body: GoogleMap(
                     mapType: MapType.hybrid,
                     rotateGesturesEnabled: true,
