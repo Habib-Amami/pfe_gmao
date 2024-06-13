@@ -94,90 +94,81 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text('Mobile ORM'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const NotificationScreen(),
-              ),
-            ),
+          StreamBuilder<int>(
+            stream: _unreadNotificationCount(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {}
+              int unreadNotificationCount = snapshot.data ?? 0;
+              return Stack(
+                children: [
+                  IconButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return const NotificationScreen();
+                        },
+                      ),
+                    ),
+                    icon: const Icon(Ionicons.notifications),
+                  ),
+                  unreadNotificationCount > 0 && unreadNotificationCount < 9
+                      ? Positioned(
+                          right: 10,
+                          top: 5,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 14,
+                              minHeight: 14,
+                            ),
+                            child: Text(
+                              '$unreadNotificationCount',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.background,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                        )
+                      : unreadNotificationCount > 8
+                          ? Positioned(
+                              right: 10,
+                              top: 5,
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 14,
+                                  minHeight: 14,
+                                ),
+                                child: Text(
+                                  '+9',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .background,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                ],
+              );
+            },
           ),
-          // StreamBuilder<int>(
-          //   stream: _unreadNotificationCount(),
-          //   builder: (context, snapshot) {
-          //     if (snapshot.hasError) {}
-          //     int unreadNotificationCount = snapshot.data ?? 0;
-          //     return Stack(
-          //       children: [
-          //         IconButton(
-          //           onPressed: () => Navigator.push(
-          //             context,
-          //             MaterialPageRoute(
-          //               builder: (context) {
-          //                 return const NotificationScreen();
-          //               },
-          //             ),
-          //           ),
-          //           icon: const Icon(Ionicons.notifications),
-          //         ),
-          //         unreadNotificationCount > 0
-          //             ? Positioned(
-          //                 right: 10,
-          //                 top: 5,
-          //                 child: Container(
-          //                   padding: const EdgeInsets.all(2),
-          //                   decoration: BoxDecoration(
-          //                     color: Colors.red,
-          //                     borderRadius: BorderRadius.circular(6),
-          //                   ),
-          //                   constraints: const BoxConstraints(
-          //                     minWidth: 14,
-          //                     minHeight: 14,
-          //                   ),
-          //                   child: Text(
-          //                     '$unreadNotificationCount',
-          //                     textAlign: TextAlign.center,
-          //                     style: TextStyle(
-          //                       fontWeight: FontWeight.bold,
-          //                       color: Theme.of(context).colorScheme.background,
-          //                       fontSize: 10,
-          //                     ),
-          //                   ),
-          //                 ),
-          //               )
-          //             : unreadNotificationCount > 9
-          //                 ? Positioned(
-          //                     right: 10,
-          //                     top: 5,
-          //                     child: Container(
-          //                       padding: const EdgeInsets.all(2),
-          //                       decoration: BoxDecoration(
-          //                         color: Colors.red,
-          //                         borderRadius: BorderRadius.circular(6),
-          //                       ),
-          //                       constraints: const BoxConstraints(
-          //                         minWidth: 14,
-          //                         minHeight: 14,
-          //                       ),
-          //                       child: Text(
-          //                         '+9',
-          //                         textAlign: TextAlign.center,
-          //                         style: TextStyle(
-          //                           fontWeight: FontWeight.bold,
-          //                           color: Theme.of(context)
-          //                               .colorScheme
-          //                               .background,
-          //                           fontSize: 10,
-          //                         ),
-          //                       ),
-          //                     ),
-          //                   )
-          //                 : const SizedBox.shrink(),
-          //       ],
-          //     );
-          //   },
-          // ),
           IconButton(
             icon: const Icon(
               Icons.settings_rounded,
